@@ -1,11 +1,9 @@
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-
+import { useDisableNumberInputScroll } from "@/hooks/use-disable-number-input-scroll";
 import type { QueryClient } from "@tanstack/react-query";
-import { useDisableNumberInputScroll } from "#/hooks/use-disable-number-input-scroll";
 
 interface MyRouterContext {
   queryClient: QueryClient;

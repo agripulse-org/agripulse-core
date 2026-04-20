@@ -9,50 +9,277 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root"
-import { Route as IndexRouteImport } from "./routes/index"
+import { Route as AuthRouteRouteImport } from "./routes/auth/route"
+import { Route as appRouteRouteImport } from "./routes/(app)/route"
+import { Route as AuthIndexRouteImport } from "./routes/auth/index"
+import { Route as appIndexRouteImport } from "./routes/(app)/index"
+import { Route as AuthRegisterRouteImport } from "./routes/auth/register"
+import { Route as AuthLoginRouteImport } from "./routes/auth/login"
+import { Route as appSoilsRouteImport } from "./routes/(app)/soils"
+import { Route as appProfileRouteImport } from "./routes/(app)/profile"
+import { Route as appImportExportRouteImport } from "./routes/(app)/import-export"
+import { Route as appAnalysisCreateRouteImport } from "./routes/(app)/analysis/create"
+import { Route as appAnalysisIdRouteImport } from "./routes/(app)/analysis/$id"
 
-const IndexRoute = IndexRouteImport.update({
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: "/auth",
+  path: "/auth",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const appRouteRoute = appRouteRouteImport.update({
+  id: "/(app)",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
   id: "/",
   path: "/",
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const appIndexRoute = appIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => appRouteRoute,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: "/register",
+  path: "/register",
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: "/login",
+  path: "/login",
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const appSoilsRoute = appSoilsRouteImport.update({
+  id: "/soils",
+  path: "/soils",
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appProfileRoute = appProfileRouteImport.update({
+  id: "/profile",
+  path: "/profile",
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appImportExportRoute = appImportExportRouteImport.update({
+  id: "/import-export",
+  path: "/import-export",
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appAnalysisCreateRoute = appAnalysisCreateRouteImport.update({
+  id: "/analysis/create",
+  path: "/analysis/create",
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appAnalysisIdRoute = appAnalysisIdRouteImport.update({
+  id: "/analysis/$id",
+  path: "/analysis/$id",
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute
+  "/auth": typeof AuthRouteRouteWithChildren
+  "/import-export": typeof appImportExportRoute
+  "/profile": typeof appProfileRoute
+  "/soils": typeof appSoilsRoute
+  "/auth/login": typeof AuthLoginRoute
+  "/auth/register": typeof AuthRegisterRoute
+  "/": typeof appIndexRoute
+  "/auth/": typeof AuthIndexRoute
+  "/analysis/$id": typeof appAnalysisIdRoute
+  "/analysis/create": typeof appAnalysisCreateRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute
+  "/import-export": typeof appImportExportRoute
+  "/profile": typeof appProfileRoute
+  "/soils": typeof appSoilsRoute
+  "/auth/login": typeof AuthLoginRoute
+  "/auth/register": typeof AuthRegisterRoute
+  "/": typeof appIndexRoute
+  "/auth": typeof AuthIndexRoute
+  "/analysis/$id": typeof appAnalysisIdRoute
+  "/analysis/create": typeof appAnalysisCreateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  "/": typeof IndexRoute
+  "/(app)": typeof appRouteRouteWithChildren
+  "/auth": typeof AuthRouteRouteWithChildren
+  "/(app)/import-export": typeof appImportExportRoute
+  "/(app)/profile": typeof appProfileRoute
+  "/(app)/soils": typeof appSoilsRoute
+  "/auth/login": typeof AuthLoginRoute
+  "/auth/register": typeof AuthRegisterRoute
+  "/(app)/": typeof appIndexRoute
+  "/auth/": typeof AuthIndexRoute
+  "/(app)/analysis/$id": typeof appAnalysisIdRoute
+  "/(app)/analysis/create": typeof appAnalysisCreateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/"
+  fullPaths:
+    | "/auth"
+    | "/import-export"
+    | "/profile"
+    | "/soils"
+    | "/auth/login"
+    | "/auth/register"
+    | "/"
+    | "/auth/"
+    | "/analysis/$id"
+    | "/analysis/create"
   fileRoutesByTo: FileRoutesByTo
-  to: "/"
-  id: "__root__" | "/"
+  to:
+    | "/import-export"
+    | "/profile"
+    | "/soils"
+    | "/auth/login"
+    | "/auth/register"
+    | "/"
+    | "/auth"
+    | "/analysis/$id"
+    | "/analysis/create"
+  id:
+    | "__root__"
+    | "/(app)"
+    | "/auth"
+    | "/(app)/import-export"
+    | "/(app)/profile"
+    | "/(app)/soils"
+    | "/auth/login"
+    | "/auth/register"
+    | "/(app)/"
+    | "/auth/"
+    | "/(app)/analysis/$id"
+    | "/(app)/analysis/create"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  appRouteRoute: typeof appRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/": {
-      id: "/"
+    "/auth": {
+      id: "/auth"
+      path: "/auth"
+      fullPath: "/auth"
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/(app)": {
+      id: "/(app)"
+      path: ""
+      fullPath: ""
+      preLoaderRoute: typeof appRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/auth/": {
+      id: "/auth/"
+      path: "/"
+      fullPath: "/auth/"
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    "/(app)/": {
+      id: "/(app)/"
       path: "/"
       fullPath: "/"
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof appIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    "/auth/register": {
+      id: "/auth/register"
+      path: "/register"
+      fullPath: "/auth/register"
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    "/auth/login": {
+      id: "/auth/login"
+      path: "/login"
+      fullPath: "/auth/login"
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    "/(app)/soils": {
+      id: "/(app)/soils"
+      path: "/soils"
+      fullPath: "/soils"
+      preLoaderRoute: typeof appSoilsRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    "/(app)/profile": {
+      id: "/(app)/profile"
+      path: "/profile"
+      fullPath: "/profile"
+      preLoaderRoute: typeof appProfileRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    "/(app)/import-export": {
+      id: "/(app)/import-export"
+      path: "/import-export"
+      fullPath: "/import-export"
+      preLoaderRoute: typeof appImportExportRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    "/(app)/analysis/create": {
+      id: "/(app)/analysis/create"
+      path: "/analysis/create"
+      fullPath: "/analysis/create"
+      preLoaderRoute: typeof appAnalysisCreateRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    "/(app)/analysis/$id": {
+      id: "/(app)/analysis/$id"
+      path: "/analysis/$id"
+      fullPath: "/analysis/$id"
+      preLoaderRoute: typeof appAnalysisIdRouteImport
+      parentRoute: typeof appRouteRoute
     }
   }
 }
 
+interface appRouteRouteChildren {
+  appImportExportRoute: typeof appImportExportRoute
+  appProfileRoute: typeof appProfileRoute
+  appSoilsRoute: typeof appSoilsRoute
+  appIndexRoute: typeof appIndexRoute
+  appAnalysisIdRoute: typeof appAnalysisIdRoute
+  appAnalysisCreateRoute: typeof appAnalysisCreateRoute
+}
+
+const appRouteRouteChildren: appRouteRouteChildren = {
+  appImportExportRoute: appImportExportRoute,
+  appProfileRoute: appProfileRoute,
+  appSoilsRoute: appSoilsRoute,
+  appIndexRoute: appIndexRoute,
+  appAnalysisIdRoute: appAnalysisIdRoute,
+  appAnalysisCreateRoute: appAnalysisCreateRoute,
+}
+
+const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
+  appRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthIndexRoute: typeof AuthIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
+  AuthIndexRoute: AuthIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  appRouteRoute: appRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

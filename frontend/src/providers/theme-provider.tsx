@@ -39,7 +39,7 @@ function updateTheme(theme: Theme) {
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme = "light",
   storageKey = "color-theme",
   ...props
 }: ThemeProviderProps) {
