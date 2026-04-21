@@ -13,6 +13,7 @@ import { Route as AuthRouteRouteImport } from "./routes/auth/route"
 import { Route as appRouteRouteImport } from "./routes/(app)/route"
 import { Route as AuthIndexRouteImport } from "./routes/auth/index"
 import { Route as appIndexRouteImport } from "./routes/(app)/index"
+import { Route as AuthSsoCallbackRouteImport } from "./routes/auth/sso-callback"
 import { Route as AuthRegisterRouteImport } from "./routes/auth/register"
 import { Route as AuthLoginRouteImport } from "./routes/auth/login"
 import { Route as appSoilsRouteImport } from "./routes/(app)/soils"
@@ -39,6 +40,11 @@ const appIndexRoute = appIndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => appRouteRoute,
+} as any)
+const AuthSsoCallbackRoute = AuthSsoCallbackRouteImport.update({
+  id: "/sso-callback",
+  path: "/sso-callback",
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: "/register",
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   "/soils": typeof appSoilsRoute
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
+  "/auth/sso-callback": typeof AuthSsoCallbackRoute
   "/": typeof appIndexRoute
   "/auth/": typeof AuthIndexRoute
   "/analysis/$id": typeof appAnalysisIdRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   "/soils": typeof appSoilsRoute
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
+  "/auth/sso-callback": typeof AuthSsoCallbackRoute
   "/": typeof appIndexRoute
   "/auth": typeof AuthIndexRoute
   "/analysis/$id": typeof appAnalysisIdRoute
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   "/(app)/soils": typeof appSoilsRoute
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
+  "/auth/sso-callback": typeof AuthSsoCallbackRoute
   "/(app)/": typeof appIndexRoute
   "/auth/": typeof AuthIndexRoute
   "/(app)/analysis/$id": typeof appAnalysisIdRoute
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
     | "/soils"
     | "/auth/login"
     | "/auth/register"
+    | "/auth/sso-callback"
     | "/"
     | "/auth/"
     | "/analysis/$id"
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | "/soils"
     | "/auth/login"
     | "/auth/register"
+    | "/auth/sso-callback"
     | "/"
     | "/auth"
     | "/analysis/$id"
@@ -146,6 +157,7 @@ export interface FileRouteTypes {
     | "/(app)/soils"
     | "/auth/login"
     | "/auth/register"
+    | "/auth/sso-callback"
     | "/(app)/"
     | "/auth/"
     | "/(app)/analysis/$id"
@@ -186,6 +198,13 @@ declare module "@tanstack/react-router" {
       fullPath: "/"
       preLoaderRoute: typeof appIndexRouteImport
       parentRoute: typeof appRouteRoute
+    }
+    "/auth/sso-callback": {
+      id: "/auth/sso-callback"
+      path: "/sso-callback"
+      fullPath: "/auth/sso-callback"
+      preLoaderRoute: typeof AuthSsoCallbackRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     "/auth/register": {
       id: "/auth/register"
@@ -264,12 +283,14 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 interface AuthRouteRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthSsoCallbackRoute: typeof AuthSsoCallbackRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  AuthSsoCallbackRoute: AuthSsoCallbackRoute,
   AuthIndexRoute: AuthIndexRoute,
 }
 

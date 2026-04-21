@@ -10,18 +10,25 @@ import {
   Menu,
   X,
   Upload,
-  User,
 } from "lucide-react";
 import { useState } from "react";
+import { useClerk, useUser } from "@clerk/clerk-react";
+import { toast } from "sonner";
 import { Chatbot } from "../../Chatbot";
 import { motion, AnimatePresence } from "motion/react";
 
 export function AppLayout() {
   const { t, language, setLanguage } = useLanguage();
+  const { signOut } = useClerk();
+  const { user } = useUser();
   const location = useLocation();
   const navigate = useNavigate();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const profileDisplayName = getProfileDisplayName(user);
+  const profileInitial = profileDisplayName.charAt(0).toUpperCase();
 
   const navItems = [
     { path: "/", icon: LayoutDashboard, label: t("nav.dashboard") },
@@ -29,8 +36,21 @@ export function AppLayout() {
     { path: "/import-export", icon: Upload, label: "Import/Export" },
   ];
 
-  const handleLogout = () => {
-    navigate({ to: "/auth" });
+  const handleLogout = async () => {
+    if (isLoggingOut) {
+      return;
+    }
+
+    setIsLoggingOut(true);
+
+    try {
+      await signOut();
+      navigate({ to: "/auth/login" });
+    } catch {
+      toast.error("Unable to sign out. Please try again.");
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const toggleLanguage = () => {
@@ -130,8 +150,18 @@ export function AppLayout() {
             onClick={() => setIsSidebarOpen(false)}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted transition-all"
           >
-            <User className="w-5 h-5" />
-            <span>Profile</span>
+            {user?.imageUrl ? (
+              <img
+                src={user.imageUrl}
+                alt={profileDisplayName}
+                className="w-7 h-7 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-muted text-xs flex items-center justify-center">
+                {profileInitial}
+              </div>
+            )}
+            <span className="truncate">{profileDisplayName}</span>
           </Link>
           <button
             onClick={toggleLanguage}
@@ -142,10 +172,11 @@ export function AppLayout() {
           </button>
           <button
             onClick={handleLogout}
+            disabled={isLoggingOut}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted transition-all"
           >
             <LogOut className="w-5 h-5" />
-            <span>{t("nav.logout")}</span>
+            <span>{isLoggingOut ? "Signing out..." : t("nav.logout")}</span>
           </button>
         </div>
       </motion.aside>
@@ -173,4 +204,19 @@ export function AppLayout() {
       {isChatOpen && <Chatbot onClose={() => setIsChatOpen(false)} />}
     </div>
   );
+}
+
+function getProfileDisplayName(user: ReturnType<typeof useUser>["user"]) {
+  if (!user) {
+    return "Profile";
+  }
+
+  const firstName =
+    user.firstName?.trim() ||
+    user.username?.trim() ||
+    user.primaryEmailAddress?.emailAddress.split("@")[0] ||
+    "Profile";
+  const lastInitial = user.lastName?.trim().charAt(0).toUpperCase();
+
+  return lastInitial ? `${firstName} ${lastInitial}.` : firstName;
 }
