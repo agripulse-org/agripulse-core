@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: agripulse-api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/agripulse}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:https://vast-cattle-18.clerk.accounts.dev}
+
+server:
+  port: 8080
+
+agripulse:
+  clerk:
+    jwks-url: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/.well-known/jwks.json
