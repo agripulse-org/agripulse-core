@@ -20,6 +20,10 @@ spring:
         jwt:
           issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:https://vast-cattle-18.clerk.accounts.dev}
 
+  mvc:
+    problemdetails:
+      enabled: true
+
 server:
   port: 8080
 

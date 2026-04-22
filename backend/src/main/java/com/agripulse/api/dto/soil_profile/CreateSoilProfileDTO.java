@@ -24,10 +24,16 @@ public record CreateSoilProfileDTO(
         @NotNull(message = "Longitude is required")
         @DecimalMin(value = "-180.0", message = "Longitude must be >= -180")
         @DecimalMax(value = "180.0", message = "Longitude must be <= 180")
-        Double longitude
+        Double longitude,
+
+        @Size(max = 255, message = "City must not exceed 255 characters")
+        String city,
+
+        @Size(max = 255, message = "Country must not exceed 255 characters")
+        String country
 ) {
     public SoilProfile toEntity(UserId userId) {
-        return new SoilProfile(name, description, latitude, longitude, userId);
+        return new SoilProfile(name, description, latitude, longitude, city, country, userId);
     }
 }
 

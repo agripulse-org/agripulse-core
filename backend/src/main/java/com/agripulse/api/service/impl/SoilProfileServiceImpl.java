@@ -39,19 +39,24 @@ public class SoilProfileServiceImpl implements SoilProfileService {
     @Override
     public SoilProfile updateProfile(UserId userId, UUID profileId, UpdateSoilProfileDTO request) {
         SoilProfile existingProfile = getOwnedProfileOrThrow(userId, profileId);
-        SoilProfile patch = request.toEntity();
 
-        if (patch.getName() != null) {
-            existingProfile.setName(patch.getName());
+        if (request.name() != null) {
+            existingProfile.setName(request.name());
         }
-        if (patch.getDescription() != null) {
-            existingProfile.setDescription(patch.getDescription());
+        if (request.description() != null) {
+            existingProfile.setDescription(request.description());
         }
-        if (patch.getLatitude() != null) {
-            existingProfile.setLatitude(patch.getLatitude());
+        if (request.latitude() != null) {
+            existingProfile.setLatitude(request.latitude());
         }
-        if (patch.getLongitude() != null) {
-            existingProfile.setLongitude(patch.getLongitude());
+        if (request.longitude() != null) {
+            existingProfile.setLongitude(request.longitude());
+        }
+        if (request.city() != null) {
+            existingProfile.setCity(request.city());
+        }
+        if (request.country() != null) {
+            existingProfile.setCountry(request.country());
         }
 
         return soilProfileRepository.save(existingProfile);

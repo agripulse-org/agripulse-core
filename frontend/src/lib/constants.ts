@@ -1,3 +1,6 @@
+export const MAP_INITIAL_CENTER: [number, number] = [41.6086, 21.7453];
+export const MAP_INITIAL_ZOOM = 8;
+
 export const ANALYSIS_DEPTH_OPTIONS = [
   { value: "0-5", label: "0–5 cm", description: "Surface layer" },
   { value: "5-15", label: "5–15 cm", description: "Topsoil" },
@@ -46,30 +49,6 @@ export const DASHBOARD_MOCK_ANALYSES = [
       { plant: "Olive", compatibility: 91 },
       { plant: "Almond", compatibility: 86 },
     ],
-  },
-];
-
-export const SOILS_MOCK_DATA = [
-  {
-    id: "1",
-    name: "North Field",
-    location: "Skopje, North Macedonia",
-    description: "Main crop field",
-    lastAnalysis: "2026-04-10",
-  },
-  {
-    id: "2",
-    name: "South Orchard",
-    location: "Bitola, North Macedonia",
-    description: "Fruit trees area",
-    lastAnalysis: "2026-04-05",
-  },
-  {
-    id: "3",
-    name: "West Vineyard",
-    location: "Ohrid, North Macedonia",
-    description: "Grape cultivation",
-    lastAnalysis: "2026-03-28",
   },
 ];
 

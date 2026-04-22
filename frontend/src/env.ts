@@ -11,6 +11,7 @@ export const env = createEnv({
   clientPrefix: "VITE_",
 
   client: {
+    VITE_API_BASE_URL: z.url("API base URL must be a valid URL"),
     VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1, "Clerk publishable key is required"),
   },
 

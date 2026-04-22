@@ -7,6 +7,7 @@ import { ToastProvider } from "./providers/toast-provider";
 import { LanguageProvider } from "./providers/language-provider";
 import { getRouter } from "./router";
 import * as TanStackQueryIntegration from "./integrations/tanstack-query/root-provider";
+import { setAuthTokenGetter } from "./lib/tokenRegistry";
 import { env } from "./env";
 import "./styles/index.css";
 
@@ -37,6 +38,11 @@ function AppRouter() {
   useEffect(() => {
     router.invalidate();
   }, [isLoaded, isSignedIn]);
+
+  useEffect(() => {
+    setAuthTokenGetter(getToken);
+    return () => setAuthTokenGetter(null);
+  }, [getToken]);
 
   return (
     <RouterProvider

@@ -29,17 +29,23 @@ public class SoilProfile {
     @Column(nullable = false)
     private Double longitude;
 
+    private String city;
+
+    private String country;
+
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "user_id", nullable = false))
     private UserId userId;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public SoilProfile(String name, String description, Double latitude, Double longitude, UserId userId) {
+    public SoilProfile(String name, String description, Double latitude, Double longitude, String city, String country, UserId userId) {
         this.name = name;
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
         this.userId = userId;
+        this.city = city;
+        this.country = country;
     }
 }

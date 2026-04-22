@@ -16,11 +16,13 @@ import { Route as appIndexRouteImport } from "./routes/(app)/index"
 import { Route as AuthSsoCallbackRouteImport } from "./routes/auth/sso-callback"
 import { Route as AuthRegisterRouteImport } from "./routes/auth/register"
 import { Route as AuthLoginRouteImport } from "./routes/auth/login"
-import { Route as appSoilsRouteImport } from "./routes/(app)/soils"
 import { Route as appProfileRouteImport } from "./routes/(app)/profile"
 import { Route as appImportExportRouteImport } from "./routes/(app)/import-export"
+import { Route as appSoilsIndexRouteImport } from "./routes/(app)/soils/index"
+import { Route as appSoilsCreateRouteImport } from "./routes/(app)/soils/create"
 import { Route as appAnalysisCreateRouteImport } from "./routes/(app)/analysis/create"
 import { Route as appAnalysisIdRouteImport } from "./routes/(app)/analysis/$id"
+import { Route as appSoilsSoilIdEditRouteImport } from "./routes/(app)/soils/$soilId/edit"
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: "/auth",
@@ -56,11 +58,6 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: "/login",
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const appSoilsRoute = appSoilsRouteImport.update({
-  id: "/soils",
-  path: "/soils",
-  getParentRoute: () => appRouteRoute,
-} as any)
 const appProfileRoute = appProfileRouteImport.update({
   id: "/profile",
   path: "/profile",
@@ -69,6 +66,16 @@ const appProfileRoute = appProfileRouteImport.update({
 const appImportExportRoute = appImportExportRouteImport.update({
   id: "/import-export",
   path: "/import-export",
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appSoilsIndexRoute = appSoilsIndexRouteImport.update({
+  id: "/soils/",
+  path: "/soils/",
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appSoilsCreateRoute = appSoilsCreateRouteImport.update({
+  id: "/soils/create",
+  path: "/soils/create",
   getParentRoute: () => appRouteRoute,
 } as any)
 const appAnalysisCreateRoute = appAnalysisCreateRouteImport.update({
@@ -81,12 +88,16 @@ const appAnalysisIdRoute = appAnalysisIdRouteImport.update({
   path: "/analysis/$id",
   getParentRoute: () => appRouteRoute,
 } as any)
+const appSoilsSoilIdEditRoute = appSoilsSoilIdEditRouteImport.update({
+  id: "/soils/$soilId/edit",
+  path: "/soils/$soilId/edit",
+  getParentRoute: () => appRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   "/auth": typeof AuthRouteRouteWithChildren
   "/import-export": typeof appImportExportRoute
   "/profile": typeof appProfileRoute
-  "/soils": typeof appSoilsRoute
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
   "/auth/sso-callback": typeof AuthSsoCallbackRoute
@@ -94,11 +105,13 @@ export interface FileRoutesByFullPath {
   "/auth/": typeof AuthIndexRoute
   "/analysis/$id": typeof appAnalysisIdRoute
   "/analysis/create": typeof appAnalysisCreateRoute
+  "/soils/create": typeof appSoilsCreateRoute
+  "/soils/": typeof appSoilsIndexRoute
+  "/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
 }
 export interface FileRoutesByTo {
   "/import-export": typeof appImportExportRoute
   "/profile": typeof appProfileRoute
-  "/soils": typeof appSoilsRoute
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
   "/auth/sso-callback": typeof AuthSsoCallbackRoute
@@ -106,6 +119,9 @@ export interface FileRoutesByTo {
   "/auth": typeof AuthIndexRoute
   "/analysis/$id": typeof appAnalysisIdRoute
   "/analysis/create": typeof appAnalysisCreateRoute
+  "/soils/create": typeof appSoilsCreateRoute
+  "/soils": typeof appSoilsIndexRoute
+  "/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -113,7 +129,6 @@ export interface FileRoutesById {
   "/auth": typeof AuthRouteRouteWithChildren
   "/(app)/import-export": typeof appImportExportRoute
   "/(app)/profile": typeof appProfileRoute
-  "/(app)/soils": typeof appSoilsRoute
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
   "/auth/sso-callback": typeof AuthSsoCallbackRoute
@@ -121,6 +136,9 @@ export interface FileRoutesById {
   "/auth/": typeof AuthIndexRoute
   "/(app)/analysis/$id": typeof appAnalysisIdRoute
   "/(app)/analysis/create": typeof appAnalysisCreateRoute
+  "/(app)/soils/create": typeof appSoilsCreateRoute
+  "/(app)/soils/": typeof appSoilsIndexRoute
+  "/(app)/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -128,7 +146,6 @@ export interface FileRouteTypes {
     | "/auth"
     | "/import-export"
     | "/profile"
-    | "/soils"
     | "/auth/login"
     | "/auth/register"
     | "/auth/sso-callback"
@@ -136,11 +153,13 @@ export interface FileRouteTypes {
     | "/auth/"
     | "/analysis/$id"
     | "/analysis/create"
+    | "/soils/create"
+    | "/soils/"
+    | "/soils/$soilId/edit"
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/import-export"
     | "/profile"
-    | "/soils"
     | "/auth/login"
     | "/auth/register"
     | "/auth/sso-callback"
@@ -148,13 +167,15 @@ export interface FileRouteTypes {
     | "/auth"
     | "/analysis/$id"
     | "/analysis/create"
+    | "/soils/create"
+    | "/soils"
+    | "/soils/$soilId/edit"
   id:
     | "__root__"
     | "/(app)"
     | "/auth"
     | "/(app)/import-export"
     | "/(app)/profile"
-    | "/(app)/soils"
     | "/auth/login"
     | "/auth/register"
     | "/auth/sso-callback"
@@ -162,6 +183,9 @@ export interface FileRouteTypes {
     | "/auth/"
     | "/(app)/analysis/$id"
     | "/(app)/analysis/create"
+    | "/(app)/soils/create"
+    | "/(app)/soils/"
+    | "/(app)/soils/$soilId/edit"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -220,13 +244,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    "/(app)/soils": {
-      id: "/(app)/soils"
-      path: "/soils"
-      fullPath: "/soils"
-      preLoaderRoute: typeof appSoilsRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     "/(app)/profile": {
       id: "/(app)/profile"
       path: "/profile"
@@ -239,6 +256,20 @@ declare module "@tanstack/react-router" {
       path: "/import-export"
       fullPath: "/import-export"
       preLoaderRoute: typeof appImportExportRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    "/(app)/soils/": {
+      id: "/(app)/soils/"
+      path: "/soils"
+      fullPath: "/soils/"
+      preLoaderRoute: typeof appSoilsIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    "/(app)/soils/create": {
+      id: "/(app)/soils/create"
+      path: "/soils/create"
+      fullPath: "/soils/create"
+      preLoaderRoute: typeof appSoilsCreateRouteImport
       parentRoute: typeof appRouteRoute
     }
     "/(app)/analysis/create": {
@@ -255,25 +286,36 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof appAnalysisIdRouteImport
       parentRoute: typeof appRouteRoute
     }
+    "/(app)/soils/$soilId/edit": {
+      id: "/(app)/soils/$soilId/edit"
+      path: "/soils/$soilId/edit"
+      fullPath: "/soils/$soilId/edit"
+      preLoaderRoute: typeof appSoilsSoilIdEditRouteImport
+      parentRoute: typeof appRouteRoute
+    }
   }
 }
 
 interface appRouteRouteChildren {
   appImportExportRoute: typeof appImportExportRoute
   appProfileRoute: typeof appProfileRoute
-  appSoilsRoute: typeof appSoilsRoute
   appIndexRoute: typeof appIndexRoute
   appAnalysisIdRoute: typeof appAnalysisIdRoute
   appAnalysisCreateRoute: typeof appAnalysisCreateRoute
+  appSoilsCreateRoute: typeof appSoilsCreateRoute
+  appSoilsIndexRoute: typeof appSoilsIndexRoute
+  appSoilsSoilIdEditRoute: typeof appSoilsSoilIdEditRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appImportExportRoute: appImportExportRoute,
   appProfileRoute: appProfileRoute,
-  appSoilsRoute: appSoilsRoute,
   appIndexRoute: appIndexRoute,
   appAnalysisIdRoute: appAnalysisIdRoute,
   appAnalysisCreateRoute: appAnalysisCreateRoute,
+  appSoilsCreateRoute: appSoilsCreateRoute,
+  appSoilsIndexRoute: appSoilsIndexRoute,
+  appSoilsSoilIdEditRoute: appSoilsSoilIdEditRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(

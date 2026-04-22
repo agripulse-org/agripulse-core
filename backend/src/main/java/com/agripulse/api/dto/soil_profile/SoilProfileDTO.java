@@ -9,7 +9,9 @@ public record SoilProfileDTO(
         String name,
         String description,
         Double latitude,
-        Double longitude
+        Double longitude,
+        String city,
+        String country
 ) {
     public static SoilProfileDTO from(SoilProfile profile) {
         return new SoilProfileDTO(
@@ -17,7 +19,9 @@ public record SoilProfileDTO(
                 profile.getName(),
                 profile.getDescription(),
                 profile.getLatitude(),
-                profile.getLongitude()
+                profile.getLongitude(),
+                profile.getCity(),
+                profile.getCountry()
         );
     }
 }
