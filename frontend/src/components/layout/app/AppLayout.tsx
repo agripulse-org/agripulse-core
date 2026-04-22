@@ -16,6 +16,7 @@ import { useClerk, useUser } from "@clerk/clerk-react";
 import { toast } from "sonner";
 import { Chatbot } from "../../Chatbot";
 import { motion, AnimatePresence } from "motion/react";
+import { cn } from "@/lib/utils";
 
 export function AppLayout() {
   const { t, language, setLanguage } = useLanguage();
@@ -91,9 +92,10 @@ export function AppLayout() {
       {/* Sidebar */}
       <motion.aside
         initial={false}
-        // animate={{ x: isSidebarOpen ? 0 : "-100%" }}
-        transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="lg:translate-x-0 fixed lg:static w-64 bg-card border-r border-border flex flex-col z-50 h-full"
+        className={cn(
+          "fixed lg:static w-64 bg-card border-r border-border flex flex-col z-50 h-full transform transition-transform duration-300 ease-out lg:translate-x-0",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full",
+        )}
       >
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-3">
