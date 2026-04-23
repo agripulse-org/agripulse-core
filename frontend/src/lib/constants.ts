@@ -85,3 +85,65 @@ export const IMPORT_ANALYSES_CSV_CONTENT =
 
 export const IMPORT_TEMPLATE_CSV_CONTENT =
   "Location,Latitude,Longitude,Depth,pH,Texture,Nitrogen,Organic Carbon\n";
+
+export const SOIL_DETAILS_MOCK_ANALYSES = [
+  {
+    id: "1",
+    soilId: "1",
+    depth: "0-5 cm",
+    date: "2026-04-10",
+    topRecommendations: [
+      { plant: "Wheat", compatibility: 92 },
+      { plant: "Barley", compatibility: 88 },
+    ],
+  },
+  {
+    id: "2",
+    soilId: "1",
+    depth: "5-15 cm",
+    date: "2026-04-05",
+    topRecommendations: [
+      { plant: "Corn", compatibility: 90 },
+      { plant: "Potato", compatibility: 87 },
+    ],
+  },
+];
+
+export const SOIL_DETAILS_MOCK_CHAT_SESSIONS = [
+  {
+    id: "1",
+    title: "Wheat planting advice",
+    lastMessage: "Based on your pH levels...",
+    date: "2026-04-10",
+    messageCount: 8,
+  },
+  {
+    id: "2",
+    title: "Soil improvement tips",
+    lastMessage: "Consider adding organic matter...",
+    date: "2026-04-08",
+    messageCount: 5,
+  },
+];
+
+export const SOIL_DETAILS_MOCK_INITIAL_CHAT_MESSAGES = [
+  {
+    id: "1",
+    role: "assistant",
+    content: "Hello! How can I help you with this soil today?",
+    timestamp: new Date(),
+  },
+  {
+    id: "2",
+    role: "user",
+    content: "What crops would grow best here?",
+    timestamp: new Date(),
+  },
+  {
+    id: "3",
+    role: "assistant",
+    content:
+      "Based on your pH of 6.5 and good nitrogen levels, I recommend wheat, barley, or sunflower.",
+    timestamp: new Date(),
+  },
+] as Array<{ id: string; role: "assistant" | "user"; content: string; timestamp: Date }>;

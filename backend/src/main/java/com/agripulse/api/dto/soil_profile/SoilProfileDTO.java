@@ -2,6 +2,7 @@ package com.agripulse.api.dto.soil_profile;
 
 import com.agripulse.api.model.domain.SoilProfile;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record SoilProfileDTO(
@@ -11,7 +12,8 @@ public record SoilProfileDTO(
         Double latitude,
         Double longitude,
         String city,
-        String country
+        String country,
+        LocalDateTime createdAt
 ) {
     public static SoilProfileDTO from(SoilProfile profile) {
         return new SoilProfileDTO(
@@ -21,7 +23,8 @@ public record SoilProfileDTO(
                 profile.getLatitude(),
                 profile.getLongitude(),
                 profile.getCity(),
-                profile.getCountry()
+                profile.getCountry(),
+                profile.getCreatedAt()
         );
     }
 }

@@ -31,6 +31,10 @@ function SoilsRoute() {
     navigate({ to: "/soils/$soilId/edit", params: { soilId } });
   };
 
+  const handleOpenDetails = (soilId: string) => {
+    navigate({ to: "/soils/$soilId", params: { soilId } });
+  };
+
   const handleDelete = (soil: (typeof soils)[number]) => {
     setDeletingSoilProfile(soil);
   };
@@ -68,7 +72,8 @@ function SoilsRoute() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group"
+                onClick={() => handleOpenDetails(soil.id)}
+                className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group cursor-pointer"
               >
                 <div className="mb-4">
                   <h3 className="text-xl mb-2">{soil.name}</h3>
@@ -88,20 +93,29 @@ function SoilsRoute() {
 
                 <div className="flex gap-2">
                   <button
-                    onClick={() => navigate({ to: "/analysis/create" })}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      navigate({ to: "/analysis/create" });
+                    }}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all"
                   >
                     <FlaskConical className="w-4 h-4" />
                     <span>{t("soils.analyze")}</span>
                   </button>
                   <button
-                    onClick={() => handleEdit(soil.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleEdit(soil.id);
+                    }}
                     className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-all"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(soil)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleDelete(soil);
+                    }}
                     className="px-4 py-2 border border-destructive text-destructive rounded-lg hover:bg-destructive/10 transition-all"
                   >
                     <Trash2 className="w-4 h-4" />

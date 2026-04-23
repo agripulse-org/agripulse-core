@@ -6,6 +6,7 @@ export type SoilProfileResponse = {
   longitude: number;
   city: string | null;
   country: string | null;
+  createdAt: string;
 };
 
 export type CreateSoilProfileRequest = {

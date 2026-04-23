@@ -22,6 +22,7 @@ import { Route as appSoilsIndexRouteImport } from "./routes/(app)/soils/index"
 import { Route as appSoilsCreateRouteImport } from "./routes/(app)/soils/create"
 import { Route as appAnalysisCreateRouteImport } from "./routes/(app)/analysis/create"
 import { Route as appAnalysisIdRouteImport } from "./routes/(app)/analysis/$id"
+import { Route as appSoilsSoilIdIndexRouteImport } from "./routes/(app)/soils/$soilId/index"
 import { Route as appSoilsSoilIdEditRouteImport } from "./routes/(app)/soils/$soilId/edit"
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -88,6 +89,11 @@ const appAnalysisIdRoute = appAnalysisIdRouteImport.update({
   path: "/analysis/$id",
   getParentRoute: () => appRouteRoute,
 } as any)
+const appSoilsSoilIdIndexRoute = appSoilsSoilIdIndexRouteImport.update({
+  id: "/soils/$soilId/",
+  path: "/soils/$soilId/",
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appSoilsSoilIdEditRoute = appSoilsSoilIdEditRouteImport.update({
   id: "/soils/$soilId/edit",
   path: "/soils/$soilId/edit",
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   "/soils/create": typeof appSoilsCreateRoute
   "/soils/": typeof appSoilsIndexRoute
   "/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
+  "/soils/$soilId/": typeof appSoilsSoilIdIndexRoute
 }
 export interface FileRoutesByTo {
   "/import-export": typeof appImportExportRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   "/soils/create": typeof appSoilsCreateRoute
   "/soils": typeof appSoilsIndexRoute
   "/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
+  "/soils/$soilId": typeof appSoilsSoilIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   "/(app)/soils/create": typeof appSoilsCreateRoute
   "/(app)/soils/": typeof appSoilsIndexRoute
   "/(app)/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
+  "/(app)/soils/$soilId/": typeof appSoilsSoilIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | "/soils/create"
     | "/soils/"
     | "/soils/$soilId/edit"
+    | "/soils/$soilId/"
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/import-export"
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | "/soils/create"
     | "/soils"
     | "/soils/$soilId/edit"
+    | "/soils/$soilId"
   id:
     | "__root__"
     | "/(app)"
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | "/(app)/soils/create"
     | "/(app)/soils/"
     | "/(app)/soils/$soilId/edit"
+    | "/(app)/soils/$soilId/"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -286,6 +298,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof appAnalysisIdRouteImport
       parentRoute: typeof appRouteRoute
     }
+    "/(app)/soils/$soilId/": {
+      id: "/(app)/soils/$soilId/"
+      path: "/soils/$soilId"
+      fullPath: "/soils/$soilId/"
+      preLoaderRoute: typeof appSoilsSoilIdIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     "/(app)/soils/$soilId/edit": {
       id: "/(app)/soils/$soilId/edit"
       path: "/soils/$soilId/edit"
@@ -305,6 +324,7 @@ interface appRouteRouteChildren {
   appSoilsCreateRoute: typeof appSoilsCreateRoute
   appSoilsIndexRoute: typeof appSoilsIndexRoute
   appSoilsSoilIdEditRoute: typeof appSoilsSoilIdEditRoute
+  appSoilsSoilIdIndexRoute: typeof appSoilsSoilIdIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
@@ -316,6 +336,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appSoilsCreateRoute: appSoilsCreateRoute,
   appSoilsIndexRoute: appSoilsIndexRoute,
   appSoilsSoilIdEditRoute: appSoilsSoilIdEditRoute,
+  appSoilsSoilIdIndexRoute: appSoilsSoilIdIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
