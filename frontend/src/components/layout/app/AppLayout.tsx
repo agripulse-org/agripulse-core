@@ -9,6 +9,7 @@ import {
   Globe,
   Menu,
   X,
+  StickyNote,
   Upload,
 } from "lucide-react";
 import { useState } from "react";
@@ -34,6 +35,7 @@ export function AppLayout() {
   const navItems = [
     { path: "/", icon: LayoutDashboard, label: t("nav.dashboard") },
     { path: "/soils", icon: Layers, label: t("nav.soils") },
+    { path: "/notes", icon: StickyNote, label: t("nav.notes") },
     { path: "/import-export", icon: Upload, label: "Import/Export" },
   ];
 

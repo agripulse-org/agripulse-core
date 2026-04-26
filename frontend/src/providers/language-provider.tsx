@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 
-type Language = "en" | "mk";
+export type Language = "en" | "mk";
 
 interface LanguageContextType {
   language: Language;
@@ -38,6 +38,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.dashboard": "Dashboard",
     "nav.soils": "My Soils",
     "nav.assistant": "AI Assistant",
+    "nav.notes": "Notes",
     "nav.settings": "Settings",
     "nav.logout": "Logout",
 
@@ -127,6 +128,7 @@ const translations: Record<Language, Record<string, string>> = {
       "This soil profile does not exist or you do not have access to it.",
     "soils.details.tabs.overview": "Overview",
     "soils.details.tabs.analyses": "Analyses",
+    "soils.details.tabs.notes": "Notes",
     "soils.details.tabs.chat": "AI Sessions",
     "soils.details.totalAnalyses": "Total Analyses",
     "soils.details.recentAnalyses": "Recent Analyses",
@@ -183,6 +185,56 @@ const translations: Record<Language, Record<string, string>> = {
     "common.cancel": "Cancel",
     "common.save": "Save",
     "common.confirm": "Confirm",
+    "common.delete": "Delete",
+    "common.retry": "Try again",
+    "common.edit": "Edit",
+
+    "notes.title": "Notes",
+    "notes.subtitle": "View and manage notes across all your soils.",
+    "notes.new": "New note",
+    "notes.edit": "Edit note",
+    "notes.searchPlaceholder": "Search notes",
+    "notes.filterTag": "Tag",
+    "notes.allTags": "All",
+    "notes.loadError": "Could not load notes.",
+    "notes.emptyTitle": "No notes found",
+    "notes.emptyDescription": "Create your first note and attach it to a soil profile.",
+    "notes.soil": "Soil profile",
+    "notes.soilRequired": "Please select a soil profile.",
+    "notes.deleteConfirm": "Delete this note? This cannot be undone.",
+    "notes.deleteTitle": "Delete note",
+    "notes.deleteDescription":
+      'Are you sure you want to delete "{title}"? This action cannot be undone.',
+    "notes.deleted": "Note deleted",
+    "notes.deleteFailed": "Could not delete the note.",
+    "notes.details.created": "Created",
+    "notes.details.updated": "Last updated",
+
+    "soils.details.notes.title": "Field notes",
+    "soils.details.notes.subtitle":
+      "Keep private observations, plans, and reminders for this soil profile.",
+    "soils.details.notes.add": "Add note",
+    "soils.details.notes.emptyTitle": "No notes yet",
+    "soils.details.notes.emptyDescription":
+      "Record treatments, sampling notes, or anything you want to remember about this soil.",
+    "soils.details.notes.createFirst": "Add your first note",
+    "soils.details.notes.edit": "Edit note",
+    "soils.details.notes.newTitle": "New note",
+    "soils.details.notes.noteTitle": "Title",
+    "soils.details.notes.noteDescription": "Description",
+    "soils.details.notes.lastUpdated": "Last updated",
+    "soils.details.notes.tags": "Tags",
+    "soils.details.notes.tagsPlaceholder": "Type a tag and press Enter",
+    "soils.details.notes.addTag": "Add",
+    "soils.details.notes.removeTag": "Remove tag",
+    "soils.details.notes.deleteConfirm": "Delete this note? This cannot be undone.",
+    "soils.details.notes.deleted": "Note deleted",
+    "soils.details.notes.deleteFailed": "Could not delete the note.",
+    "soils.details.notes.loadError": "Could not load notes.",
+    "soils.details.notes.titleRequired": "Please enter a title.",
+    "soils.details.notes.saveSuccess": "Note updated",
+    "soils.details.notes.createSuccess": "Note created",
+    "soils.details.notes.saveFailed": "Could not save the note.",
   },
   mk: {
     // Auth
@@ -212,6 +264,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.dashboard": "Контролна табла",
     "nav.soils": "Мои почви",
     "nav.assistant": "AI Асистент",
+    "nav.notes": "Белешки",
     "nav.settings": "Поставки",
     "nav.logout": "Одјава",
 
@@ -301,6 +354,7 @@ const translations: Record<Language, Record<string, string>> = {
       "Овој профил на почва не постои или немате пристап до него.",
     "soils.details.tabs.overview": "Преглед",
     "soils.details.tabs.analyses": "Анализи",
+    "soils.details.tabs.notes": "Белешки",
     "soils.details.tabs.chat": "AI сесии",
     "soils.details.totalAnalyses": "Вкупно анализи",
     "soils.details.recentAnalyses": "Неодамнешни анализи",
@@ -359,6 +413,56 @@ const translations: Record<Language, Record<string, string>> = {
     "common.cancel": "Откажи",
     "common.save": "Зачувај",
     "common.confirm": "Потврди",
+    "common.delete": "Избриши",
+    "common.retry": "Обиди се повторно",
+    "common.edit": "Уреди",
+
+    "notes.title": "Белешки",
+    "notes.subtitle": "Преглед и управување со белешките за сите ваши почви.",
+    "notes.new": "Нова белешка",
+    "notes.edit": "Уреди белешка",
+    "notes.searchPlaceholder": "Пребарај белешки",
+    "notes.filterTag": "Таг",
+    "notes.allTags": "Сите",
+    "notes.loadError": "Не можевме да ги вчитаме белешките.",
+    "notes.emptyTitle": "Нема белешки",
+    "notes.emptyDescription": "Креирајте ја првата белешка и поврзете ја со профил на почва.",
+    "notes.soil": "Профил на почва",
+    "notes.soilRequired": "Изберете профил на почва.",
+    "notes.deleteConfirm": "Да се избрише оваа белешка? Ова не може да се врати.",
+    "notes.deleteTitle": "Избриши белешка",
+    "notes.deleteDescription":
+      "Дали сте сигурни дека сакате да ја избришете „{title}“? Ова дејство не може да се врати.",
+    "notes.deleted": "Белешката е избришана",
+    "notes.deleteFailed": "Не можевме да ја избришеме белешката.",
+    "notes.details.created": "Креирано",
+    "notes.details.updated": "Последна промена",
+
+    "soils.details.notes.title": "Белешки од полето",
+    "soils.details.notes.subtitle":
+      "Приватни забелешки, планови и потсетници за овој профил на почва.",
+    "soils.details.notes.add": "Додај белешка",
+    "soils.details.notes.emptyTitle": "Сè уште нема белешки",
+    "soils.details.notes.emptyDescription":
+      "Запишете третмани, примероци или сè што сакате да го запомните за оваа почва.",
+    "soils.details.notes.createFirst": "Додајте ја првата белешка",
+    "soils.details.notes.edit": "Уреди белешка",
+    "soils.details.notes.newTitle": "Нова белешка",
+    "soils.details.notes.noteTitle": "Наслов",
+    "soils.details.notes.noteDescription": "Опис",
+    "soils.details.notes.lastUpdated": "Последна промена",
+    "soils.details.notes.tags": "Тагови",
+    "soils.details.notes.tagsPlaceholder": "Внесете таг и притиснете Enter",
+    "soils.details.notes.addTag": "Додај",
+    "soils.details.notes.removeTag": "Тргни таг",
+    "soils.details.notes.deleteConfirm": "Да се избрише оваа белешка? Ова не може да се врати.",
+    "soils.details.notes.deleted": "Белешката е избришана",
+    "soils.details.notes.deleteFailed": "Не можевме да ја избришеме белешката.",
+    "soils.details.notes.loadError": "Не можевме да ги вчитаме белешките.",
+    "soils.details.notes.titleRequired": "Внесете наслов.",
+    "soils.details.notes.saveSuccess": "Белешката е ажурирана",
+    "soils.details.notes.createSuccess": "Белешката е креирана",
+    "soils.details.notes.saveFailed": "Не можевме да ја зачуваме белешката.",
   },
 };
 

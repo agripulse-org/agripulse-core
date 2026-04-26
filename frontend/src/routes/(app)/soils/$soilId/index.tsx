@@ -14,6 +14,7 @@ import {
   FileText,
   FlaskConical,
   ChevronRight,
+  StickyNote,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
@@ -27,6 +28,7 @@ import {
   SOIL_DETAILS_MOCK_INITIAL_CHAT_MESSAGES,
 } from "@/lib/constants";
 import { APIError } from "@/services/apiClient";
+import { SoilNotesTab } from "@/components/soils/details/SoilNotesTab";
 
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
@@ -47,7 +49,7 @@ export const Route = createFileRoute("/(app)/soils/$soilId/")({
   component: SoilDetailsPage,
 });
 
-type Tab = "overview" | "analyses" | "chat";
+type Tab = "overview" | "analyses" | "notes" | "chat";
 
 export function SoilDetailsPage() {
   const { soilId: id } = Route.useParams();
@@ -68,6 +70,7 @@ export function SoilDetailsPage() {
   const tabs = [
     { id: "overview" as Tab, label: t("soils.details.tabs.overview"), icon: Layers },
     { id: "analyses" as Tab, label: t("soils.details.tabs.analyses"), icon: FlaskConical },
+    { id: "notes" as Tab, label: t("soils.details.tabs.notes"), icon: StickyNote },
     { id: "chat" as Tab, label: t("soils.details.tabs.chat"), icon: MessageSquare },
   ];
 
@@ -181,6 +184,7 @@ export function SoilDetailsPage() {
               onCreateNew={() => setShowNewAnalysisModal(true)}
             />
           )}
+          {activeTab === "notes" && <SoilNotesTab key="notes" soilProfileId={id} />}
           {activeTab === "chat" && (
             <ChatSessionsTab
               key="chat"
