@@ -18,7 +18,6 @@ import { Route as AuthRegisterRouteImport } from "./routes/auth/register"
 import { Route as AuthLoginRouteImport } from "./routes/auth/login"
 import { Route as appProfileRouteImport } from "./routes/(app)/profile"
 import { Route as appNotesRouteImport } from "./routes/(app)/notes"
-import { Route as appImportExportRouteImport } from "./routes/(app)/import-export"
 import { Route as appSoilsIndexRouteImport } from "./routes/(app)/soils/index"
 import { Route as appSoilsCreateRouteImport } from "./routes/(app)/soils/create"
 import { Route as appAnalysisCreateRouteImport } from "./routes/(app)/analysis/create"
@@ -70,11 +69,6 @@ const appNotesRoute = appNotesRouteImport.update({
   path: "/notes",
   getParentRoute: () => appRouteRoute,
 } as any)
-const appImportExportRoute = appImportExportRouteImport.update({
-  id: "/import-export",
-  path: "/import-export",
-  getParentRoute: () => appRouteRoute,
-} as any)
 const appSoilsIndexRoute = appSoilsIndexRouteImport.update({
   id: "/soils/",
   path: "/soils/",
@@ -108,7 +102,6 @@ const appSoilsSoilIdEditRoute = appSoilsSoilIdEditRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/auth": typeof AuthRouteRouteWithChildren
-  "/import-export": typeof appImportExportRoute
   "/notes": typeof appNotesRoute
   "/profile": typeof appProfileRoute
   "/auth/login": typeof AuthLoginRoute
@@ -124,7 +117,6 @@ export interface FileRoutesByFullPath {
   "/soils/$soilId/": typeof appSoilsSoilIdIndexRoute
 }
 export interface FileRoutesByTo {
-  "/import-export": typeof appImportExportRoute
   "/notes": typeof appNotesRoute
   "/profile": typeof appProfileRoute
   "/auth/login": typeof AuthLoginRoute
@@ -143,7 +135,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/(app)": typeof appRouteRouteWithChildren
   "/auth": typeof AuthRouteRouteWithChildren
-  "/(app)/import-export": typeof appImportExportRoute
   "/(app)/notes": typeof appNotesRoute
   "/(app)/profile": typeof appProfileRoute
   "/auth/login": typeof AuthLoginRoute
@@ -162,7 +153,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | "/auth"
-    | "/import-export"
     | "/notes"
     | "/profile"
     | "/auth/login"
@@ -178,7 +168,6 @@ export interface FileRouteTypes {
     | "/soils/$soilId/"
   fileRoutesByTo: FileRoutesByTo
   to:
-    | "/import-export"
     | "/notes"
     | "/profile"
     | "/auth/login"
@@ -196,7 +185,6 @@ export interface FileRouteTypes {
     | "__root__"
     | "/(app)"
     | "/auth"
-    | "/(app)/import-export"
     | "/(app)/notes"
     | "/(app)/profile"
     | "/auth/login"
@@ -282,13 +270,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof appNotesRouteImport
       parentRoute: typeof appRouteRoute
     }
-    "/(app)/import-export": {
-      id: "/(app)/import-export"
-      path: "/import-export"
-      fullPath: "/import-export"
-      preLoaderRoute: typeof appImportExportRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     "/(app)/soils/": {
       id: "/(app)/soils/"
       path: "/soils"
@@ -335,7 +316,6 @@ declare module "@tanstack/react-router" {
 }
 
 interface appRouteRouteChildren {
-  appImportExportRoute: typeof appImportExportRoute
   appNotesRoute: typeof appNotesRoute
   appProfileRoute: typeof appProfileRoute
   appIndexRoute: typeof appIndexRoute
@@ -348,7 +328,6 @@ interface appRouteRouteChildren {
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
-  appImportExportRoute: appImportExportRoute,
   appNotesRoute: appNotesRoute,
   appProfileRoute: appProfileRoute,
   appIndexRoute: appIndexRoute,

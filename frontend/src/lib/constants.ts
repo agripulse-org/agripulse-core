@@ -8,9 +8,6 @@ export const ANALYSIS_DEPTH_OPTIONS = [
   { value: "30-60", label: "30–60 cm", description: "Deep layer" },
 ];
 
-export const IMPORT_UPLOAD_STATUSES = ["idle", "success", "error"] as const;
-export type ImportUploadStatus = (typeof IMPORT_UPLOAD_STATUSES)[number];
-
 // ==== Mock data ====
 
 export const DASHBOARD_MOCK_ANALYSES = [
@@ -79,12 +76,6 @@ export const ANALYSIS_DETAILS_MOCK = {
     { plant: "Potato", compatibility: 75, reason: "Good moisture retention" },
   ],
 };
-
-export const IMPORT_ANALYSES_CSV_CONTENT =
-  "Location,Date,Depth,pH,Nitrogen,Top Plant\nSkopje,2026-04-10,0-5cm,6.5,0.14,Wheat\n";
-
-export const IMPORT_TEMPLATE_CSV_CONTENT =
-  "Location,Latitude,Longitude,Depth,pH,Texture,Nitrogen,Organic Carbon\n";
 
 export const SOIL_DETAILS_MOCK_ANALYSES = [
   {

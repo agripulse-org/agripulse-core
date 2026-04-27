@@ -10,7 +10,6 @@ import {
   Menu,
   X,
   StickyNote,
-  Upload,
 } from "lucide-react";
 import { useState } from "react";
 import { useClerk, useUser } from "@clerk/clerk-react";
@@ -37,7 +36,6 @@ export function AppLayout() {
     { path: "/", icon: LayoutDashboard, label: t("nav.dashboard") },
     { path: "/soils", icon: Layers, label: t("nav.soils") },
     { path: "/notes", icon: StickyNote, label: t("nav.notes") },
-    { path: "/import-export", icon: Upload, label: t("nav.importExport") },
   ];
 
   const handleLogout = async () => {
