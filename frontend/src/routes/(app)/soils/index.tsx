@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { Plus, MapPin, Edit, Trash2, Layers, FlaskConical } from "lucide-react";
 import { motion } from "motion/react";
 import { EmptyState } from "@/components/EmptyState";
@@ -15,8 +15,9 @@ export const Route = createFileRoute("/(app)/soils/")({
 });
 
 function SoilsRoute() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+
   const { data: soils } = useSuspenseQuery(getSoilProfilesQueryOptions());
   const [deletingSoilProfile, setDeletingSoilProfile] = useState<(typeof soils)[number] | null>(
     null,
@@ -132,9 +133,7 @@ function SoilsRoute() {
         open={!!deletingSoilProfile}
         onOpenChange={(open) => !open && setDeletingSoilProfile(null)}
         title={t("soils.deleteConfirmTitle")}
-        description={(soil) =>
-          t("soils.deleteConfirmDescription").replace("{name}", soil?.name ?? "")
-        }
+        description={(soil) => t("soils.deleteConfirmDescription", { name: soil?.name })}
         confirmLabel={t("soils.delete")}
         onConfirm={(soil) => {
           deleteSoilProfileMutation.mutate(soil.id, {

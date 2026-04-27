@@ -1,25 +1,31 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
-import { useLanguage } from "@/providers/language-provider";
 import { useCreateSoilNote, useUpdateSoilNote } from "@/data/soilNote";
 import { APIError } from "@/services/apiClient";
 import type { SoilNoteResponse } from "@/services/soil-note";
 import { Badge } from "@/components/ui/badge";
 
-const noteFormSchema = z.object({
-  soilProfileId: z.string().min(1, "Soil is required"),
-  title: z.string().trim().min(1, "Title is required").max(255),
-  description: z.string(),
-  tags: z.array(z.object({ value: z.string() })),
-});
+const buildNoteFormSchema = (t: TFunction) =>
+  z.object({
+    soilProfileId: z.string().min(1, t("notes.soilRequired")),
+    title: z
+      .string()
+      .trim()
+      .min(1, t("notes.validation.titleRequired"))
+      .max(255, t("notes.validation.titleMax")),
+    description: z.string(),
+    tags: z.array(z.object({ value: z.string() })),
+  });
 
-type NoteFormValues = z.infer<typeof noteFormSchema>;
+type NoteFormValues = z.infer<ReturnType<typeof buildNoteFormSchema>>;
 
 interface NoteFormModalProps {
   soilProfileId?: string;
@@ -34,12 +40,13 @@ export function NoteFormModal({
   initial,
   onClose,
 }: NoteFormModalProps) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   const canSelectSoil = !initialSoilId;
 
   const [tagInput, setTagInput] = useState("");
 
+  const noteFormSchema = useMemo(() => buildNoteFormSchema(t), [t]);
   const {
     register,
     handleSubmit,
@@ -178,7 +185,7 @@ export function NoteFormModal({
               id="note-form-description"
               {...register("description")}
               rows={8}
-              className="w-full px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 resize-y min-h-[200px]"
+              className="w-full px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 resize-y min-h-50"
             />
           </div>
 

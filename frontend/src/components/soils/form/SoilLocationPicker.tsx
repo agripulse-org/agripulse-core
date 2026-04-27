@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { LocateFixed, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { geocodingService } from "@/services/geocoding";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/lib/constants";
 
@@ -22,7 +22,8 @@ interface SoilLocationPickerProps {
 }
 
 export function SoilLocationPicker({ latitude, longitude, onChange }: SoilLocationPickerProps) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
+
   const [search, setSearch] = useState("");
   const [isLocating, setIsLocating] = useState(false);
 
@@ -92,7 +93,7 @@ export function SoilLocationPicker({ latitude, longitude, onChange }: SoilLocati
       <div className="w-full flex gap-3 items-end">
         <div className="grid gap-3 sm:grid-cols-2 grow">
           <div>
-            <label className="mb-2 block text-sm">Latitude</label>
+            <label className="mb-2 block text-sm">{t("analysis.new.latitude")}</label>
             <input
               type="number"
               step="any"
@@ -102,7 +103,7 @@ export function SoilLocationPicker({ latitude, longitude, onChange }: SoilLocati
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm">Longitude</label>
+            <label className="mb-2 block text-sm">{t("analysis.new.longitude")}</label>
             <input
               type="number"
               step="any"
@@ -118,8 +119,8 @@ export function SoilLocationPicker({ latitude, longitude, onChange }: SoilLocati
           onClick={handleLocate}
           disabled={isLocating}
           className="h-12.5 w-12.5 shrink-0 rounded-xl p-0"
-          aria-label="Use my location"
-          title="Use my location"
+          aria-label={t("soils.useMyLocation")}
+          title={t("soils.useMyLocation")}
         >
           <LocateFixed className="size-5" />
         </Button>

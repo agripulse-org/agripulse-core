@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   MapPin,
@@ -30,19 +30,20 @@ function AnalysisDetailsRoute() {
 }
 
 function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleDelete = () => {
-    toast.success("Analysis deleted successfully");
+    toast.success(t("analysis.details.deleted"));
     setTimeout(() => navigate({ to: "/" }), 500);
   };
 
   const handleDownloadPDF = () => {
-    toast.success("Downloading PDF report...");
+    toast.success(t("analysis.details.downloading"));
     setTimeout(() => {
-      toast.success("PDF report downloaded");
+      toast.success(t("analysis.details.downloaded"));
     }, 1500);
   };
 
@@ -68,12 +69,12 @@ function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
             className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Dashboard</span>
+            <span>{t("analysis.details.backToDashboard")}</span>
           </button>
 
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
             <div>
-              <h1 className="text-3xl mb-4">Soil Analysis Report #{id}</h1>
+              <h1 className="text-3xl mb-4">{t("analysis.details.reportTitle", { id })}</h1>
               <div className="flex flex-wrap gap-4 text-white/90">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
@@ -97,7 +98,7 @@ function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
               >
                 <Download className="w-4 h-4" />
                 <span className="hidden sm:inline">{t("analysis.details.downloadPDF")}</span>
-                <span className="sm:hidden">Download PDF</span>
+                <span className="sm:hidden">{t("analysis.details.downloadPDFShort")}</span>
               </button>
               <button
                 onClick={() => setShowDeleteModal(true)}
@@ -238,7 +239,7 @@ function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
           <div className="flex gap-3">
             <AlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-medium mb-1">Important Note</h4>
+              <h4 className="font-medium mb-1">{t("analysis.details.importantNote")}</h4>
               <p className="text-sm text-muted-foreground">{t("analysis.details.disclaimer")}</p>
             </div>
           </div>
@@ -252,22 +253,22 @@ function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-card border border-border rounded-2xl p-6 max-w-md w-full"
           >
-            <h3 className="text-xl mb-4">Confirm Deletion</h3>
+            <h3 className="text-xl mb-4">{t("analysis.details.confirmDeletionTitle")}</h3>
             <p className="text-muted-foreground mb-6">
-              Are you sure you want to delete this analysis? This action cannot be undone.
+              {t("analysis.details.confirmDeletionDescription")}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
                 className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-all"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={handleDelete}
                 className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-all"
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           </motion.div>

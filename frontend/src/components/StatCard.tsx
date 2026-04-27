@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 interface StatCardProps {
   title: string;
@@ -23,6 +24,8 @@ export function StatCard({
   trend,
   children,
 }: StatCardProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-card border border-border rounded-xl p-6 hover:shadow-md transition-all">
       <div className="flex items-start justify-between mb-4">
@@ -47,7 +50,7 @@ export function StatCard({
           <span className={trend.isPositive ? "text-green-600" : "text-red-600"}>
             {trend.isPositive ? "↑" : "↓"} {Math.abs(trend.value)}%
           </span>
-          <span className="text-muted-foreground">vs last month</span>
+          <span className="text-muted-foreground">{t("common.vsLastMonth")}</span>
         </div>
       )}
 

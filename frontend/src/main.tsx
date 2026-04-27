@@ -4,11 +4,11 @@ import { RouterProvider } from "@tanstack/react-router";
 import { ClerkProvider, useAuth } from "@clerk/clerk-react";
 import { ThemeProvider } from "./providers/theme-provider";
 import { ToastProvider } from "./providers/toast-provider";
-import { LanguageProvider } from "./providers/language-provider";
 import { getRouter } from "./router";
 import * as TanStackQueryIntegration from "./integrations/tanstack-query/root-provider";
 import { setAuthTokenGetter } from "./lib/tokenRegistry";
 import { env } from "./env";
+import "./i18n";
 import "./styles/index.css";
 
 const router = getRouter();
@@ -20,12 +20,10 @@ if (rootElement && !rootElement.innerHTML) {
     <StrictMode>
       <TanStackQueryIntegration.Provider>
         <ClerkProvider publishableKey={env.VITE_CLERK_PUBLISHABLE_KEY}>
-          <LanguageProvider>
-            <ThemeProvider>
-              <AppRouter />
-              <ToastProvider />
-            </ThemeProvider>
-          </LanguageProvider>
+          <ThemeProvider>
+            <AppRouter />
+            <ToastProvider />
+          </ThemeProvider>
         </ClerkProvider>
       </TanStackQueryIntegration.Provider>
     </StrictMode>,

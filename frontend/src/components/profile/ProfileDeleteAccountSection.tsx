@@ -4,8 +4,10 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export function ProfileDeleteAccountSection() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useUser();
   const { signOut } = useClerk();
@@ -22,10 +24,10 @@ export function ProfileDeleteAccountSection() {
     try {
       await user.delete();
       await signOut();
-      toast.success("Your account was deleted.");
+      toast.success(t("profile.delete.success"));
       navigate({ to: "/auth/register" });
     } catch {
-      toast.error("Account deletion needs additional Clerk security verification.");
+      toast.error(t("profile.delete.securityVerificationRequired"));
       setShowDeleteModal(false);
     } finally {
       setIsDeleting(false);
@@ -42,16 +44,16 @@ export function ProfileDeleteAccountSection() {
       >
         <h2 className="text-xl mb-2 text-destructive flex items-center gap-2">
           <Trash2 className="w-5 h-5" />
-          Danger Zone
+          {t("profile.delete.dangerZoneTitle")}
         </h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Once you delete your account, there is no going back. Please be certain.
+          {t("profile.delete.dangerZoneDescription")}
         </p>
         <button
           onClick={() => setShowDeleteModal(true)}
           className="px-4 py-2 border border-destructive text-destructive rounded-lg hover:bg-destructive hover:text-destructive-foreground transition-all"
         >
-          Delete Account
+          {t("profile.delete.deleteAccount")}
         </button>
       </motion.section>
 
@@ -62,24 +64,21 @@ export function ProfileDeleteAccountSection() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-card border border-border rounded-2xl p-6 max-w-md w-full"
           >
-            <h3 className="text-xl mb-4 text-destructive">Delete Account?</h3>
-            <p className="text-muted-foreground mb-6">
-              This action is permanent and cannot be undone. All your data, analyses, and soils will
-              be permanently deleted.
-            </p>
+            <h3 className="text-xl mb-4 text-destructive">{t("profile.delete.confirmTitle")}</h3>
+            <p className="text-muted-foreground mb-6">{t("profile.delete.confirmDescription")}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
                 className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-all"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={handleDeleteAccount}
                 disabled={isDeleting}
                 className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-all"
               >
-                {isDeleting ? "Deleting..." : "Delete Forever"}
+                {isDeleting ? t("common.deleting") : t("profile.delete.deleteForever")}
               </button>
             </div>
           </motion.div>

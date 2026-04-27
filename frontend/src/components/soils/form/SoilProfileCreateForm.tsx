@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, Loader2, Search } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { SoilLocationPicker } from "./SoilLocationPicker";
 import { useSoilProfileForm } from "./useSoilProfileForm";
 import type { SoilProfileFormValues } from "./useSoilProfileForm";
@@ -17,7 +17,8 @@ export function SoilProfileCreateForm({
   onSubmit,
   onCancel,
 }: SoilProfileCreateFormProps) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
+
   const [step, setStep] = useState(1);
   const {
     register,
@@ -195,7 +196,9 @@ export function SoilProfileCreateForm({
                 <span>{step === 1 ? t("common.cancel") : t("soils.back")}</span>
               </button>
 
-              <div className="text-sm text-muted-foreground">Step {step} of 2</div>
+              <div className="text-sm text-muted-foreground">
+                {t("soils.stepProgress", { step, totalSteps: 2 })}
+              </div>
 
               {step === 1 ? (
                 <button

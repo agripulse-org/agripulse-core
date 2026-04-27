@@ -1,11 +1,16 @@
 import { useMemo } from "react";
 import { mk, enGB } from "date-fns/locale";
 import { format } from "date-fns";
-import { useLanguage } from "@/providers/language-provider";
-import type { Language } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
+import { isValidLanguageCode } from "@/i18n";
+import type { AppLanguage } from "@/i18n";
 
 export function useFormatters() {
-  const { language: currentLanguage } = useLanguage();
+  const { i18n } = useTranslation();
+
+  const currentLanguage: AppLanguage = isValidLanguageCode(i18n.resolvedLanguage)
+    ? i18n.resolvedLanguage
+    : "en";
 
   return useMemo(() => {
     const dateFormatter = getDateFormatter(currentLanguage);
@@ -57,7 +62,7 @@ export function useFormatters() {
 }
 
 // Custom formatters
-function getDateFormatter(languageCode: Language) {
+function getDateFormatter(languageCode: AppLanguage) {
   const locale = languageCode === "mk" ? "mk" : "en-GB";
 
   return new Intl.DateTimeFormat(locale, {
@@ -67,7 +72,7 @@ function getDateFormatter(languageCode: Language) {
   });
 }
 
-function getTimeFormatter(languageCode: Language) {
+function getTimeFormatter(languageCode: AppLanguage) {
   const locale = languageCode === "mk" ? "mk" : "en-GB";
 
   return new Intl.DateTimeFormat(locale, {

@@ -1,21 +1,27 @@
 import { useUser } from "@clerk/clerk-react";
 import { Mail, Save, User } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
-const profileSchema = z.object({
-  firstName: z.string().trim().min(1, "First name is required"),
-  lastName: z.string().trim().optional(),
-});
+const buildProfileSchema = (t: TFunction) =>
+  z.object({
+    firstName: z.string().trim().min(1, t("profile.personal.firstNameRequired")),
+    lastName: z.string().trim().optional(),
+  });
 
-type ProfileFormValues = z.infer<typeof profileSchema>;
+type ProfileFormValues = z.infer<ReturnType<typeof buildProfileSchema>>;
 
 export function ProfilePersonalInfoSection() {
+  const { t } = useTranslation();
   const { user, isLoaded, isSignedIn } = useUser();
+
+  const profileSchema = useMemo(() => buildProfileSchema(t), [t]);
   const {
     register,
     handleSubmit,
@@ -56,9 +62,9 @@ export function ProfilePersonalInfoSection() {
         firstName: values.firstName.trim(),
         lastName: values.lastName?.trim() ?? "",
       });
-      toast.success("Profile updated successfully.");
+      toast.success(t("profile.personal.updatedSuccess"));
     } catch {
-      toast.error("Unable to update profile. Please try again.");
+      toast.error(t("profile.personal.updateFailed"));
     }
   };
 
@@ -66,7 +72,8 @@ export function ProfilePersonalInfoSection() {
     return null;
   }
 
-  const primaryEmail = user.primaryEmailAddress?.emailAddress ?? "No verified email available";
+  const primaryEmail =
+    user.primaryEmailAddress?.emailAddress ?? t("profile.personal.noVerifiedEmail");
 
   return (
     <motion.section
@@ -76,12 +83,12 @@ export function ProfilePersonalInfoSection() {
     >
       <h2 className="text-xl mb-6 flex items-center gap-2">
         <User className="w-5 h-5" />
-        Personal Information
+        {t("profile.personal.title")}
       </h2>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm mb-2">First Name</label>
+          <label className="block text-sm mb-2">{t("profile.personal.firstName")}</label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input
@@ -96,7 +103,7 @@ export function ProfilePersonalInfoSection() {
         </div>
 
         <div>
-          <label className="block text-sm mb-2">Last Name</label>
+          <label className="block text-sm mb-2">{t("profile.personal.lastName")}</label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input
@@ -111,7 +118,7 @@ export function ProfilePersonalInfoSection() {
         </div>
 
         <div>
-          <label className="block text-sm mb-2">Primary Email</label>
+          <label className="block text-sm mb-2">{t("profile.personal.primaryEmail")}</label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input
@@ -134,12 +141,12 @@ export function ProfilePersonalInfoSection() {
           {isSubmitting ? (
             <>
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              <span>Saving...</span>
+              <span>{t("profile.personal.saving")}</span>
             </>
           ) : (
             <>
               <Save className="w-5 h-5" />
-              <span>Save Changes</span>
+              <span>{t("profile.personal.saveChanges")}</span>
             </>
           )}
         </button>

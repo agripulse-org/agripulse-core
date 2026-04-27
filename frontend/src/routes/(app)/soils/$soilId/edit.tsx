@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { getSoilProfileByIdQueryOptions, useUpdateSoilProfile } from "@/data/soilProfile";
 import { reverseGeocodeLocation } from "@/services/geocoding/geocodingService";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { SoilProfileEditForm } from "@/components/soils/form/SoilProfileEditForm";
 import type { SoilProfileFormValues } from "@/components/soils/form/useSoilProfileForm";
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/(app)/soils/$soilId/edit")({
 });
 
 function EditSoilProfileRoute() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { soilId } = Route.useParams();

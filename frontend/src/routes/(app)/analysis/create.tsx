@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { MapPin, Search, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ANALYSIS_DEPTH_OPTIONS } from "@/lib/constants";
@@ -10,8 +10,9 @@ export const Route = createFileRoute("/(app)/analysis/create")({
 });
 
 function NewAnalysisRoute() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+
   const [step, setStep] = useState(1);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [formData, setFormData] = useState({
@@ -69,9 +70,7 @@ function NewAnalysisRoute() {
       >
         <div className="bg-gradient-to-r from-primary to-secondary p-8 text-white">
           <h1 className="text-3xl mb-2">{t("analysis.new.title")}</h1>
-          <p className="text-white/80">
-            Follow the steps to analyze your soil and get personalized recommendations
-          </p>
+          <p className="text-white/80">{t("analysis.new.subtitle")}</p>
 
           <div className="mt-6 flex gap-2">
             {[1, 2, 3, 4].map((s) => (
@@ -109,7 +108,7 @@ function NewAnalysisRoute() {
                           type="text"
                           value={formData.location}
                           onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                          placeholder="e.g., Skopje, North Macedonia"
+                          placeholder={t("analysis.new.searchPlaceholderExample")}
                           className="w-full pl-11 pr-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
                         />
                       </div>
@@ -134,7 +133,7 @@ function NewAnalysisRoute() {
                           step="any"
                           value={formData.latitude}
                           onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
-                          placeholder="41.9973"
+                          placeholder={t("analysis.new.latitudeExample")}
                           className="w-full px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
                         />
                       </div>
@@ -145,7 +144,7 @@ function NewAnalysisRoute() {
                           step="any"
                           value={formData.longitude}
                           onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
-                          placeholder="21.4280"
+                          placeholder={t("analysis.new.longitudeExample")}
                           className="w-full px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
                         />
                       </div>
@@ -154,7 +153,9 @@ function NewAnalysisRoute() {
                     <div className="aspect-video bg-muted rounded-xl flex items-center justify-center border border-border">
                       <div className="text-center">
                         <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
-                        <p className="text-sm text-muted-foreground">Map preview</p>
+                        <p className="text-sm text-muted-foreground">
+                          {t("analysis.new.mapPreview")}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -179,7 +180,7 @@ function NewAnalysisRoute() {
                       type="text"
                       value={formData.soilName}
                       onChange={(e) => setFormData({ ...formData, soilName: e.target.value })}
-                      placeholder="e.g., North Field"
+                      placeholder={t("analysis.new.soilNamePlaceholder")}
                       className="w-full px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                   </div>
@@ -189,7 +190,7 @@ function NewAnalysisRoute() {
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Add notes about this soil sample..."
+                      placeholder={t("analysis.new.descriptionPlaceholder")}
                       rows={4}
                       className="w-full px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
                     />
@@ -247,29 +248,37 @@ function NewAnalysisRoute() {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <h3 className="text-xl mb-6">Review & Analyze</h3>
+                <h3 className="text-xl mb-6">{t("analysis.new.reviewTitle")}</h3>
 
                 <div className="space-y-4 bg-muted/50 rounded-xl p-6">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">Location</p>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        {t("analysis.new.review.location")}
+                      </p>
                       <p className="font-medium">
                         {formData.location || `${formData.latitude}, ${formData.longitude}`}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">Depth</p>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        {t("analysis.new.review.depth")}
+                      </p>
                       <p className="font-medium">
                         {ANALYSIS_DEPTH_OPTIONS.find((d) => d.value === formData.depth)?.label}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">Soil Name</p>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        {t("analysis.new.review.soilName")}
+                      </p>
                       <p className="font-medium">{formData.soilName}</p>
                     </div>
                     {formData.description && (
                       <div className="col-span-2">
-                        <p className="text-sm text-muted-foreground mb-1">Description</p>
+                        <p className="text-sm text-muted-foreground mb-1">
+                          {t("analysis.new.review.description")}
+                        </p>
                         <p className="font-medium">{formData.description}</p>
                       </div>
                     )}
@@ -302,7 +311,7 @@ function NewAnalysisRoute() {
           </button>
 
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>Step {step} of 4</span>
+            <span>{t("analysis.new.stepProgress", { step, totalSteps: 4 })}</span>
           </div>
 
           <button

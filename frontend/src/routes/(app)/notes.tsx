@@ -5,8 +5,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { Edit, Plus, Search, StickyNote, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
-import { useLanguage } from "@/providers/language-provider";
 import { getSoilProfilesQueryOptions } from "@/data/soilProfile";
 import { useDeleteSoilNote, useFilterSoilNotes } from "@/data/soilNote";
 import type { SoilNoteResponse } from "@/services/soil-note";
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/(app)/notes")({
 });
 
 function NotesRoute() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = Route.useNavigate();
   const searchParams = Route.useSearch();
 
@@ -225,7 +225,7 @@ function NotesRoute() {
         }}
         title={t("notes.deleteTitle")}
         description={(item) => (
-          <span>{t("notes.deleteDescription").replace("{title}", item?.title ?? "")}</span>
+          <span>{t("notes.deleteDescription", { title: item?.title ?? "" })}</span>
         )}
         confirmLabel={t("common.delete")}
         cancelLabel={t("common.cancel")}
@@ -246,7 +246,7 @@ function NoteCard({
   onEdit: () => void;
   onDelete: () => void;
 }) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <Card className="h-full cursor-pointer hover:shadow-md transition-all" onClick={onOpen}>

@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { Plus, MapPin, Calendar, Layers, FlaskConical, TrendingUp } from "lucide-react";
 import { motion } from "motion/react";
 import { StatCard } from "@/components/StatCard";
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/(app)/")({
 });
 
 function DashboardRoute() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -19,7 +19,7 @@ function DashboardRoute() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl mb-2">{t("dashboard.title")}</h1>
-          <p className="text-muted-foreground">View and manage your soil analysis history</p>
+          <p className="text-muted-foreground">{t("dashboard.subtitle")}</p>
         </div>
         <button
           onClick={() => navigate({ to: "/analysis/create" })}

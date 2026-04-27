@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight, Loader2, PencilLine } from "lucide-react";
 import { motion } from "motion/react";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { SoilLocationPicker } from "./SoilLocationPicker";
 import { useSoilProfileForm } from "./useSoilProfileForm";
 import type { SoilProfileFormValues } from "./useSoilProfileForm";
@@ -18,7 +18,8 @@ export function SoilProfileEditForm({
   onSubmit,
   onCancel,
 }: SoilProfileEditFormProps) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
+
   const {
     register,
     handleSubmit,

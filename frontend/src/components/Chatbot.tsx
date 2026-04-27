@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { useLanguage } from "../providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { X, Send, Loader2, Bot, User } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { CHATBOT_MOCK_RESPONSES } from "@/lib/constants";
 
 interface Message {
   id: string;
@@ -11,7 +12,8 @@ interface Message {
 }
 
 export function Chatbot({ onClose }: { onClose: () => void }) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -49,18 +51,10 @@ export function Chatbot({ onClose }: { onClose: () => void }) {
 
     // Simulate AI response
     setTimeout(() => {
-      const responses = [
-        "Based on your soil analysis, I recommend starting with wheat cultivation. Your pH level of 6.5 is optimal for wheat growth.",
-        "Your soil has good nitrogen content (0.14%). This is excellent for supporting healthy crop development.",
-        "The loamy texture of your soil provides good drainage and nutrient retention, which is ideal for most crops.",
-        "With a CEC of 18 meq/100g, your soil has a good capacity to hold and exchange nutrients. This is beneficial for crop nutrition.",
-        "Your organic carbon level of 2.8% indicates healthy soil with good fertility. Consider crop rotation to maintain this level.",
-      ];
-
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: responses[Math.floor(Math.random() * responses.length)],
+        content: CHATBOT_MOCK_RESPONSES[Math.floor(Math.random() * CHATBOT_MOCK_RESPONSES.length)],
         timestamp: new Date(),
       };
 
@@ -100,7 +94,7 @@ export function Chatbot({ onClose }: { onClose: () => void }) {
             </div>
             <div>
               <h3 className="font-medium">{t("chat.title")}</h3>
-              <p className="text-xs text-white/80">Always here to help</p>
+              <p className="text-xs text-white/80">{t("chat.subtitle")}</p>
             </div>
           </div>
           <button

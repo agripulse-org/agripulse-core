@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCreateSoilProfile } from "@/data/soilProfile";
 import { geocodingService } from "@/services/geocoding";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { SoilProfileCreateForm } from "@/components/soils/form/SoilProfileCreateForm";
 import type { SoilProfileFormValues } from "@/components/soils/form/useSoilProfileForm";
@@ -11,8 +11,9 @@ export const Route = createFileRoute("/(app)/soils/create")({
 });
 
 function CreateSoilProfileRoute() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+
   const createSoilProfileMutation = useCreateSoilProfile();
 
   const handleSubmit = async (values: SoilProfileFormValues) => {

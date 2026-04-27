@@ -1,37 +1,53 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
-const coordinateSchema = (fieldLabel: string, min: number, max: number) =>
+type SoilCoordinateLabelKey = "soils.latitude" | "soils.longitude";
+
+const coordinateSchema = (
+  t: ReturnType<typeof useTranslation>["t"],
+  fieldLabelKey: SoilCoordinateLabelKey,
+  min: number,
+  max: number,
+) =>
   z
     .string()
     .trim()
-    .min(1, `${fieldLabel} is required`)
-    .refine((value) => {
-      const parsedValue = Number(value);
-      return Number.isFinite(parsedValue) && parsedValue >= min && parsedValue <= max;
-    }, `${fieldLabel} must be between ${min} and ${max}`);
+    .min(1, t("soils.validation.fieldRequired", { field: t(fieldLabelKey) }))
+    .refine(
+      (value) => {
+        const parsedValue = Number(value);
+        return Number.isFinite(parsedValue) && parsedValue >= min && parsedValue <= max;
+      },
+      t("soils.validation.fieldRange", { field: t(fieldLabelKey), min, max }),
+    );
 
-export const soilProfileFormSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name is required")
-    .max(255, "Name must not exceed 255 characters"),
-  description: z
-    .string()
-    .trim()
-    .max(1000, "Description must not exceed 1000 characters")
-    .optional()
-    .or(z.literal("")),
-  latitude: coordinateSchema("Latitude", -90, 90),
-  longitude: coordinateSchema("Longitude", -180, 180),
-});
+export const buildSoilProfileFormSchema = (t: TFunction) =>
+  z.object({
+    name: z
+      .string()
+      .trim()
+      .min(1, t("soils.validation.nameRequired"))
+      .max(255, t("soils.validation.nameMax")),
+    description: z
+      .string()
+      .trim()
+      .max(1000, t("soils.validation.descriptionMax"))
+      .optional()
+      .or(z.literal("")),
+    latitude: coordinateSchema(t, "soils.latitude", -90, 90),
+    longitude: coordinateSchema(t, "soils.longitude", -180, 180),
+  });
 
-export type SoilProfileFormValues = z.infer<typeof soilProfileFormSchema>;
+export type SoilProfileFormValues = z.infer<ReturnType<typeof buildSoilProfileFormSchema>>;
 
 export function useSoilProfileForm(initialValues?: SoilProfileFormValues) {
+  const { t } = useTranslation();
+
+  const soilProfileFormSchema = useMemo(() => buildSoilProfileFormSchema(t), [t]);
   const form = useForm<SoilProfileFormValues>({
     resolver: zodResolver(soilProfileFormSchema),
     defaultValues: initialValues ?? {

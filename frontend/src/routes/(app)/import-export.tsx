@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Upload, Download, FileText, CheckCircle, AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { IMPORT_ANALYSES_CSV_CONTENT, IMPORT_TEMPLATE_CSV_CONTENT } from "@/lib/constants";
 import type { ImportUploadStatus } from "@/lib/constants";
 
@@ -11,6 +12,8 @@ export const Route = createFileRoute("/(app)/import-export")({
 });
 
 function ImportExportRoute() {
+  const { t } = useTranslation();
+
   const [isDragging, setIsDragging] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<ImportUploadStatus>("idle");
 
@@ -42,16 +45,16 @@ function ImportExportRoute() {
     const csvFile = files.find((f) => f.name.endsWith(".csv"));
 
     if (csvFile) {
-      toast.loading("Importing soil data...");
+      toast.loading(t("importExport.importingData"));
       setTimeout(() => {
         setUploadStatus("success");
         toast.dismiss();
-        toast.success(`Successfully imported data from ${csvFile.name}`);
+        toast.success(t("importExport.importSuccessWithName", { fileName: csvFile.name }));
         setTimeout(() => setUploadStatus("idle"), 3000);
       }, 1500);
     } else {
       setUploadStatus("error");
-      toast.error("Please upload a valid CSV file");
+      toast.error(t("importExport.uploadInvalidCsv"));
       setTimeout(() => setUploadStatus("idle"), 3000);
     }
   };
@@ -64,14 +67,14 @@ function ImportExportRoute() {
     a.download = "soil-analyses.csv";
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Analyses exported successfully");
+    toast.success(t("importExport.exportSuccess"));
   };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl mb-2">Import & Export</h1>
-        <p className="text-muted-foreground">Manage your soil data with CSV import and export</p>
+        <h1 className="text-3xl mb-2">{t("importExport.title")}</h1>
+        <p className="text-muted-foreground">{t("importExport.subtitle")}</p>
       </div>
 
       <div className="space-y-6">
@@ -82,16 +85,16 @@ function ImportExportRoute() {
         >
           <h2 className="text-xl mb-6 flex items-center gap-2">
             <Download className="w-5 h-5 text-primary" />
-            Export Data
+            {t("importExport.export.title")}
           </h2>
 
           <div className="space-y-4">
             <div className="bg-muted/50 rounded-xl p-4 border border-border">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-medium mb-1">Export All Analyses</h3>
+                  <h3 className="font-medium mb-1">{t("importExport.export.allAnalysesTitle")}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Download all your soil analyses as a CSV file
+                    {t("importExport.export.allAnalysesDescription")}
                   </p>
                 </div>
                 <FileText className="w-8 h-8 text-primary" />
@@ -101,16 +104,16 @@ function ImportExportRoute() {
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all"
               >
                 <Download className="w-4 h-4" />
-                <span>Download CSV</span>
+                <span>{t("importExport.export.downloadCsv")}</span>
               </button>
             </div>
 
             <div className="bg-muted/50 rounded-xl p-4 border border-border">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-medium mb-1">Export Analysis Templates</h3>
+                  <h3 className="font-medium mb-1">{t("importExport.export.templateTitle")}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Download a CSV template for bulk soil data import
+                    {t("importExport.export.templateDescription")}
                   </p>
                 </div>
                 <FileText className="w-8 h-8 text-secondary" />
@@ -128,7 +131,7 @@ function ImportExportRoute() {
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-border rounded-lg hover:bg-muted transition-all"
               >
                 <Download className="w-4 h-4" />
-                <span>Download Template</span>
+                <span>{t("importExport.export.downloadTemplate")}</span>
               </button>
             </div>
           </div>
@@ -142,7 +145,7 @@ function ImportExportRoute() {
         >
           <h2 className="text-xl mb-6 flex items-center gap-2">
             <Upload className="w-5 h-5 text-primary" />
-            Import Data
+            {t("importExport.import.title")}
           </h2>
 
           <div
@@ -167,10 +170,12 @@ function ImportExportRoute() {
               {uploadStatus === "idle" && (
                 <>
                   <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg mb-2">Drop CSV file here</h3>
-                  <p className="text-sm text-muted-foreground mb-4">or click to browse</p>
+                  <h3 className="text-lg mb-2">{t("importExport.import.dropCsv")}</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {t("importExport.import.orBrowse")}
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    Supports: .csv files with soil analysis data
+                    {t("importExport.import.supported")}
                   </p>
                 </>
               )}
@@ -178,16 +183,24 @@ function ImportExportRoute() {
               {uploadStatus === "success" && (
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
                   <CheckCircle className="w-12 h-12 text-primary mx-auto mb-4" />
-                  <h3 className="text-lg text-primary mb-2">Upload Successful!</h3>
-                  <p className="text-sm text-muted-foreground">Your soil data has been imported</p>
+                  <h3 className="text-lg text-primary mb-2">
+                    {t("importExport.import.uploadSuccessTitle")}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t("importExport.import.uploadSuccessDescription")}
+                  </p>
                 </motion.div>
               )}
 
               {uploadStatus === "error" && (
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
                   <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
-                  <h3 className="text-lg text-destructive mb-2">Upload Failed</h3>
-                  <p className="text-sm text-muted-foreground">Please upload a valid CSV file</p>
+                  <h3 className="text-lg text-destructive mb-2">
+                    {t("importExport.import.uploadFailedTitle")}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t("importExport.uploadInvalidCsv")}
+                  </p>
                 </motion.div>
               )}
             </div>
@@ -196,14 +209,14 @@ function ImportExportRoute() {
           <div className="mt-6 bg-accent/10 border border-accent/30 rounded-xl p-4">
             <h4 className="font-medium mb-2 text-sm flex items-center gap-2">
               <FileText className="w-4 h-4" />
-              CSV Format Requirements
+              {t("importExport.requirements.title")}
             </h4>
             <ul className="text-xs text-muted-foreground space-y-1 ml-6 list-disc">
-              <li>First row must contain column headers</li>
-              <li>Required columns: Location, Depth, pH</li>
-              <li>Optional columns: Latitude, Longitude, Nitrogen, Organic Carbon, Texture</li>
-              <li>Use comma (,) as separator</li>
-              <li>Maximum file size: 10MB</li>
+              <li>{t("importExport.requirements.headers")}</li>
+              <li>{t("importExport.requirements.requiredColumns")}</li>
+              <li>{t("importExport.requirements.optionalColumns")}</li>
+              <li>{t("importExport.requirements.separator")}</li>
+              <li>{t("importExport.requirements.maxSize")}</li>
             </ul>
           </div>
         </motion.section>

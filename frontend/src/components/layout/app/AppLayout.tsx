@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { useLanguage } from "../../../providers/language-provider";
+import { useTranslation } from "react-i18next";
 import {
   Sprout,
   LayoutDashboard,
@@ -18,9 +18,10 @@ import { toast } from "sonner";
 import { Chatbot } from "../../Chatbot";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
+import { isValidLanguageCode } from "@/i18n";
 
 export function AppLayout() {
-  const { t, language, setLanguage } = useLanguage();
+  const { t, i18n } = useTranslation();
   const { signOut } = useClerk();
   const { user } = useUser();
   const location = useLocation();
@@ -36,7 +37,7 @@ export function AppLayout() {
     { path: "/", icon: LayoutDashboard, label: t("nav.dashboard") },
     { path: "/soils", icon: Layers, label: t("nav.soils") },
     { path: "/notes", icon: StickyNote, label: t("nav.notes") },
-    { path: "/import-export", icon: Upload, label: "Import/Export" },
+    { path: "/import-export", icon: Upload, label: t("nav.importExport") },
   ];
 
   const handleLogout = async () => {
@@ -50,14 +51,15 @@ export function AppLayout() {
       await signOut();
       navigate({ to: "/auth/login" });
     } catch {
-      toast.error("Unable to sign out. Please try again.");
+      toast.error(t("common.unableToSignOut"));
     } finally {
       setIsLoggingOut(false);
     }
   };
 
+  const language = isValidLanguageCode(i18n.resolvedLanguage) ? i18n.resolvedLanguage : "en";
   const toggleLanguage = () => {
-    setLanguage(language === "en" ? "mk" : "en");
+    void i18n.changeLanguage(language === "en" ? "mk" : "en");
   };
 
   return (
@@ -106,7 +108,7 @@ export function AppLayout() {
             </div>
             <div>
               <h1 className="font-semibold text-foreground">AgriPulse</h1>
-              <p className="text-sm text-muted-foreground">Smart Agriculture</p>
+              <p className="text-sm text-muted-foreground">{t("auth.platformSubtitle")}</p>
             </div>
           </div>
         </div>
@@ -180,7 +182,7 @@ export function AppLayout() {
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted transition-all"
           >
             <LogOut className="w-5 h-5" />
-            <span>{isLoggingOut ? "Signing out..." : t("nav.logout")}</span>
+            <span>{isLoggingOut ? t("common.signingOut") : t("nav.logout")}</span>
           </button>
         </div>
       </motion.aside>

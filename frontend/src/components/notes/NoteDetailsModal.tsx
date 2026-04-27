@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { X } from "lucide-react";
 
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import type { SoilNoteResponse } from "@/services/soil-note";
 import { Badge } from "@/components/ui/badge";
 import { useFormatters } from "@/hooks/useFormatters";
@@ -13,7 +13,7 @@ interface NoteDetailsModalProps {
 }
 
 export function NoteDetailsModal({ note, onClose }: NoteDetailsModalProps) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { dateTime } = useFormatters();
 
   return (

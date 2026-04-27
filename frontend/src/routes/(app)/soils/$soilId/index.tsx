@@ -19,7 +19,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { getSoilProfileByIdQueryOptions } from "@/data/soilProfile";
 import {
   ANALYSIS_DEPTH_OPTIONS,
@@ -52,9 +52,10 @@ export const Route = createFileRoute("/(app)/soils/$soilId/")({
 type Tab = "overview" | "analyses" | "notes" | "chat";
 
 export function SoilDetailsPage() {
-  const { soilId: id } = Route.useParams();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const { soilId: id } = Route.useParams();
+
   const { data: soil } = useSuspenseQuery(getSoilProfileByIdQueryOptions(id));
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [showNewAnalysisModal, setShowNewAnalysisModal] = useState(false);
@@ -75,7 +76,7 @@ export function SoilDetailsPage() {
   ];
 
   const handleCreateAnalysis = (depth: string) => {
-    toast.success(t("soils.details.analysis.creating").replace("{depth}", depth));
+    toast.success(t("soils.details.analysis.creating", { depth }));
     setShowNewAnalysisModal(false);
     // Simulate analysis creation
     setTimeout(() => {
@@ -223,7 +224,7 @@ export function SoilDetailsPage() {
 
 function SoilNotFound() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center p-6">
@@ -258,7 +259,7 @@ function OverviewTab({
   onViewAllAnalyses: () => void;
 }) {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const locationParts = [soil.city, soil.country].filter((value): value is string =>
     Boolean(value),
   );
@@ -334,7 +335,7 @@ function OverviewTab({
 // Analyses Tab Component
 function AnalysesTab({ analyses, onCreateNew }: { analyses: any[]; onCreateNew: () => void }) {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <motion.div
@@ -412,7 +413,8 @@ function ChatSessionsTab({
   onOpenSession: (id: string) => void;
   onDeleteSession: (id: string) => void;
 }) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -486,7 +488,8 @@ function NewAnalysisModal({
   onClose: () => void;
   onCreate: (depth: string) => void;
 }) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
+
   const [mode, setMode] = useState<"auto" | "import">("auto");
   const [selectedDepth, setSelectedDepth] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -726,7 +729,8 @@ function NewAnalysisModal({
 
 // Chat Session Modal Component
 function ChatSessionModal({ sessionId, onClose }: { sessionId: string; onClose: () => void }) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
+
   type ChatMessage = {
     id: string;
     role: "assistant" | "user";

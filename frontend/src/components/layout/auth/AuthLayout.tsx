@@ -1,13 +1,15 @@
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { Outlet, useRouterState } from "@tanstack/react-router";
 import { Sprout, Globe } from "lucide-react";
 import { motion } from "motion/react";
+import { isValidLanguageCode } from "@/i18n";
 
 export function AuthLayout() {
-  const { t, language, setLanguage } = useLanguage();
+  const { t, i18n } = useTranslation();
 
+  const language = isValidLanguageCode(i18n.resolvedLanguage) ? i18n.resolvedLanguage : "en";
   const toggleLanguage = () => {
-    setLanguage(language === "en" ? "mk" : "en");
+    void i18n.changeLanguage(language === "en" ? "mk" : "en");
   };
 
   const pathname = useRouterState({
@@ -34,7 +36,7 @@ export function AuthLayout() {
             </div>
             <div>
               <h1 className="text-2xl">AgriPulse</h1>
-              <p className="text-white/80 text-sm">Smart Agriculture Platform</p>
+              <p className="text-white/80 text-sm">{t("auth.platformSubtitle")}</p>
             </div>
           </div>
         </div>
@@ -44,15 +46,15 @@ export function AuthLayout() {
           <div className="flex gap-4">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex-1">
               <div className="text-3xl mb-2">🌱</div>
-              <p className="text-white/90 text-sm">Data-driven insights</p>
+              <p className="text-white/90 text-sm">{t("auth.feature.dataInsights")}</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex-1">
               <div className="text-3xl mb-2">🌾</div>
-              <p className="text-white/90 text-sm">Crop recommendations</p>
+              <p className="text-white/90 text-sm">{t("auth.feature.cropRecommendations")}</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex-1">
               <div className="text-3xl mb-2">📊</div>
-              <p className="text-white/90 text-sm">Soil analysis</p>
+              <p className="text-white/90 text-sm">{t("auth.feature.soilAnalysis")}</p>
             </div>
           </div>
         </div>

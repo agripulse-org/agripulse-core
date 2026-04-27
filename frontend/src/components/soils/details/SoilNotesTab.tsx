@@ -2,8 +2,8 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { Edit, Plus, StickyNote, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-import { useLanguage } from "@/providers/language-provider";
 import { useDeleteSoilNote, useSoilNotes } from "@/data/soilNote";
 import { APIError } from "@/services/apiClient";
 import type { SoilNoteResponse } from "@/services/soil-note";
@@ -18,8 +18,9 @@ interface SoilNotesTabProps {
 }
 
 export function SoilNotesTab({ soilProfileId }: SoilNotesTabProps) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { dateTime } = useFormatters();
+
   const [formOpen, setFormOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<SoilNoteResponse | null>(null);
   const [deletingNote, setDeletingNote] = useState<SoilNoteResponse | null>(null);
@@ -176,9 +177,7 @@ export function SoilNotesTab({ soilProfileId }: SoilNotesTabProps) {
           if (!open) setDeletingNote(null);
         }}
         title={t("notes.deleteTitle")}
-        description={(item) => (
-          <span>{t("notes.deleteDescription").replace("{title}", item?.title ?? "")}</span>
-        )}
+        description={(item) => <span>{t("notes.deleteDescription", { title: item?.title })}</span>}
         confirmLabel={t("common.delete")}
         cancelLabel={t("common.cancel")}
         onConfirm={(item) => void handleDelete(item)}

@@ -1,29 +1,32 @@
+import { useMemo } from "react";
 import { useSignUp } from "@clerk/clerk-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { Apple, Lock, Mail, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { getClerkMessage, getSafeRedirect } from "@/lib/auth";
+import type { TFunction } from "i18next";
 
-const registerSchema = z
-  .object({
-    name: z.string().trim().min(2, "Full name must be at least 2 characters"),
-    email: z.string().email("Please enter a valid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
-  });
+const buildRegisterSchema = (t: TFunction) =>
+  z
+    .object({
+      name: z.string().trim().min(2, t("auth.validation.fullNameMin")),
+      email: z.email(t("auth.validation.invalidEmail")),
+      password: z.string().min(8, t("auth.validation.passwordMin")),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      path: ["confirmPassword"],
+      message: t("auth.validation.passwordsNoMatch"),
+    });
 
 const registerSearchSchema = z.object({
   redirect: z.string().optional(),
 });
 
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type RegisterFormValues = z.infer<ReturnType<typeof buildRegisterSchema>>;
 
 const oauthRedirectPath = "/auth/sso-callback";
 
@@ -33,11 +36,14 @@ export const Route = createFileRoute("/auth/register")({
 });
 
 function RegisterRoute() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const search = Route.useSearch();
   const safeRedirect = getSafeRedirect(search.redirect);
+
   const { isLoaded, signUp, setActive } = useSignUp();
+
+  const registerSchema = useMemo(() => buildRegisterSchema(t), [t]);
   const {
     register,
     handleSubmit,
@@ -80,8 +86,7 @@ function RegisterRoute() {
 
       if (signUpResult.status !== "complete" || !signUpResult.createdSessionId) {
         setError("root", {
-          message:
-            "Account created, but additional verification is required by your Clerk configuration.",
+          message: t("auth.additionalVerificationRequired"),
         });
         return;
       }
@@ -119,7 +124,7 @@ function RegisterRoute() {
     <>
       <div className="text-center mb-8">
         <h2 className="text-3xl mb-2">{t("auth.getStarted")}</h2>
-        <p className="text-muted-foreground">Create an account to start analyzing your soil</p>
+        <p className="text-muted-foreground">{t("auth.registerSubtitle")}</p>
       </div>
 
       <div className="space-y-3">
@@ -166,7 +171,9 @@ function RegisterRoute() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-background text-muted-foreground">or continue with email</span>
+          <span className="px-4 bg-background text-muted-foreground">
+            {t("auth.orContinueWithEmail")}
+          </span>
         </div>
       </div>
 
@@ -217,7 +224,7 @@ function RegisterRoute() {
         </div>
 
         <div>
-          <label className="block text-sm mb-2 text-foreground">Confirm Password</label>
+          <label className="block text-sm mb-2 text-foreground">{t("auth.confirmPassword")}</label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input
@@ -240,7 +247,7 @@ function RegisterRoute() {
           disabled={!isLoaded || isSubmitting}
           className="w-full bg-primary text-primary-foreground py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl"
         >
-          {isSubmitting ? "Creating account..." : t("auth.register")}
+          {isSubmitting ? t("common.creatingAccount") : t("auth.register")}
         </button>
       </form>
 
@@ -250,7 +257,7 @@ function RegisterRoute() {
           search={{ redirect: safeRedirect !== "/" ? safeRedirect : undefined }}
           className="text-primary hover:underline"
         >
-          Already have an account? Login
+          {t("auth.haveAccountLogin")}
         </Link>
       </div>
     </>

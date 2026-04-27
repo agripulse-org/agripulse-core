@@ -1,23 +1,26 @@
+import { useMemo } from "react";
 import { useSignIn } from "@clerk/clerk-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useLanguage } from "@/providers/language-provider";
+import { useTranslation } from "react-i18next";
 import { Apple, Lock, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { getClerkMessage, getSafeRedirect } from "@/lib/auth";
 import { GoogleIcon } from "@/components/GoogleIcon";
+import type { TFunction } from "i18next";
 
-const loginSchema = z.object({
-  email: z.email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+const buildLoginSchema = (t: TFunction) =>
+  z.object({
+    email: z.email(t("auth.validation.invalidEmail")),
+    password: z.string().min(8, t("auth.validation.passwordMin")),
+  });
 
 const loginSearchSchema = z.object({
   redirect: z.string().optional(),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = z.infer<ReturnType<typeof buildLoginSchema>>;
 
 const oauthRedirectPath = "/auth/sso-callback";
 
@@ -27,11 +30,13 @@ export const Route = createFileRoute("/auth/login")({
 });
 
 function LoginRoute() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
   const safeRedirect = getSafeRedirect(redirect);
   const { isLoaded, signIn, setActive } = useSignIn();
+
+  const loginSchema = useMemo(() => buildLoginSchema(t), [t]);
   const {
     register,
     handleSubmit,
@@ -60,7 +65,7 @@ function LoginRoute() {
 
       if (signInResult.status !== "complete" || !signInResult.createdSessionId) {
         setError("root", {
-          message: "Additional sign-in steps are required in your Clerk configuration.",
+          message: t("auth.additionalSignInStepsRequired"),
         });
         return;
       }
@@ -90,7 +95,7 @@ function LoginRoute() {
     <>
       <div className="text-center mb-8">
         <h2 className="text-3xl mb-2">{t("auth.welcomeBack")}</h2>
-        <p className="text-muted-foreground">Enter your credentials to access your account</p>
+        <p className="text-muted-foreground">{t("auth.loginSubtitle")}</p>
       </div>
 
       <div className="space-y-3">
@@ -120,7 +125,9 @@ function LoginRoute() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-background text-muted-foreground">or continue with email</span>
+          <span className="px-4 bg-background text-muted-foreground">
+            {t("auth.orContinueWithEmail")}
+          </span>
         </div>
       </div>
 
@@ -162,7 +169,7 @@ function LoginRoute() {
           disabled={!isLoaded || isSubmitting}
           className="w-full bg-primary text-primary-foreground py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl"
         >
-          {isSubmitting ? "Signing in..." : t("auth.login")}
+          {isSubmitting ? t("common.signingIn") : t("auth.login")}
         </button>
       </form>
 
@@ -172,7 +179,7 @@ function LoginRoute() {
           search={{ redirect: safeRedirect !== "/" ? safeRedirect : undefined }}
           className="text-primary hover:underline"
         >
-          Don&apos;t have an account? Register
+          {t("auth.noAccountRegister")}
         </Link>
       </div>
     </>

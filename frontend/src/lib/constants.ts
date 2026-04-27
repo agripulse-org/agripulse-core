@@ -147,3 +147,11 @@ export const SOIL_DETAILS_MOCK_INITIAL_CHAT_MESSAGES = [
     timestamp: new Date(),
   },
 ] as Array<{ id: string; role: "assistant" | "user"; content: string; timestamp: Date }>;
+
+export const CHATBOT_MOCK_RESPONSES = [
+  "Based on your soil analysis, I recommend starting with wheat cultivation. Your pH level of 6.5 is optimal for wheat growth.",
+  "Your soil has good nitrogen content (0.14%). This is excellent for supporting healthy crop development.",
+  "The loamy texture of your soil provides good drainage and nutrient retention, which is ideal for most crops.",
+  "With a CEC of 18 meq/100g, your soil has a good capacity to hold and exchange nutrients. This is beneficial for crop nutrition.",
+  "Your organic carbon level of 2.8% indicates healthy soil with good fertility. Consider crop rotation to maintain this level.",
+];
