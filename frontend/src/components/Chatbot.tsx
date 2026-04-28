@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Send, Loader2, Bot, User } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { CHATBOT_MOCK_RESPONSES } from "@/lib/constants";
+import ReactMarkdown from "react-markdown";
+import { useChatStream } from "@/data/chatbot";
+import type { ChatHistoryMessage } from "@/services/chatbot";
 
 interface Message {
   id: string;
@@ -11,59 +13,79 @@ interface Message {
   timestamp: Date;
 }
 
+const INITIAL_MESSAGE: Message = {
+  id: "init",
+  role: "assistant",
+  content:
+    "Hello! I'm your agricultural AI assistant. I can help you with questions about crops, planting seasons, soil conditions, and general farming topics. How can I help you today?",
+  timestamp: new Date(),
+};
+
 export function Chatbot({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content:
-        "Hello! I'm your agricultural AI assistant. I can help you understand your soil analysis results and answer questions about crop recommendations. How can I help you today?",
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const { send, isStreaming } = useChatStream();
 
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const buildHistory = (currentMessages: Message[]): ChatHistoryMessage[] =>
+    currentMessages
+      .filter((m) => m.id !== "init")
+      .map((m) => ({ role: m.role, content: m.content }));
+
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isStreaming) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
-      content: input,
+      content: input.trim(),
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const assistantId = `${Date.now()}-assistant`;
+    const assistantMessage: Message = {
+      id: assistantId,
+      role: "assistant",
+      content: "",
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => {
+      const next = [...prev, userMessage, assistantMessage];
+      const history = buildHistory(prev);
+
+      send(
+        userMessage.content,
+        history,
+        (chunk) => {
+          setMessages((msgs) =>
+            msgs.map((m) => (m.id === assistantId ? { ...m, content: m.content + chunk } : m)),
+          );
+        },
+        () => {},
+        () => {
+          setMessages((msgs) =>
+            msgs.map((m) =>
+              m.id === assistantId && m.content === ""
+                ? { ...m, content: "Sorry, something went wrong. Please try again." }
+                : m,
+            ),
+          );
+        },
+      );
+
+      return next;
+    });
+
     setInput("");
-    setIsLoading(true);
-
-    // Simulate AI response
-    setTimeout(() => {
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: CHATBOT_MOCK_RESPONSES[Math.floor(Math.random() * CHATBOT_MOCK_RESPONSES.length)],
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev, assistantMessage]);
-      setIsLoading(false);
-    }, 1500);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -128,19 +150,33 @@ export function Chatbot({ onClose }: { onClose: () => void }) {
                       : "bg-muted text-foreground"
                   }`}
                 >
-                  <p className="text-sm leading-relaxed">{message.content}</p>
-                  <p
-                    className={`text-xs mt-2 ${
-                      message.role === "user"
-                        ? "text-primary-foreground/70"
-                        : "text-muted-foreground"
-                    }`}
-                  >
-                    {message.timestamp.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
+                  {message.role === "assistant" ? (
+                    message.content === "" ? (
+                      <span className="inline-flex items-center gap-1 text-muted-foreground">
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      </span>
+                    ) : (
+                      <div className="prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-p:leading-relaxed prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-pre:my-1 prose-strong:font-semibold">
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      </div>
+                    )
+                  ) : (
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                  )}
+                  {message.content !== "" && (
+                    <p
+                      className={`text-xs mt-2 ${
+                        message.role === "user"
+                          ? "text-primary-foreground/70"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {message.timestamp.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  )}
                 </div>
                 {message.role === "user" && (
                   <div className="w-8 h-8 bg-secondary/20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -150,18 +186,6 @@ export function Chatbot({ onClose }: { onClose: () => void }) {
               </motion.div>
             ))}
           </AnimatePresence>
-
-          {isLoading && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
-              <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                <Bot className="w-5 h-5 text-primary" />
-              </div>
-              <div className="bg-muted rounded-2xl px-4 py-3 flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">{t("chat.thinking")}</span>
-              </div>
-            </motion.div>
-          )}
 
           <div ref={messagesEndRef} />
         </div>
@@ -173,17 +197,21 @@ export function Chatbot({ onClose }: { onClose: () => void }) {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyDown}
               placeholder={t("chat.placeholder")}
               className="flex-1 px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-              disabled={isLoading}
+              disabled={isStreaming}
             />
             <button
               onClick={handleSend}
-              disabled={!input.trim() || isLoading}
+              disabled={!input.trim() || isStreaming}
               className="px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
-              <Send className="w-5 h-5" />
+              {isStreaming ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
