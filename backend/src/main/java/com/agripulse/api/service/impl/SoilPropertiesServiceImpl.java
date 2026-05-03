@@ -5,6 +5,8 @@ import com.agripulse.api.model.exceptions.SoilGridsFetchException;
 import com.agripulse.api.service.SoilPropertiesService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -15,6 +17,7 @@ import java.util.Map;
 @Service
 public class SoilPropertiesServiceImpl implements SoilPropertiesService {
 
+    private static final Logger log = LoggerFactory.getLogger(SoilPropertiesServiceImpl.class);
     private static final String BASE_URL = "https://rest.isric.org/soilgrids/v2.0";
 
     // SoilGrids stores values multiplied by a d_factor; divide to get standard units.
@@ -41,6 +44,9 @@ public class SoilPropertiesServiceImpl implements SoilPropertiesService {
 
     @Override
     public SoilProperties getPropertiesForLocation(double latitude, double longitude, String depth) {
+        if (depth == null || depth.isBlank()) {
+            throw new IllegalArgumentException("Soil depth is required. Please provide a valid depth value (e.g. \"0-5cm\").");
+        }
         SoilGridsResponse response;
         try {
             response = restClient.get()
@@ -62,7 +68,8 @@ public class SoilPropertiesServiceImpl implements SoilPropertiesService {
         } catch (SoilGridsFetchException e) {
             throw e;
         } catch (RuntimeException e) {
-            throw new SoilGridsFetchException("Failed to reach SoilGrids service: " + e.getMessage());
+            log.error("Failed to reach SoilGrids service", e);
+            throw new SoilGridsFetchException("Failed to reach SoilGrids service");
         }
 
         if (response == null

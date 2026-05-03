@@ -6,6 +6,8 @@ import com.agripulse.api.model.exceptions.WeatherFetchException;
 import com.agripulse.api.service.WeatherService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -14,6 +16,7 @@ import java.util.List;
 @Service
 public class WeatherServiceImpl implements WeatherService {
 
+    private static final Logger log = LoggerFactory.getLogger(WeatherServiceImpl.class);
     private static final String BASE_URL = "https://api.openweathermap.org/data/2.5";
 
     private final RestClient restClient;
@@ -46,7 +49,8 @@ public class WeatherServiceImpl implements WeatherService {
         } catch (WeatherFetchException e) {
             throw e;
         } catch (RuntimeException e) {
-            throw new WeatherFetchException("Failed to reach weather service: " + e.getMessage());
+            log.error("Failed to reach weather service", e);
+            throw new WeatherFetchException("Failed to reach weather service");
         }
 
         if (response == null || response.main() == null) {
