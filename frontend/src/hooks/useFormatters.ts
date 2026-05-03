@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { mk, enGB } from "date-fns/locale";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { isValidLanguageCode } from "@/i18n";
 import type { AppLanguage } from "@/i18n";
@@ -56,6 +56,21 @@ export function useFormatters() {
        */
       timeShort(date: string | Date) {
         return timeFormatter.format(new Date(date));
+      },
+
+      /**
+       * Formats a date as a relative time string for recent dates, falling back to
+       * an absolute date for dates older than 7 days.
+       *
+       * Examples:
+       * - English: "less than a minute ago", "5 minutes ago", "about 3 hours ago", "2 days ago"
+       * - Macedonian: localized equivalents via date-fns mk locale
+       */
+      relativeTime(date: string | Date) {
+        const d = new Date(date);
+        const diffDays = Math.floor((Date.now() - d.getTime()) / 86400000);
+        if (diffDays >= 7) return dateFormatter.format(d);
+        return formatDistanceToNow(d, { addSuffix: true, locale });
       },
     };
   }, [currentLanguage]);

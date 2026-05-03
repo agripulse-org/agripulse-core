@@ -1,8 +1,8 @@
 package com.agripulse.api.service.impl;
 
-import com.agripulse.api.dto.chat.ChatHistoryMessage;
-import com.agripulse.api.dto.chat.ChatMessageRequest;
-import com.agripulse.api.service.AIChatbotService;
+import com.agripulse.api.model.domain.ChatMessage;
+import com.agripulse.api.model.domain.ChatRole;
+import com.agripulse.api.service.AgriAIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -11,12 +11,11 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AIChatbotServiceImpl implements AIChatbotService {
+public class AgriAIServiceImpl implements AgriAIService {
 
     private final ChatClient chatClient;
 
@@ -41,25 +40,27 @@ public class AIChatbotServiceImpl implements AIChatbotService {
             """;
 
     @Override
-    public Flux<String> chat(ChatMessageRequest request) {
-        List<Message> messages = new ArrayList<>();
-
-        if (request.history() != null) {
-            for (ChatHistoryMessage entry : request.history()) {
-                if ("user".equals(entry.role())) {
-                    messages.add(new UserMessage(entry.content()));
-                } else {
-                    messages.add(new AssistantMessage(entry.content()));
-                }
-            }
-        }
-
-        messages.add(new UserMessage(request.message()));
+    public Flux<String> streamResponse(List<ChatMessage> history, String userMessage) {
+        List<Message> aiMessages = history.stream()
+                .<Message>map(m -> m.getRole() == ChatRole.USER
+                        ? new UserMessage(m.getContent())
+                        : new AssistantMessage(m.getContent()))
+                .toList();
 
         return chatClient.prompt()
                 .system(SYSTEM_PROMPT)
-                .messages(messages)
+                .messages(aiMessages)
+                .user(userMessage)
                 .stream()
+                .content();
+    }
+
+    @Override
+    public String generateTitle(String firstUserMessage) {
+        return chatClient.prompt()
+                .user("Generate a short title (max 6 words) for a chat conversation that starts with: \""
+                        + firstUserMessage + "\". Return only the title, no quotes or punctuation.")
+                .call()
                 .content();
     }
 }

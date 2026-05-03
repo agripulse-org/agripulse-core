@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import { useClerk, useUser } from "@clerk/clerk-react";
 import { toast } from "sonner";
-import { Chatbot } from "../../Chatbot";
+import { ChatbotWidget } from "../../chat/ChatbotWidget";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { isValidLanguageCode } from "@/i18n";
@@ -36,6 +36,7 @@ export function AppLayout() {
     { path: "/", icon: LayoutDashboard, label: t("nav.dashboard") },
     { path: "/soils", icon: Layers, label: t("nav.soils") },
     { path: "/notes", icon: StickyNote, label: t("nav.notes") },
+    { path: "/conversations", icon: MessageCircle, label: t("nav.assistant") },
   ];
 
   const handleLogout = async () => {
@@ -135,16 +136,6 @@ export function AppLayout() {
                 </Link>
               );
             })}
-            <button
-              onClick={() => {
-                setIsChatOpen(true);
-                setIsSidebarOpen(false);
-              }}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted transition-all"
-            >
-              <MessageCircle className="w-5 h-5" />
-              <span>{t("nav.assistant")}</span>
-            </button>
           </div>
         </nav>
 
@@ -190,22 +181,25 @@ export function AppLayout() {
         <Outlet />
       </main>
 
-      {/* Floating Chat Button (Mobile/Desktop) */}
-      {!isChatOpen && (
-        <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsChatOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-2xl flex items-center justify-center z-30 hover:bg-primary/90 transition-all"
-        >
-          <MessageCircle className="w-6 h-6" />
-        </motion.button>
-      )}
+      {!location.pathname.startsWith("/conversations") && (
+        <>
+          {/* Floating Chat Button (Mobile/Desktop) */}
+          {!isChatOpen && (
+            <motion.button
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsChatOpen(true)}
+              className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-2xl flex items-center justify-center z-30 hover:bg-primary/90 transition-all"
+            >
+              <MessageCircle className="w-6 h-6" />
+            </motion.button>
+          )}
 
-      {/* Chatbot */}
-      {isChatOpen && <Chatbot onClose={() => setIsChatOpen(false)} />}
+          {isChatOpen && <ChatbotWidget onClose={() => setIsChatOpen(false)} />}
+        </>
+      )}
     </div>
   );
 }
