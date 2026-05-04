@@ -5,7 +5,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { NewConversationDialog } from "@/components/chat/NewConversationDialog";
 import {
   getChatSessionQueryOptions,
   getChatSessionsQueryOptions,
@@ -46,24 +45,22 @@ function TabContent({ soilProfileId }: TabContentProps) {
   const { data: sessions } = useSuspenseQuery(getChatSessionsQueryOptions(soilProfileId));
 
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
-  const [showNewChatModal, setShowNewChatModal] = useState(false);
   const [pendingNewChat, setPendingNewChat] = useState<{ soilProfileId: string | null } | null>(
     null,
   );
 
   const isMobile = () => window.innerWidth < 768;
 
-  const handleCreate = (soilId?: string) => {
-    setShowNewChatModal(false);
-
+  const handleNewChat = () => {
     if (isMobile()) {
-      return navigate({
-        to: "/conversations",
-        search: { soilProfileId: soilId ?? soilProfileId ?? undefined },
+      void navigate({
+        to: "/conversations/new",
+        search: { soilProfileId: soilProfileId ?? undefined },
       });
+      return;
     }
 
-    setPendingNewChat({ soilProfileId: soilId ?? soilProfileId ?? null });
+    setPendingNewChat({ soilProfileId: soilProfileId ?? null });
     setSelectedSessionId(null);
   };
 
@@ -71,7 +68,8 @@ function TabContent({ soilProfileId }: TabContentProps) {
     setPendingNewChat(null);
 
     if (isMobile()) {
-      return navigate({ to: "/conversations/$sessionId", params: { sessionId } });
+      void navigate({ to: "/conversations/$sessionId", params: { sessionId } });
+      return;
     }
 
     setSelectedSessionId(sessionId);
@@ -79,7 +77,8 @@ function TabContent({ soilProfileId }: TabContentProps) {
 
   const handleSelectSession = (id: string) => {
     if (isMobile()) {
-      return navigate({ to: "/conversations/$sessionId", params: { sessionId: id } });
+      void navigate({ to: "/conversations/$sessionId", params: { sessionId: id } });
+      return;
     }
 
     setSelectedSessionId(id);
@@ -90,14 +89,12 @@ function TabContent({ soilProfileId }: TabContentProps) {
     setSelectedSessionId(null);
   };
 
-  const handleMobileBack = () => {
+  const handleBack = () => {
     setSelectedSessionId(null);
     setPendingNewChat(null);
   };
 
   const showNewChat = pendingNewChat !== null && selectedSessionId === null;
-
-  const handleNewChat = () => setShowNewChatModal(true);
 
   return (
     <div className="relative flex h-full min-h-162 overflow-hidden bg-card md:border md:border-border md:rounded-xl">
@@ -140,7 +137,7 @@ function TabContent({ soilProfileId }: TabContentProps) {
 
       <div
         className={cn(
-          "absolute inset-0 flex flex-col bg-card transition-transform duration-300 ease-in-out",
+          "absolute inset-0 flex flex-col bg-card transition-transform duration-300 ease-in-out overflow-auto",
           "md:relative md:inset-auto md:flex-1 md:translate-x-0",
         )}
       >
@@ -148,28 +145,20 @@ function TabContent({ soilProfileId }: TabContentProps) {
           <NewConversationView
             soilProfileId={pendingNewChat.soilProfileId}
             onSessionCreated={handleSessionCreated}
-            onBack={handleMobileBack}
+            onBack={handleBack}
           />
         ) : selectedSessionId ? (
           <Suspense fallback={<PageLoader />}>
             <ConversationContainer
               sessionId={selectedSessionId}
               onDeleted={handleDeleted}
-              onBack={handleMobileBack}
+              onBack={handleBack}
             />
           </Suspense>
         ) : (
           <ConversationsEmptyState onCreateNew={handleNewChat} />
         )}
       </div>
-
-      {showNewChatModal && (
-        <NewConversationDialog
-          onClose={() => setShowNewChatModal(false)}
-          onCreate={handleCreate}
-          preselectedSoilId={soilProfileId}
-        />
-      )}
     </div>
   );
 }

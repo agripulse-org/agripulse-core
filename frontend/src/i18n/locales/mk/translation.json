@@ -247,6 +247,10 @@
   "chat.comingSoon": "Наскоро",
   "chat.selectSoilProfile": "Избери профил на почва",
   "chat.chooseSoil": "Избери почва...",
+  "chat.addContext": "Контекст",
+  "chat.searchSoilProfiles": "Пребарај профили на почва...",
+  "chat.placeholderGeneral": "Прашај било што за земјоделството...",
+  "chat.placeholderSoil": "Прашај за {{name}}...",
 
   "common.loading": "Вчитување...",
   "common.cancel": "Откажи",

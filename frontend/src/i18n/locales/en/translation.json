@@ -247,6 +247,10 @@
   "chat.comingSoon": "Coming soon",
   "chat.selectSoilProfile": "Select Soil Profile",
   "chat.chooseSoil": "Choose a soil...",
+  "chat.addContext": "Context",
+  "chat.searchSoilProfiles": "Search soil profiles...",
+  "chat.placeholderGeneral": "Ask anything about farming...",
+  "chat.placeholderSoil": "Ask about {{name}}...",
 
   "common.loading": "Loading...",
   "common.cancel": "Cancel",

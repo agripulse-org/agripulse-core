@@ -22,6 +22,7 @@ import { Route as appConversationsRouteRouteImport } from "./routes/(app)/conver
 import { Route as appSoilsIndexRouteImport } from "./routes/(app)/soils/index"
 import { Route as appConversationsIndexRouteImport } from "./routes/(app)/conversations/index"
 import { Route as appSoilsCreateRouteImport } from "./routes/(app)/soils/create"
+import { Route as appConversationsNewRouteImport } from "./routes/(app)/conversations/new"
 import { Route as appConversationsSessionIdRouteImport } from "./routes/(app)/conversations/$sessionId"
 import { Route as appAnalysisCreateRouteImport } from "./routes/(app)/analysis/create"
 import { Route as appAnalysisIdRouteImport } from "./routes/(app)/analysis/$id"
@@ -92,6 +93,11 @@ const appSoilsCreateRoute = appSoilsCreateRouteImport.update({
   path: "/soils/create",
   getParentRoute: () => appRouteRoute,
 } as any)
+const appConversationsNewRoute = appConversationsNewRouteImport.update({
+  id: "/new",
+  path: "/new",
+  getParentRoute: () => appConversationsRouteRoute,
+} as any)
 const appConversationsSessionIdRoute =
   appConversationsSessionIdRouteImport.update({
     id: "/$sessionId",
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   "/analysis/$id": typeof appAnalysisIdRoute
   "/analysis/create": typeof appAnalysisCreateRoute
   "/conversations/$sessionId": typeof appConversationsSessionIdRoute
+  "/conversations/new": typeof appConversationsNewRoute
   "/soils/create": typeof appSoilsCreateRoute
   "/conversations/": typeof appConversationsIndexRoute
   "/soils/": typeof appSoilsIndexRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   "/analysis/$id": typeof appAnalysisIdRoute
   "/analysis/create": typeof appAnalysisCreateRoute
   "/conversations/$sessionId": typeof appConversationsSessionIdRoute
+  "/conversations/new": typeof appConversationsNewRoute
   "/soils/create": typeof appSoilsCreateRoute
   "/conversations": typeof appConversationsIndexRoute
   "/soils": typeof appSoilsIndexRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   "/(app)/analysis/$id": typeof appAnalysisIdRoute
   "/(app)/analysis/create": typeof appAnalysisCreateRoute
   "/(app)/conversations/$sessionId": typeof appConversationsSessionIdRoute
+  "/(app)/conversations/new": typeof appConversationsNewRoute
   "/(app)/soils/create": typeof appSoilsCreateRoute
   "/(app)/conversations/": typeof appConversationsIndexRoute
   "/(app)/soils/": typeof appSoilsIndexRoute
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
     | "/analysis/$id"
     | "/analysis/create"
     | "/conversations/$sessionId"
+    | "/conversations/new"
     | "/soils/create"
     | "/conversations/"
     | "/soils/"
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | "/analysis/$id"
     | "/analysis/create"
     | "/conversations/$sessionId"
+    | "/conversations/new"
     | "/soils/create"
     | "/conversations"
     | "/soils"
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | "/(app)/analysis/$id"
     | "/(app)/analysis/create"
     | "/(app)/conversations/$sessionId"
+    | "/(app)/conversations/new"
     | "/(app)/soils/create"
     | "/(app)/conversations/"
     | "/(app)/soils/"
@@ -333,6 +345,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof appSoilsCreateRouteImport
       parentRoute: typeof appRouteRoute
     }
+    "/(app)/conversations/new": {
+      id: "/(app)/conversations/new"
+      path: "/new"
+      fullPath: "/conversations/new"
+      preLoaderRoute: typeof appConversationsNewRouteImport
+      parentRoute: typeof appConversationsRouteRoute
+    }
     "/(app)/conversations/$sessionId": {
       id: "/(app)/conversations/$sessionId"
       path: "/$sessionId"
@@ -373,11 +392,13 @@ declare module "@tanstack/react-router" {
 
 interface appConversationsRouteRouteChildren {
   appConversationsSessionIdRoute: typeof appConversationsSessionIdRoute
+  appConversationsNewRoute: typeof appConversationsNewRoute
   appConversationsIndexRoute: typeof appConversationsIndexRoute
 }
 
 const appConversationsRouteRouteChildren: appConversationsRouteRouteChildren = {
   appConversationsSessionIdRoute: appConversationsSessionIdRoute,
+  appConversationsNewRoute: appConversationsNewRoute,
   appConversationsIndexRoute: appConversationsIndexRoute,
 }
 
