@@ -1,11 +1,6 @@
 package com.agripulse.api.web;
 
-import com.agripulse.api.dto.chat.ChatSessionDetailsDTO;
-import com.agripulse.api.dto.chat.ChatSessionSummaryDTO;
-import com.agripulse.api.dto.chat.CreateChatSessionDTO;
-import com.agripulse.api.dto.chat.FavoriteStatusDTO;
-import com.agripulse.api.dto.chat.SendChatMessageDTO;
-import com.agripulse.api.dto.chat.SetFavoriteDTO;
+import com.agripulse.api.dto.chat.*;
 import com.agripulse.api.model.domain.UserId;
 import com.agripulse.api.service.ChatSessionService;
 import jakarta.validation.Valid;
