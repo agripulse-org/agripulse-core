@@ -1,12 +1,14 @@
 package com.agripulse.api.service.impl;
 
 import com.agripulse.api.dto.chat.CreateChatSessionDTO;
+import com.agripulse.api.dto.chat.SoilContext;
 import com.agripulse.api.model.domain.*;
 import com.agripulse.api.model.exceptions.ChatSessionNotFoundException;
 import com.agripulse.api.model.exceptions.SoilProfileNotFoundException;
 import com.agripulse.api.model.projections.ChatSessionWithStats;
 import com.agripulse.api.repository.ChatMessageRepository;
 import com.agripulse.api.repository.ChatSessionRepository;
+import com.agripulse.api.repository.SoilNoteRepository;
 import com.agripulse.api.repository.SoilProfileRepository;
 import com.agripulse.api.service.AgriAIService;
 import com.agripulse.api.service.ChatSessionService;
@@ -33,6 +35,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final SoilProfileRepository soilProfileRepository;
+    private final SoilNoteRepository soilNoteRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -94,9 +97,16 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
         chatMessageRepository.save(new ChatMessage(session, ChatRole.USER, message));
 
+        SoilProfile soilProfile = session.getSoilProfile();
+        SoilContext soilContext = null;
+        if (soilProfile != null) {
+            List<SoilNote> notes = soilNoteRepository.findTop5BySoilProfileIdOrderByCreatedAtDesc(soilProfile.getId());
+            soilContext = SoilContext.from(soilProfile, notes);
+        }
+
         StringBuilder buffer = new StringBuilder();
 
-        return agriAIService.streamResponse(history, message)
+        return agriAIService.streamResponse(history, message, soilContext)
                 .doOnNext(buffer::append)
                 .concatWith(Mono.<String>fromRunnable(() -> {
                     String content = buffer.toString();
