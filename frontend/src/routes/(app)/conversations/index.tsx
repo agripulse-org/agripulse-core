@@ -23,6 +23,10 @@ function ConversationsIndex() {
         setPendingContext(null);
         void navigate({ to: "/conversations/$sessionId", params: { sessionId } });
       }}
+      onBack={() => {
+        setPendingContext(null);
+        void navigate({ to: "/conversations" });
+      }}
     />
   );
 }

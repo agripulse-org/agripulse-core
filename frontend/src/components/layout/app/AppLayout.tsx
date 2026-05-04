@@ -61,6 +61,10 @@ export function AppLayout() {
     void i18n.changeLanguage(language === "en" ? "mk" : "en");
   };
 
+  const showChatWidget = ["/conversations", "/soils/"].every(
+    (path) => !location.pathname.startsWith(path),
+  );
+
   return (
     <div className="flex h-screen bg-background">
       {/* Mobile Header */}
@@ -181,7 +185,7 @@ export function AppLayout() {
         <Outlet />
       </main>
 
-      {!location.pathname.startsWith("/conversations") && (
+      {showChatWidget && (
         <>
           {/* Floating Chat Button (Mobile/Desktop) */}
           {!isChatOpen && (

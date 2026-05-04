@@ -47,24 +47,25 @@ export function ConversationsList({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto not-hover:no-scrollbar">
         {sortedSessions.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground text-sm">
             {searchQuery ? t("chat.noResults") : t("chat.noConversations")}
           </div>
         ) : (
-          <div className="p-2">
+          <div>
             {sortedSessions.map((session) => (
               <motion.div
                 key={session.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className={`
-                  relative p-3 rounded-lg mb-2 cursor-pointer transition-all group
+                  relative px-4 py-3 cursor-pointer transition-all group
+                  border-b border-border/50 last:border-b-0 border-l-[3px]
                   ${
                     selectedId === session.id
-                      ? "bg-primary/10 border border-primary/30"
-                      : "hover:bg-muted border border-transparent"
+                      ? "bg-primary/10 border-l-primary"
+                      : "border-l-transparent hover:bg-muted"
                   }
                 `}
                 onClick={() => onSelectSession(session.id)}

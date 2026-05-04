@@ -58,6 +58,7 @@ function ConversationSession() {
           title={session.title ?? t("chat.newConversation")}
           soilProfile={session.soilProfile}
           isFavorite={session.isFavorite}
+          onBack={() => void navigate({ to: "/conversations" })}
           onToggleFavorite={() => setFav({ sessionId, isFavorite: !session.isFavorite })}
           onDelete={() => setDeleteDialogOpen(true)}
         />

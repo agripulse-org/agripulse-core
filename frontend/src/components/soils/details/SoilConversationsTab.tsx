@@ -2,7 +2,9 @@ import { Suspense, useState } from "react";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 import { NewConversationDialog } from "@/components/chat/NewConversationDialog";
 import {
   getChatSessionQueryOptions,
@@ -40,6 +42,7 @@ interface TabContentProps {
 
 function TabContent({ soilProfileId }: TabContentProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: sessions } = useSuspenseQuery(getChatSessionsQueryOptions(soilProfileId));
 
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
@@ -48,30 +51,66 @@ function TabContent({ soilProfileId }: TabContentProps) {
     null,
   );
 
+  const isMobile = () => window.innerWidth < 768;
+
   const handleCreate = (soilId?: string) => {
+    setShowNewChatModal(false);
+
+    if (isMobile()) {
+      return navigate({
+        to: "/conversations",
+        search: { soilProfileId: soilId ?? soilProfileId ?? undefined },
+      });
+    }
+
     setPendingNewChat({ soilProfileId: soilId ?? soilProfileId ?? null });
     setSelectedSessionId(null);
-    setShowNewChatModal(false);
   };
 
   const handleSessionCreated = (sessionId: string) => {
     setPendingNewChat(null);
+
+    if (isMobile()) {
+      return navigate({ to: "/conversations/$sessionId", params: { sessionId } });
+    }
+
     setSelectedSessionId(sessionId);
+  };
+
+  const handleSelectSession = (id: string) => {
+    if (isMobile()) {
+      return navigate({ to: "/conversations/$sessionId", params: { sessionId: id } });
+    }
+
+    setSelectedSessionId(id);
+    setPendingNewChat(null);
   };
 
   const handleDeleted = () => {
     setSelectedSessionId(null);
   };
 
+  const handleMobileBack = () => {
+    setSelectedSessionId(null);
+    setPendingNewChat(null);
+  };
+
   const showNewChat = pendingNewChat !== null && selectedSessionId === null;
 
+  const handleNewChat = () => setShowNewChatModal(true);
+
   return (
-    <div className="flex h-full bg-background">
-      <div className="w-80 border-r border-border flex flex-col bg-card">
+    <div className="relative flex h-full min-h-162 overflow-hidden bg-card md:border md:border-border md:rounded-xl">
+      <div
+        className={cn(
+          "absolute inset-0 z-10 flex flex-col bg-card transition-transform duration-300 ease-in-out",
+          "md:relative md:inset-auto md:z-auto md:w-80 md:shrink-0 md:border-r md:border-border md:translate-x-0",
+        )}
+      >
         <div className="p-4 border-b border-border flex items-center justify-between">
           <h2 className="font-semibold">{t("chat.aiConversationsTitle")}</h2>
           <button
-            onClick={() => setShowNewChatModal(true)}
+            onClick={handleNewChat}
             className="p-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all"
           >
             <Plus className="w-5 h-5" />
@@ -83,7 +122,7 @@ function TabContent({ soilProfileId }: TabContentProps) {
             <div>
               <p className="text-muted-foreground text-sm mb-4">{t("chat.noConversations")}</p>
               <button
-                onClick={() => setShowNewChatModal(true)}
+                onClick={handleNewChat}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all text-sm"
               >
                 {t("chat.startConversation")}
@@ -94,26 +133,33 @@ function TabContent({ soilProfileId }: TabContentProps) {
           <ConversationsList
             sessions={sessions}
             selectedId={selectedSessionId}
-            onSelectSession={(id) => {
-              setSelectedSessionId(id);
-              setPendingNewChat(null);
-            }}
+            onSelectSession={handleSelectSession}
           />
         )}
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div
+        className={cn(
+          "absolute inset-0 flex flex-col bg-card transition-transform duration-300 ease-in-out",
+          "md:relative md:inset-auto md:flex-1 md:translate-x-0",
+        )}
+      >
         {showNewChat ? (
           <NewConversationView
             soilProfileId={pendingNewChat.soilProfileId}
             onSessionCreated={handleSessionCreated}
+            onBack={handleMobileBack}
           />
         ) : selectedSessionId ? (
           <Suspense fallback={<PageLoader />}>
-            <ConversationContainer sessionId={selectedSessionId} onDeleted={handleDeleted} />
+            <ConversationContainer
+              sessionId={selectedSessionId}
+              onDeleted={handleDeleted}
+              onBack={handleMobileBack}
+            />
           </Suspense>
         ) : (
-          <ConversationsEmptyState onCreateNew={() => setShowNewChatModal(true)} />
+          <ConversationsEmptyState onCreateNew={handleNewChat} />
         )}
       </div>
 
@@ -131,9 +177,10 @@ function TabContent({ soilProfileId }: TabContentProps) {
 interface ConversationContainerProps {
   sessionId: string;
   onDeleted: () => void;
+  onBack?: () => void;
 }
 
-function ConversationContainer({ sessionId, onDeleted }: ConversationContainerProps) {
+function ConversationContainer({ sessionId, onDeleted, onBack }: ConversationContainerProps) {
   const { t } = useTranslation();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -164,6 +211,7 @@ function ConversationContainer({ sessionId, onDeleted }: ConversationContainerPr
         <ConversationHeader
           title={session.title ?? t("chat.newConversation")}
           isFavorite={session.isFavorite}
+          onBack={onBack}
           onToggleFavorite={() => setFav({ sessionId, isFavorite: !session.isFavorite })}
           onDelete={() => setDeleteDialogOpen(true)}
         />

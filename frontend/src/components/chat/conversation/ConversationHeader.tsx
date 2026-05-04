@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
-import { ExternalLink, Star, Trash2 } from "lucide-react";
+import { ArrowLeft, ExternalLink, Star, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ConversationHeaderProps {
   title: string;
   soilProfile?: { id: string; name: string } | null;
   isFavorite?: boolean;
+  onBack?: () => void;
   onToggleFavorite?: () => void;
   onDelete?: () => void;
 }
@@ -15,6 +16,7 @@ export function ConversationHeader({
   title,
   isFavorite,
   soilProfile,
+  onBack,
   onToggleFavorite,
   onDelete,
 }: ConversationHeaderProps) {
@@ -23,8 +25,16 @@ export function ConversationHeader({
 
   return (
     <div className="p-4 border-b border-border flex items-center justify-between min-h-17.25">
-      <div className="flex-1">
-        <h2 className="text-lg font-medium mb-1">{title}</h2>
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="md:hidden mr-2 p-2 hover:bg-muted rounded-lg transition-all text-muted-foreground flex-shrink-0"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+      )}
+      <div className="flex-1 min-w-0">
+        <h2 className="text-lg font-medium mb-1 truncate">{title}</h2>
 
         {soilProfile && (
           <button

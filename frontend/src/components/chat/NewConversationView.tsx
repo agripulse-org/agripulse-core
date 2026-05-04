@@ -7,9 +7,10 @@ import { ConversationHeader, ConversationInput, ConversationMessages } from "./c
 interface NewConversationViewProps {
   soilProfileId?: string | null;
   onSessionCreated: (sessionId: string) => void;
+  onBack?: () => void;
 }
 
-export function NewConversationView({ soilProfileId, onSessionCreated }: NewConversationViewProps) {
+export function NewConversationView({ soilProfileId, onSessionCreated, onBack }: NewConversationViewProps) {
   const { t } = useTranslation();
 
   const { messages, sendMessage, isStreaming } = useChatMessages({
@@ -33,7 +34,7 @@ export function NewConversationView({ soilProfileId, onSessionCreated }: NewConv
 
   return (
     <div className="flex flex-col h-full">
-      <ConversationHeader title={t("chat.newConversation")} />
+      <ConversationHeader title={t("chat.newConversation")} onBack={onBack} />
 
       <ConversationMessages messages={messages} isStreaming={isStreaming} />
 

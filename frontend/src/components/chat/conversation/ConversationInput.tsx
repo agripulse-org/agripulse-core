@@ -25,7 +25,7 @@ export function ConversationInput({ disabled, onSubmit }: ConversationInputProps
   };
 
   return (
-    <div className="p-4 border-t border-border bg-background">
+    <div className="p-4 border-t border-border bg-card">
       <div className="flex gap-3">
         <textarea
           value={input}
@@ -33,7 +33,7 @@ export function ConversationInput({ disabled, onSubmit }: ConversationInputProps
           onKeyDown={handleKeyPress}
           placeholder={t("chat.placeholder")}
           rows={1}
-          className="flex-1 px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+          className="flex-1 min-w-0 px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none placeholder:truncate"
           style={{ minHeight: "48px", maxHeight: "120px" }}
           disabled={disabled}
           autoFocus

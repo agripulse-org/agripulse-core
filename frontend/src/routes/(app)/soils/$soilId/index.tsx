@@ -170,11 +170,7 @@ export function SoilDetailsPage() {
             />
           )}
           {activeTab === "notes" && <SoilNotesTab key="notes" soilProfileId={id} />}
-          {activeTab === "chat" && (
-            <div className="h-[63vh]">
-              <SoilConversationsTab soilProfileId={id} />
-            </div>
-          )}
+          {activeTab === "chat" && <SoilConversationsTab soilProfileId={id} />}
         </AnimatePresence>
       </div>
 
