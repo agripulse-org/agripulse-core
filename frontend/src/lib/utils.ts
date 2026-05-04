@@ -17,3 +17,7 @@ export function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(
     timeout = setTimeout(() => func(...args), waitFor);
   };
 }
+
+export function uid() {
+  return crypto.randomUUID();
+}

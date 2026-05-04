@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
-  X,
   MapPin,
   Edit,
   Calendar,
@@ -10,7 +9,6 @@ import {
   Plus,
   Upload,
   MessageSquare,
-  Trash2,
   FileText,
   FlaskConical,
   ChevronRight,
@@ -21,14 +19,10 @@ import { toast } from "sonner";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { getSoilProfileByIdQueryOptions } from "@/data/soilProfile";
-import {
-  ANALYSIS_DEPTH_OPTIONS,
-  SOIL_DETAILS_MOCK_ANALYSES,
-  SOIL_DETAILS_MOCK_CHAT_SESSIONS,
-  SOIL_DETAILS_MOCK_INITIAL_CHAT_MESSAGES,
-} from "@/lib/constants";
+import { ANALYSIS_DEPTH_OPTIONS, SOIL_DETAILS_MOCK_ANALYSES } from "@/lib/constants";
 import { APIError } from "@/services/apiClient";
 import { SoilNotesTab } from "@/components/soils/details/SoilNotesTab";
+import { SoilConversationsTab } from "@/components/soils/details/SoilConversationsTab";
 
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
@@ -59,8 +53,6 @@ export function SoilDetailsPage() {
   const { data: soil } = useSuspenseQuery(getSoilProfileByIdQueryOptions(id));
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [showNewAnalysisModal, setShowNewAnalysisModal] = useState(false);
-  const [showChatModal, setShowChatModal] = useState(false);
-  const [selectedChatSession, setSelectedChatSession] = useState<string | null>(null);
 
   const locationParts = [soil.city, soil.country].filter((value): value is string =>
     Boolean(value),
@@ -78,16 +70,9 @@ export function SoilDetailsPage() {
   const handleCreateAnalysis = (depth: string) => {
     toast.success(t("soils.details.analysis.creating", { depth }));
     setShowNewAnalysisModal(false);
-    // Simulate analysis creation
     setTimeout(() => {
       toast.success(t("soils.details.analysis.created"));
     }, 1500);
-  };
-
-  const handleDeleteChatSession = (_sessionId: string) => {
-    if (confirm(t("soils.details.chat.deleteConfirm"))) {
-      toast.success(t("soils.details.chat.deleted"));
-    }
   };
 
   return (
@@ -167,7 +152,6 @@ export function SoilDetailsPage() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <AnimatePresence mode="wait">
           {activeTab === "overview" && (
@@ -186,36 +170,14 @@ export function SoilDetailsPage() {
             />
           )}
           {activeTab === "notes" && <SoilNotesTab key="notes" soilProfileId={id} />}
-          {activeTab === "chat" && (
-            <ChatSessionsTab
-              key="chat"
-              sessions={SOIL_DETAILS_MOCK_CHAT_SESSIONS}
-              onOpenSession={(sessionId) => {
-                setSelectedChatSession(sessionId);
-                setShowChatModal(true);
-              }}
-              onDeleteSession={handleDeleteChatSession}
-            />
-          )}
+          {activeTab === "chat" && <SoilConversationsTab soilProfileId={id} />}
         </AnimatePresence>
       </div>
 
-      {/* New Analysis Modal */}
       {showNewAnalysisModal && (
         <NewAnalysisModal
           onClose={() => setShowNewAnalysisModal(false)}
           onCreate={handleCreateAnalysis}
-        />
-      )}
-
-      {/* Chat Session Modal */}
-      {showChatModal && selectedChatSession && (
-        <ChatSessionModal
-          sessionId={selectedChatSession}
-          onClose={() => {
-            setShowChatModal(false);
-            setSelectedChatSession(null);
-          }}
         />
       )}
     </div>
@@ -394,83 +356,6 @@ function AnalysesTab({ analyses, onCreateNew }: { analyses: any[]; onCreateNew: 
                     <span className="text-sm font-medium text-primary">{rec.compatibility}%</span>
                   </div>
                 ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-// Chat Sessions Tab Component
-function ChatSessionsTab({
-  sessions,
-  onOpenSession,
-  onDeleteSession,
-}: {
-  sessions: any[];
-  onOpenSession: (id: string) => void;
-  onDeleteSession: (id: string) => void;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-    >
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-2xl mb-1">{t("soils.details.chat.title")}</h2>
-          <p className="text-muted-foreground text-sm">{t("soils.details.chat.subtitle")}</p>
-        </div>
-        <button
-          onClick={() => onOpenSession("new")}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all shadow-lg"
-        >
-          <Plus className="w-5 h-5" />
-          <span>{t("soils.details.chat.newSession")}</span>
-        </button>
-      </div>
-
-      {sessions.length === 0 ? (
-        <EmptyState
-          icon={MessageSquare}
-          title={t("soils.details.chat.emptyTitle")}
-          description={t("soils.details.chat.emptyDescription")}
-          action={{ label: t("soils.details.chat.startChat"), onClick: () => onOpenSession("new") }}
-        />
-      ) : (
-        <div className="space-y-3">
-          {sessions.map((session, index) => (
-            <motion.div
-              key={session.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-card border border-border rounded-xl p-6 hover:shadow-md transition-all"
-            >
-              <div className="flex items-start justify-between">
-                <div onClick={() => onOpenSession(session.id)} className="flex-1 cursor-pointer">
-                  <h3 className="font-medium mb-2">{session.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-1">
-                    {session.lastMessage}
-                  </p>
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <span>{new Date(session.date).toLocaleDateString()}</span>
-                    <span>
-                      {session.messageCount} {t("soils.details.chat.messages")}
-                    </span>
-                  </div>
-                </div>
-                <button
-                  onClick={() => onDeleteSession(session.id)}
-                  className="p-2 hover:bg-destructive/10 text-destructive rounded-lg transition-all"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
               </div>
             </motion.div>
           ))}
@@ -722,118 +607,6 @@ function NewAnalysisModal({
             </div>
           </motion.div>
         )}
-      </motion.div>
-    </div>
-  );
-}
-
-// Chat Session Modal Component
-function ChatSessionModal({ sessionId, onClose }: { sessionId: string; onClose: () => void }) {
-  const { t } = useTranslation();
-
-  type ChatMessage = {
-    id: string;
-    role: "assistant" | "user";
-    content: string;
-    timestamp: Date;
-  };
-
-  const [messages, setMessages] = useState<ChatMessage[]>(
-    sessionId === "new" ? [] : [...SOIL_DETAILS_MOCK_INITIAL_CHAT_MESSAGES],
-  );
-  const [input, setInput] = useState("");
-
-  const handleSend = () => {
-    if (!input.trim()) return;
-
-    const newMessage: ChatMessage = {
-      id: Date.now().toString(),
-      role: "user",
-      content: input,
-      timestamp: new Date(),
-    };
-
-    setMessages([...messages, newMessage]);
-    setInput("");
-
-    // Simulate AI response
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: t("soils.details.chat.assistantReply"),
-          timestamp: new Date(),
-        } satisfies ChatMessage,
-      ]);
-    }, 1000);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-card border border-border rounded-2xl w-full max-w-2xl h-[600px] flex flex-col"
-      >
-        {/* Header */}
-        <div className="p-6 border-b border-border flex items-center justify-between">
-          <h3 className="text-xl">
-            {sessionId === "new"
-              ? t("soils.details.chat.newSession")
-              : t("soils.details.chat.session")}
-          </h3>
-          <button onClick={onClose} className="p-2 hover:bg-muted rounded-lg transition-all">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {messages.length === 0 ? (
-            <div className="text-center text-muted-foreground py-12">
-              <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{t("soils.details.chat.emptyDescription")}</p>
-            </div>
-          ) : (
-            messages.map((message: any) => (
-              <div
-                key={message.id}
-                className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-3 ${
-                    message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                  }`}
-                >
-                  <p className="text-sm">{message.content}</p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Input */}
-        <div className="p-6 border-t border-border">
-          <div className="flex gap-3">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSend()}
-              placeholder={t("chat.placeholder")}
-              className="flex-1 px-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
-            <button
-              onClick={handleSend}
-              disabled={!input.trim()}
-              className="px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all disabled:opacity-50 shadow-lg"
-            >
-              {t("chat.send")}
-            </button>
-          </div>
-        </div>
       </motion.div>
     </div>
   );
