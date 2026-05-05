@@ -1,5 +1,6 @@
 package com.agripulse.api.client;
 
+import com.agripulse.api.client.gotenberg.GotenbergClient;
 import com.agripulse.api.client.openweather.OpenWeatherClient;
 import com.agripulse.api.client.openweather.OpenWeatherClientFallback;
 import com.agripulse.api.client.soilgrids.SoilGridsClient;
@@ -30,6 +31,9 @@ public class HttpClientsConfig {
 
     private static final Duration SOILGRIDS_CONNECT_TIMEOUT = Duration.ofSeconds(5);
     private static final Duration SOILGRIDS_READ_TIMEOUT = Duration.ofSeconds(15);
+
+    private static final Duration GOTENBERG_CONNECT_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration GOTENBERG_READ_TIMEOUT = Duration.ofSeconds(60);
 
     private static Object invoke(Method method, Object target, Object[] args) throws Throwable {
         try {
@@ -69,6 +73,17 @@ public class HttpClientsConfig {
         );
 
         return circuitBreakerProxy(real, new SoilGridsClientFallback(), cbRegistry.circuitBreaker("soilgrids"), SoilGridsClient.class);
+    }
+
+    @Bean
+    public GotenbergClient gotenbergClient(ExternalServiceProperties props) {
+        return buildHttpClient(
+                props.getGotenberg().getBaseUrl(),
+                GOTENBERG_CONNECT_TIMEOUT,
+                GOTENBERG_READ_TIMEOUT,
+                null,
+                GotenbergClient.class
+        );
     }
 
     @SuppressWarnings("unchecked")

@@ -2,6 +2,7 @@ package com.agripulse.api;
 
 import com.agripulse.api.model.domain.SoilProperties;
 import com.agripulse.api.model.domain.WeatherData;
+import com.agripulse.api.service.PdfGeneratorService;
 import com.agripulse.api.service.SoilPropertiesService;
 import com.agripulse.api.service.WeatherService;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,9 @@ class ExternalServicesIntegrationTest {
 
     @Autowired
     SoilPropertiesService soilPropertiesService;
+
+    @Autowired
+    PdfGeneratorService pdfGeneratorService;
 
     @Test
     @EnabledIfEnvironmentVariable(named = "OPENWEATHER_API_KEY", matches = ".+")
@@ -49,5 +53,29 @@ class ExternalServicesIntegrationTest {
         assertThat(props.clay()).isNotNull().isBetween(0.0, 1000.0);
         assertThat(props.sand()).isNotNull().isBetween(0.0, 1000.0);
         assertThat(props.silt()).isNotNull().isBetween(0.0, 1000.0);
+    }
+
+    @Test
+    void gotenbergClient_convertsHtmlToPdf() {
+        String html = """
+                <!DOCTYPE html>
+                <html>
+                  <head><meta charset="UTF-8"/><title>Test Report</title></head>
+                  <body><h1>AgriPulse Report</h1><p>Integration test page.</p></body>
+                </html>
+                """;
+
+        byte[] pdf = pdfGeneratorService.generateFromHtml(html);
+
+        System.out.println("Generated PDF size: " + pdf.length + " bytes");
+
+        assertThat(pdf).isNotNull();
+        assertThat(pdf.length).isGreaterThan(0);
+
+        // PDF magic bytes: %PDF (0x25 0x50 0x44 0x46)
+        assertThat(pdf[0]).isEqualTo((byte) 0x25);
+        assertThat(pdf[1]).isEqualTo((byte) 0x50);
+        assertThat(pdf[2]).isEqualTo((byte) 0x44);
+        assertThat(pdf[3]).isEqualTo((byte) 0x46);
     }
 }

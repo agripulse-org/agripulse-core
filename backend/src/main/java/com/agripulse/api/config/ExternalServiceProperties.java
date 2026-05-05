@@ -13,6 +13,7 @@ public class ExternalServiceProperties {
 
     private OpenWeather openweather = new OpenWeather();
     private Soilgrids soilgrids = new Soilgrids();
+    private Gotenberg gotenberg = new Gotenberg();
 
     @Getter
     @Setter
@@ -25,5 +26,11 @@ public class ExternalServiceProperties {
     @Setter
     public static class Soilgrids {
         private String baseUrl = "https://rest.isric.org/soilgrids/v2.0";
+    }
+
+    @Getter
+    @Setter
+    public static class Gotenberg {
+        private String baseUrl = "https://gotenberg.char-beardie.ts.net/";
     }
 }
