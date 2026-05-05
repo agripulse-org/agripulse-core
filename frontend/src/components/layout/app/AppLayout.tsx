@@ -167,7 +167,7 @@ export function AppLayout() {
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted transition-all"
           >
             <Globe className="w-5 h-5" />
-            <span>{language === "en" ? "MK" : "EN"}</span>
+            <span>{language === "en" ? "EN" : "MK"}</span>
           </button>
           <button
             onClick={handleLogout}

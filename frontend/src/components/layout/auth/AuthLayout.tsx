@@ -66,7 +66,7 @@ export function AuthLayout() {
           className="absolute top-6 right-6 flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-muted/80 transition-all"
         >
           <Globe className="w-4 h-4" />
-          <span>{language === "en" ? "MK" : "EN"}</span>
+          <span>{language === "en" ? "EN" : "MK"}</span>
         </button>
 
         <motion.div
