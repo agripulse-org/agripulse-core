@@ -2,11 +2,12 @@ package com.agripulse.api.web;
 
 import com.agripulse.api.dto.soil_analysis.CreateSoilAnalysisDTO;
 import com.agripulse.api.dto.soil_analysis.SoilAnalysisDTO;
+import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.UserId;
 import com.agripulse.api.service.SoilAnalysisService;
-
 import jakarta.validation.Valid;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +61,7 @@ public class SoilAnalysisController {
     }
 
     @PostMapping
-    public SoilAnalysisDTO create(
+    public ResponseEntity<SoilAnalysisDTO> create(
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable UUID soilProfileId,
             @Valid @RequestBody CreateSoilAnalysisDTO request
@@ -68,13 +69,15 @@ public class SoilAnalysisController {
 
         UserId userId = UserId.of(jwt.getSubject());
 
-        return SoilAnalysisDTO.from(
-                soilAnalysisService.create(
-                        userId,
-                        soilProfileId,
-                        request
-                )
+        SoilAnalysis analysis = soilAnalysisService.create(
+                userId,
+                soilProfileId,
+                request
         );
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(SoilAnalysisDTO.from(analysis));
     }
 
     @DeleteMapping("/{analysisId}")

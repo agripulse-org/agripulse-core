@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
 public interface ChatSessionRepository extends JpaRepository<ChatSession, UUID> {
 
     @Query("SELECT s FROM ChatSession s LEFT JOIN FETCH s.soilProfile WHERE s.userId = :userId " +

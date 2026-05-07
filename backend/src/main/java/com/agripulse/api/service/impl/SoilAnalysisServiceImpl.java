@@ -1,20 +1,14 @@
 package com.agripulse.api.service.impl;
-
 import com.agripulse.api.dto.soil_analysis.CreateSoilAnalysisDTO;
 import com.agripulse.api.model.domain.SoilAnalysis;
-import com.agripulse.api.model.domain.SoilNote;
 import com.agripulse.api.model.domain.UserId;
 import com.agripulse.api.model.exceptions.SoilAnalysisNotFoundException;
-import com.agripulse.api.model.exceptions.SoilNoteNotFoundException;
 import com.agripulse.api.model.exceptions.SoilProfileNotFoundException;
 import com.agripulse.api.repository.SoilAnalysisRepository;
 import com.agripulse.api.repository.SoilProfileRepository;
 import com.agripulse.api.service.SoilAnalysisService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,15 +34,23 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
     }
 
     @Override
-    public SoilAnalysis create(UserId userId, UUID soilProfileId, CreateSoilAnalysisDTO request) {
-        var profile = soilProfileRepository.findById(request.soilProfileId())
-                .orElseThrow(() -> new SoilProfileNotFoundException(request.soilProfileId()));
+    public SoilAnalysis create(
+            UserId userId,
+            UUID soilProfileId,
+            CreateSoilAnalysisDTO request
+    ) {
+
+        var profile = soilProfileRepository.findById(soilProfileId)
+                .orElseThrow(() ->
+                        new SoilProfileNotFoundException(soilProfileId)
+                );
 
         if (!profile.getUserId().equals(userId)) {
-            throw new SoilProfileNotFoundException(request.soilProfileId());
+            throw new SoilProfileNotFoundException(soilProfileId);
         }
 
-        SoilAnalysis analysis = request.toEntity(profile);
+        SoilAnalysis analysis = new SoilAnalysis(profile);
+
         return soilAnalysisRepository.save(analysis);
     }
 

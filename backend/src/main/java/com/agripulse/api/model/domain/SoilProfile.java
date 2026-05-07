@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class SoilProfile {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "soilProfile", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SoilAnalysis> analyses;
+    private List<SoilAnalysis> analyses = new ArrayList<>();
 
     public SoilProfile(String name, String description, Double latitude, Double longitude, String city, String country, UserId userId) {
         this.name = name;

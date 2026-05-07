@@ -9,9 +9,6 @@ import java.util.UUID;
 
 public record CreateSoilAnalysisDTO(
 
-        @NotNull(message = "Soil profile id is required")
-        UUID soilProfileId
-
 ) {
 
     public SoilAnalysis toEntity(SoilProfile soilProfile) {
