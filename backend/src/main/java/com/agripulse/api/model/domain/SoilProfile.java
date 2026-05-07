@@ -41,7 +41,12 @@ public class SoilProfile {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "soilProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "soilProfile",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     private List<SoilAnalysis> analyses = new ArrayList<>();
 
     public SoilProfile(String name, String description, Double latitude, Double longitude, String city, String country, UserId userId) {

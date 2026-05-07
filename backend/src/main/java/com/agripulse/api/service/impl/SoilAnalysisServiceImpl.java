@@ -25,12 +25,15 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
 
     @Override
     public List<SoilAnalysis> findAll(UserId userId, UUID soilProfileId) {
-        return soilAnalysisRepository.findAllBySoilProfile_IdAndSoilProfile_UserId(soilProfileId, userId);
+        return soilAnalysisRepository
+                .findBySoilProfile_IdAndSoilProfile_UserIdOrderByCreatedAtDesc(soilProfileId, userId);
     }
 
     @Override
     public SoilAnalysis getAnalysis(UserId userId, UUID soilProfileId, UUID analysisId) {
-        return soilAnalysisRepository.findByIdAndSoilProfile_IdAndSoilProfile_UserId(analysisId, soilProfileId, userId).orElseThrow(()->new SoilAnalysisNotFoundException(analysisId));
+        return soilAnalysisRepository
+                .findByIdAndSoilProfile_IdAndSoilProfile_UserId(analysisId, soilProfileId, userId)
+                .orElseThrow(()->new SoilAnalysisNotFoundException(analysisId));
     }
 
     @Override
@@ -49,7 +52,7 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
             throw new SoilProfileNotFoundException(soilProfileId);
         }
 
-        SoilAnalysis analysis = new SoilAnalysis(profile);
+        SoilAnalysis analysis = new SoilAnalysis(profile, request.soilDepth());
 
         return soilAnalysisRepository.save(analysis);
     }

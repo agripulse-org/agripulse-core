@@ -2,7 +2,7 @@ package com.agripulse.api.service.impl;
 
 import com.agripulse.api.dto.chat.SoilContext;
 import com.agripulse.api.model.domain.ChatMessage;
-import com.agripulse.api.model.domain.ChatRole;
+import com.agripulse.api.model.enums.ChatRole;
 import com.agripulse.api.service.AgriAIService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;

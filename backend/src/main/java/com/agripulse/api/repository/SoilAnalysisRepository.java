@@ -9,13 +9,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface SoilAnalysisRepository extends JpaRepository<SoilAnalysis, UUID> {
-    List<SoilAnalysis> findBySoilProfileIdOrderByCreatedAtDesc(UUID soilProfileId);
-    List<SoilAnalysis> findAllBySoilProfile_IdAndSoilProfile_UserId(
+    List<SoilAnalysis> findBySoilProfile_IdAndSoilProfile_UserIdOrderByCreatedAtDesc(
             UUID soilProfileId,
             UserId userId
     );
-    Optional<SoilAnalysis>
-    findByIdAndSoilProfile_IdAndSoilProfile_UserId(
+    Optional<SoilAnalysis> findByIdAndSoilProfile_IdAndSoilProfile_UserId(
             UUID analysisId,
             UUID soilProfileId,
             UserId userId

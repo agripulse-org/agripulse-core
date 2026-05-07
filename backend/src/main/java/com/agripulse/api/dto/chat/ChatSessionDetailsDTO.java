@@ -1,7 +1,7 @@
 package com.agripulse.api.dto.chat;
 
 import com.agripulse.api.model.domain.ChatMessage;
-import com.agripulse.api.model.domain.ChatRole;
+import com.agripulse.api.model.enums.ChatRole;
 import com.agripulse.api.model.domain.ChatSession;
 import com.agripulse.api.model.domain.SoilProfile;
 
@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public record ChatSessionDetailsDTO(
+public record  ChatSessionDetailsDTO(
         UUID id,
         String title,
         SoilProfileSummaryDTO soilProfile,
