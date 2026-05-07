@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,6 +40,9 @@ public class SoilProfile {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @OneToMany(mappedBy = "soilProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SoilAnalysis> analyses;
+
     public SoilProfile(String name, String description, Double latitude, Double longitude, String city, String country, UserId userId) {
         this.name = name;
         this.description = description;
@@ -47,5 +51,15 @@ public class SoilProfile {
         this.userId = userId;
         this.city = city;
         this.country = country;
+    }
+
+    public void addAnalysis(SoilAnalysis analysis) {
+        analyses.add(analysis);
+        analysis.setSoilProfile(this);
+    }
+
+    public void removeAnalysis(SoilAnalysis analysis) {
+        analyses.remove(analysis);
+        analysis.setSoilProfile(null);
     }
 }
