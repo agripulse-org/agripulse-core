@@ -2,7 +2,7 @@ package com.agripulse.api.dto.soil_analysis;
 
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.enums.SoilDepth;
-import com.agripulse.api.model.enums.Status;
+import com.agripulse.api.model.enums.AnalysisStatus;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,16 +15,12 @@ public record SoilAnalysisDTO(
         LocalDateTime updatedAt,
 
         SoilDepth soilDepth,
-        Status status,
-
-        // Soil chemistry
+        AnalysisStatus status,
 
         Double ph,
         Double nitrogen,
         Double cec,
         Double organicCarbon,
-
-        // Soil structure
 
         Double sandContent,
         Double siltContent,
@@ -32,11 +28,7 @@ public record SoilAnalysisDTO(
         Double bulkDensity,
         Double coarseFragments,
 
-        // Water
-
         Double plantAvailableWater,
-
-        // Weather
 
         Double temperatureAvgC,
         Double temperatureMinC,
@@ -60,14 +52,10 @@ public record SoilAnalysisDTO(
                 analysis.getSoilDepth(),
                 analysis.getStatus(),
 
-                // Soil chemistry
-
                 analysis.getPh(),
                 analysis.getNitrogen(),
                 analysis.getCec(),
                 analysis.getOrganicCarbon(),
-
-                // Soil structure
 
                 analysis.getSandContent(),
                 analysis.getSiltContent(),
@@ -75,11 +63,7 @@ public record SoilAnalysisDTO(
                 analysis.getBulkDensity(),
                 analysis.getCoarseFragments(),
 
-                // Water
-
                 analysis.getPlantAvailableWater(),
-
-                // Weather
 
                 analysis.getTemperatureAvgC(),
                 analysis.getTemperatureMinC(),

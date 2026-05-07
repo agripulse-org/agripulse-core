@@ -1,5 +1,5 @@
 package com.agripulse.api.model.enums;
 
-public enum Status {
+public enum AnalysisStatus {
     FAILED, PENDING, FINISHED
 }

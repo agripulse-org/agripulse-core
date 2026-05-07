@@ -1,7 +1,7 @@
 package com.agripulse.api.model.domain;
 
 import com.agripulse.api.model.enums.SoilDepth;
-import com.agripulse.api.model.enums.Status;
+import com.agripulse.api.model.enums.AnalysisStatus;
 
 import jakarta.persistence.*;
 
@@ -35,7 +35,7 @@ public class SoilAnalysis {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status;
+    private AnalysisStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "soil_profile_id", nullable = false)
@@ -87,7 +87,7 @@ public class SoilAnalysis {
     ) {
         this.soilProfile = soilProfile;
         this.soilDepth = soilDepth;
-        this.status = Status.PENDING;
+        this.status = AnalysisStatus.PENDING;
     }
 
     @PreUpdate

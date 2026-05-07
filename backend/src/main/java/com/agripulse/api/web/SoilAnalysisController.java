@@ -4,6 +4,7 @@ import com.agripulse.api.dto.soil_analysis.CreateSoilAnalysisDTO;
 import com.agripulse.api.dto.soil_analysis.SoilAnalysisDTO;
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.UserId;
+import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.service.SoilAnalysisService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -94,5 +96,28 @@ public class SoilAnalysisController {
                 soilProfileId,
                 analysisId
         );
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<List<SoilAnalysisDTO>> uploadCsv(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID soilProfileId,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam SoilDepth soilDepth
+    ) {
+        UserId userId = UserId.of(jwt.getSubject());
+
+        List<SoilAnalysis> analyses = soilAnalysisService.uploadCsv(
+                userId,
+                soilProfileId,
+                file,
+                soilDepth
+        );
+
+        List<SoilAnalysisDTO> result = analyses.stream()
+                .map(SoilAnalysisDTO::from)
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 }
