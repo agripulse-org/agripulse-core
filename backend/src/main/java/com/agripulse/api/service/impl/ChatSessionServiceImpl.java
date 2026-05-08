@@ -3,6 +3,7 @@ package com.agripulse.api.service.impl;
 import com.agripulse.api.dto.chat.CreateChatSessionDTO;
 import com.agripulse.api.dto.chat.SoilContext;
 import com.agripulse.api.model.domain.*;
+import com.agripulse.api.model.enums.ChatRole;
 import com.agripulse.api.model.exceptions.ChatSessionNotFoundException;
 import com.agripulse.api.model.exceptions.SoilProfileNotFoundException;
 import com.agripulse.api.model.projections.ChatSessionWithStats;

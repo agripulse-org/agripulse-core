@@ -1,5 +1,6 @@
 package com.agripulse.api.model.domain;
 
+import com.agripulse.api.model.enums.ChatRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

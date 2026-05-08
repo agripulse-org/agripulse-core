@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, UUID> {
 
     long countByChatSession(ChatSession chatSession);
