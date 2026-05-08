@@ -65,7 +65,7 @@ function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) throw new Error();
