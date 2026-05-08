@@ -40,6 +40,12 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
                 .findByIdAndSoilProfile_IdAndSoilProfile_UserId(analysisId, soilProfileId, userId)
                 .orElseThrow(()->new SoilAnalysisNotFoundException(analysisId));
     }
+    @Override
+    public SoilAnalysis getAnalysisById(UserId userId, UUID analysisId) {
+        return soilAnalysisRepository
+                .findByIdAndSoilProfile_UserId(analysisId, userId)
+                .orElseThrow(() -> new SoilAnalysisNotFoundException(analysisId));
+    }
 
     @Override
     public SoilAnalysis create(

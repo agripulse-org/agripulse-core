@@ -10,7 +10,7 @@ import java.util.UUID;
 public record SoilAnalysisDTO(
 
         UUID id,
-
+        UUID soilProfileId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
 
@@ -46,6 +46,7 @@ public record SoilAnalysisDTO(
 
                 analysis.getId(),
 
+                analysis.getSoilProfile().getId(),
                 analysis.getCreatedAt(),
                 analysis.getUpdatedAt(),
 

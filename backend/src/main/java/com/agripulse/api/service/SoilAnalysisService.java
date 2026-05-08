@@ -23,6 +23,8 @@ public interface SoilAnalysisService {
             UUID analysisId
     );
 
+    SoilAnalysis getAnalysisById(UserId userId, UUID analysisId);
+
     SoilAnalysis create(
             UserId userId,
             UUID soilProfileId,
