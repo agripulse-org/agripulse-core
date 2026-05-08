@@ -8,6 +8,7 @@ import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.service.SoilAnalysisService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -98,7 +99,7 @@ public class SoilAnalysisController {
         );
     }
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<SoilAnalysisDTO>> uploadCsv(
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable UUID soilProfileId,
