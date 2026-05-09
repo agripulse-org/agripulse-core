@@ -94,6 +94,7 @@
   "analysis.details.deleted": "Analysis deleted successfully",
   "analysis.details.downloading": "Downloading PDF report...",
   "analysis.details.downloaded": "PDF report downloaded",
+  "analysis.details.downloadError": "Failed to download PDF report",
   "analysis.details.backToDashboard": "Back to Dashboard",
   "analysis.details.downloadPDFShort": "Download PDF",
   "analysis.details.importantNote": "Important Note",

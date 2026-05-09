@@ -41,4 +41,10 @@ public interface SoilAnalysisService {
             MultipartFile file,
             SoilDepth soilDepth
     );
+
+    byte[] exportReport(
+            UserId userId,
+            UUID soilProfileId,
+            UUID analysisId
+    );
 }
