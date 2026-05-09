@@ -7,6 +7,7 @@ import com.agripulse.api.model.domain.UserId;
 import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.service.SoilAnalysisService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -97,6 +98,23 @@ public class SoilAnalysisController {
                 soilProfileId,
                 analysisId
         );
+    }
+
+    @GetMapping("/{analysisId}/export")
+    public ResponseEntity<byte[]> exportReport(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID soilProfileId,
+            @PathVariable UUID analysisId
+    ) {
+        UserId userId = UserId.of(jwt.getSubject());
+
+        byte[] pdf = soilAnalysisService.exportReport(userId, soilProfileId, analysisId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "soil-report-" + analysisId + ".pdf");
+
+        return ResponseEntity.ok().headers(headers).body(pdf);
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

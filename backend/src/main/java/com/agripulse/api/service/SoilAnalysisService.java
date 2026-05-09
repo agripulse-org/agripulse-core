@@ -23,8 +23,6 @@ public interface SoilAnalysisService {
             UUID analysisId
     );
 
-    SoilAnalysis getAnalysisById(UserId userId, UUID analysisId);
-
     SoilAnalysis create(
             UserId userId,
             UUID soilProfileId,
@@ -42,5 +40,11 @@ public interface SoilAnalysisService {
             UUID soilProfileId,
             MultipartFile file,
             SoilDepth soilDepth
+    );
+
+    byte[] exportReport(
+            UserId userId,
+            UUID soilProfileId,
+            UUID analysisId
     );
 }

@@ -14,8 +14,6 @@ import {
 import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useAuth } from "@clerk/clerk-react";
-import { getAnalysisById } from "@/services/soil-analysis/soilAnalysisService";
 import { ANALYSIS_DETAILS_MOCK } from "@/lib/constants";
 
 export const Route = createFileRoute("/(app)/analysis/$id")({
@@ -34,7 +32,6 @@ function AnalysisDetailsRoute() {
 function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { getToken } = useAuth();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -43,42 +40,11 @@ function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
     setTimeout(() => navigate({ to: "/" }), 500);
   };
 
-  const downloadBlob = (blob: Blob, filename: string) => {
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-
-  const handleDownloadPDF = async () => {
-    try {
-      toast.loading(t("analysis.details.downloading"));
-
-      const token = await getToken();
-      const analysis = await getAnalysisById(id);
-
-      const response = await fetch(
-        `/api/soil-profiles/${analysis.soilProfileId}/analyses/${id}/export`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (!response.ok) throw new Error();
-
-      const blob = await response.blob();
-      downloadBlob(blob, `soil-report-${id}.pdf`);
-      toast.dismiss();
+  const handleDownloadPDF = () => {
+    toast.success(t("analysis.details.downloading"));
+    setTimeout(() => {
       toast.success(t("analysis.details.downloaded"));
-    } catch (e) {
-      console.error(e);
-      toast.dismiss();
-      toast.error(t("analysis.details.downloadError"));
-    }
+    }, 1500);
   };
 
   const getStatusColor = (status: string) => {

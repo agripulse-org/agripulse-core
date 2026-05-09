@@ -80,6 +80,8 @@
             font-size: 12px;
             text-transform: uppercase;
             color: #757575;
+            height: 2.5em;
+            overflow: hidden;
         }
         .recommendations {
             margin-top: 30px;
@@ -132,7 +134,7 @@
     <div class="report-title">Извештај за анализа на почва</div>
     <div class="subtitle">
         Генерирано на
-        <span th:text="${#temporals.format(analyzedAt, 'dd.MM.yyyy - HH:mm')}"></span>
+        <span th:text="${#temporals.format(report.analyzedAt, 'dd.MM.yyyy - HH:mm')}"></span>
     </div>
 </div>
 
@@ -140,18 +142,18 @@
 <div class="grid">
     <div class="row">
         <div class="cell cell-header">Име на профил</div>
-        <div class="cell" th:text="${profileName}"></div>
+        <div class="cell" th:text="${report.profileName}"></div>
     </div>
     <div class="row">
         <div class="cell cell-header">Локација</div>
         <div class="cell">
-            <div class="location-city" th:text="${city + ', ' + country}"></div>
-            <div class="location-coords" th:text="${latitude + ', ' + longitude}"></div>
+            <div class="location-city" th:text="${report.city + ', ' + report.country}"></div>
+            <div class="location-coords" th:text="${report.latitude + ', ' + report.longitude}"></div>
         </div>
     </div>
     <div class="row">
         <div class="cell cell-header">Слој на длабочина</div>
-        <div class="cell" th:text="${depthLayer}"></div>
+        <div class="cell" th:text="${report.depthLayer}"></div>
     </div>
 </div>
 
@@ -160,23 +162,23 @@
     <div class="row">
         <div class="stat-box">
             <div class="stat-label">pH Ниво</div>
-            <div class="stat-value" th:text="${ph != null ? #numbers.formatDecimal(ph, 1, 2) : '-'}"></div>
+            <div class="stat-value" th:text="${report.ph != null ? #numbers.formatDecimal(report.ph, 1, 2) : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Азот</div>
-            <div class="stat-value" th:text="${nitrogen != null ? #numbers.formatDecimal(nitrogen, 1, 2) : '-'}"></div>
+            <div class="stat-value" th:text="${report.nitrogen != null ? #numbers.formatDecimal(report.nitrogen, 1, 2) : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Органски јаглерод</div>
-            <div class="stat-value" th:text="${organicCarbon != null ? #numbers.formatDecimal(organicCarbon, 1, 2) : '-'}"></div>
+            <div class="stat-value" th:text="${report.organicCarbon != null ? #numbers.formatDecimal(report.organicCarbon, 1, 2) : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Волуменска густина</div>
-            <div class="stat-value" th:text="${bulkDensity != null ? #numbers.formatDecimal(bulkDensity, 1, 2) : '-'}"></div>
+            <div class="stat-value" th:text="${report.bulkDensity != null ? #numbers.formatDecimal(report.bulkDensity, 1, 2) : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">КЕК</div>
-            <div class="stat-value" th:text="${cec != null ? #numbers.formatDecimal(cec, 1, 2) : '-'}"></div>
+            <div class="stat-value" th:text="${report.cec != null ? #numbers.formatDecimal(report.cec, 1, 2) : '-'}"></div>
         </div>
     </div>
 </div>
@@ -185,23 +187,23 @@
     <div class="row">
         <div class="stat-box">
             <div class="stat-label">Песок</div>
-            <div class="stat-value" th:text="${sandContent != null ? #numbers.formatDecimal(sandContent, 1, 2) + '%' : '-'}"></div>
+            <div class="stat-value" th:text="${report.sandContent != null ? #numbers.formatDecimal(report.sandContent, 1, 2) + '%' : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Прашина</div>
-            <div class="stat-value" th:text="${siltContent != null ? #numbers.formatDecimal(siltContent, 1, 2) + '%' : '-'}"></div>
+            <div class="stat-value" th:text="${report.siltContent != null ? #numbers.formatDecimal(report.siltContent, 1, 2) + '%' : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Глина</div>
-            <div class="stat-value" th:text="${clayContent != null ? #numbers.formatDecimal(clayContent, 1, 2) + '%' : '-'}"></div>
+            <div class="stat-value" th:text="${report.clayContent != null ? #numbers.formatDecimal(report.clayContent, 1, 2) + '%' : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Груби фрагменти</div>
-            <div class="stat-value" th:text="${coarseFragments != null ? #numbers.formatDecimal(coarseFragments, 1, 2) + '%' : '-'}"></div>
+            <div class="stat-value" th:text="${report.coarseFragments != null ? #numbers.formatDecimal(report.coarseFragments, 1, 2) + '%' : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Растворлива вода</div>
-            <div class="stat-value" th:text="${plantAvailableWater != null ? #numbers.formatDecimal(plantAvailableWater, 1, 2) : '-'}"></div>
+            <div class="stat-value" th:text="${report.plantAvailableWater != null ? #numbers.formatDecimal(report.plantAvailableWater, 1, 2) : '-'}"></div>
         </div>
     </div>
 </div>
@@ -211,35 +213,35 @@
     <div class="row">
         <div class="stat-box">
             <div class="stat-label">Просечна температура</div>
-            <div class="stat-value" th:text="${temperatureAvgC != null ? #numbers.formatDecimal(temperatureAvgC, 1, 2) + ' °C' : '-'}"></div>
+            <div class="stat-value" th:text="${report.temperatureAvgC != null ? #numbers.formatDecimal(report.temperatureAvgC, 1, 2) + ' °C' : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Мин. температура</div>
-            <div class="stat-value" th:text="${temperatureMinC != null ? #numbers.formatDecimal(temperatureMinC, 1, 2) + ' °C' : '-'}"></div>
+            <div class="stat-value" th:text="${report.temperatureMinC != null ? #numbers.formatDecimal(report.temperatureMinC, 1, 2) + ' °C' : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Макс. температура</div>
-            <div class="stat-value" th:text="${temperatureMaxC != null ? #numbers.formatDecimal(temperatureMaxC, 1, 2) + ' °C' : '-'}"></div>
+            <div class="stat-value" th:text="${report.temperatureMaxC != null ? #numbers.formatDecimal(report.temperatureMaxC, 1, 2) + ' °C' : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Влажност</div>
-            <div class="stat-value" th:text="${avgHumidityPercent != null ? #numbers.formatDecimal(avgHumidityPercent, 1, 2) + '%' : '-'}"></div>
+            <div class="stat-value" th:text="${report.avgHumidityPercent != null ? #numbers.formatDecimal(report.avgHumidityPercent, 1, 2) + '%' : '-'}"></div>
         </div>
         <div class="stat-box">
             <div class="stat-label">Врнежи</div>
-            <div class="stat-value" th:text="${totalPrecipitationMm != null ? #numbers.formatDecimal(totalPrecipitationMm, 1, 2) + ' mm' : '-'}"></div>
+            <div class="stat-value" th:text="${report.totalPrecipitationMm != null ? #numbers.formatDecimal(report.totalPrecipitationMm, 1, 2) + ' mm' : '-'}"></div>
         </div>
     </div>
 </div>
 
 <div class="section-title">AI Препораки за култури</div>
 <div class="recommendations">
-    <div th:each="rec : ${recommendations}" class="rec-item">
+    <div th:each="rec : ${report.recommendations}" class="rec-item">
         <span class="rec-score"
               th:text="${#numbers.formatDecimal(rec.compatibility_score * 100, 0, 0) + '% совпаѓање'}"></span>
         <div class="rec-name" th:text="${rec.crop_name}"></div>
     </div>
-    <div th:if="${#lists.isEmpty(recommendations)}">
+    <div th:if="${#lists.isEmpty(report.recommendations)}">
         <p>Нема достапни препораки за овој профил.</p>
     </div>
 </div>

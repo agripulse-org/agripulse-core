@@ -18,8 +18,4 @@ public interface SoilAnalysisRepository extends JpaRepository<SoilAnalysis, UUID
             UUID soilProfileId,
             UserId userId
     );
-    Optional<SoilAnalysis> findByIdAndSoilProfile_UserId(
-            UUID analysisId,
-            UserId userId
-    );
 }
