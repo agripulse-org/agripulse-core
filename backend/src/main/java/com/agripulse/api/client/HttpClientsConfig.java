@@ -1,5 +1,6 @@
 package com.agripulse.api.client;
 
+import com.agripulse.api.client.agripulseai.AgriPulseAiClient;
 import com.agripulse.api.client.gotenberg.GotenbergClient;
 import com.agripulse.api.client.openweather.OpenWeatherClient;
 import com.agripulse.api.client.openweather.OpenWeatherClientFallback;
@@ -34,6 +35,9 @@ public class HttpClientsConfig {
 
     private static final Duration GOTENBERG_CONNECT_TIMEOUT = Duration.ofSeconds(5);
     private static final Duration GOTENBERG_READ_TIMEOUT = Duration.ofSeconds(60);
+
+    private static final Duration AGRIPULSE_AI_CONNECT_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration AGRIPULSE_AI_READ_TIMEOUT = Duration.ofSeconds(30);
 
     private static Object invoke(Method method, Object target, Object[] args) throws Throwable {
         try {
@@ -83,6 +87,17 @@ public class HttpClientsConfig {
                 GOTENBERG_READ_TIMEOUT,
                 null,
                 GotenbergClient.class
+        );
+    }
+
+    @Bean
+    public AgriPulseAiClient agriPulseAiClient(ExternalServiceProperties props) {
+        return buildHttpClient(
+                props.getAgripulseai().getBaseUrl(),
+                AGRIPULSE_AI_CONNECT_TIMEOUT,
+                AGRIPULSE_AI_READ_TIMEOUT,
+                null,
+                AgriPulseAiClient.class
         );
     }
 

@@ -44,6 +44,8 @@ agripulse:
     base-url: https://rest.isric.org/soilgrids/v2.0
   gotenberg:
     base-url: ${GOTENBERG_BASE_URL:https://gotenberg.char-beardie.ts.net/}
+  agripulseai:
+    base-url: ${AGRIPULSE_AI_BASE_URL:https://agripulse-ai.char-beardie.ts.net/}
 
 resilience4j:
   circuitbreaker:

@@ -1,7 +1,12 @@
 package com.agripulse.api.model.domain;
 
-import com.agripulse.api.model.enums.SoilDepth;
+import com.agripulse.api.dto.soil_analysis.CropRecommendationResult;
 import com.agripulse.api.model.enums.AnalysisStatus;
+import com.agripulse.api.model.enums.CropType;
+import com.agripulse.api.model.enums.SoilDepth;
+import com.agripulse.api.model.enums.SoilType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import jakarta.persistence.*;
 
@@ -10,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -74,12 +80,19 @@ public class SoilAnalysis {
     // cm³/cm³
     private Double plantAvailableWater;
 
+    @Enumerated(EnumType.STRING)
+    private SoilType soilType;
+
     // Weather
     private Double temperatureAvgC;
     private Double temperatureMinC;
     private Double temperatureMaxC;
     private Double avgHumidityPercent;
     private Double totalPrecipitationMm;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private List<CropRecommendationResult> cropRecommendations;
 
     public SoilAnalysis(
             SoilProfile soilProfile,

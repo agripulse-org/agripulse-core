@@ -2,6 +2,8 @@ package com.agripulse.api;
 
 import com.agripulse.api.model.domain.SoilProperties;
 import com.agripulse.api.model.domain.WeatherData;
+import com.agripulse.api.model.enums.SoilType;
+import com.agripulse.api.service.CropRecommendationService;
 import com.agripulse.api.service.PdfGeneratorService;
 import com.agripulse.api.service.SoilPropertiesService;
 import com.agripulse.api.service.WeatherService;
@@ -26,6 +28,9 @@ class ExternalServicesIntegrationTest {
 
     @Autowired
     PdfGeneratorService pdfGeneratorService;
+
+    @Autowired
+    CropRecommendationService cropRecommendationService;
 
     @Test
     @EnabledIfEnvironmentVariable(named = "OPENWEATHER_API_KEY", matches = ".+")
@@ -77,5 +82,25 @@ class ExternalServicesIntegrationTest {
         assertThat(pdf[1]).isEqualTo((byte) 0x50);
         assertThat(pdf[2]).isEqualTo((byte) 0x44);
         assertThat(pdf[3]).isEqualTo((byte) 0x46);
+    }
+
+    @Test
+    void agriPulseAiService_returnsCropRecommendations() {
+        var recommendations = cropRecommendationService.getRecommendations(
+                50.0,   // nitrogen mg/kg
+                15.0,   // temperature °C
+                65.0,   // humidity %
+                6.5,    // ph
+                40.0,   // moisture %
+                SoilType.LOAMY
+        );
+
+        System.out.println("Crop recommendations: " + recommendations);
+
+        assertThat(recommendations).isNotNull().isNotEmpty();
+        recommendations.forEach(r -> {
+            assertThat(r.crop()).isNotNull();
+            assertThat(r.recommendationScore()).isBetween(0.0, 1.0);
+        });
     }
 }
