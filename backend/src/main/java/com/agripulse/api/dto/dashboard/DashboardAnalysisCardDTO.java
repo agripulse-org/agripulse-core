@@ -2,6 +2,7 @@ package com.agripulse.api.dto.dashboard;
 
 import com.agripulse.api.dto.soil_analysis.CropRecommendationResult;
 import com.agripulse.api.model.domain.SoilAnalysis;
+import com.agripulse.api.model.domain.SoilProfile;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public record DashboardAnalysisCardDTO(
 
                 analysis.getId(),
 
-                DashboardSoilProfileDTO.from(analysis),
+                DashboardSoilProfileDTO.from(analysis.getSoilProfile()),
 
                 analysis.getCreatedAt(),
 
@@ -42,6 +43,7 @@ public record DashboardAnalysisCardDTO(
     }
 
     record DashboardSoilProfileDTO(
+            UUID id,
 
             String city,
 
@@ -50,14 +52,15 @@ public record DashboardAnalysisCardDTO(
     ) {
 
         public static DashboardSoilProfileDTO from(
-                SoilAnalysis analysis
+                SoilProfile soilProfile
         ) {
 
             return new DashboardSoilProfileDTO(
+                    soilProfile.getId(),
 
-                    analysis.getSoilProfile().getCity(),
+                    soilProfile.getCity(),
 
-                    analysis.getSoilProfile().getCountry()
+                    soilProfile.getCountry()
             );
         }
     }

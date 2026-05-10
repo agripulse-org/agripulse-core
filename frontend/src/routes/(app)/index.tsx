@@ -66,7 +66,12 @@ function DashboardRoute() {
               key={analysis.id}
               analysis={analysis}
               delay={index * 0.1}
-              onClick={() => navigate({ to: "/analysis/$id", params: { id: analysis.id } })}
+              onClick={() =>
+                navigate({
+                  to: "/soils/$soilId/analyses/$analysisId",
+                  params: { soilId: analysis.soilProfile.id, analysisId: analysis.id },
+                })
+              }
             />
           ))}
         </div>

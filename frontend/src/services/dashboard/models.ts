@@ -8,6 +8,7 @@ export type DashboardResponse = {
 export type DashboardAnalysis = {
   id: string;
   soilProfile: {
+    id: string;
     city: string | null;
     country: string | null;
   };

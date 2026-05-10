@@ -16,20 +16,21 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ANALYSIS_DETAILS_MOCK } from "@/lib/constants";
 
-export const Route = createFileRoute("/(app)/analysis/$id")({
+export const Route = createFileRoute("/(app)/soils/$soilId/analyses/$analysisId")({
   component: AnalysisDetailsRoute,
 });
 
 interface AnalysisDetailsPageProps {
-  id: string;
+  soilId: string;
+  analysisId: string;
 }
 
 function AnalysisDetailsRoute() {
-  const { id } = Route.useParams();
-  return <AnalysisDetailsPage id={id} />;
+  const { soilId, analysisId } = Route.useParams();
+  return <AnalysisDetailsPage soilId={soilId} analysisId={analysisId} />;
 }
 
-function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
+function AnalysisDetailsPage({ soilId, analysisId }: AnalysisDetailsPageProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -37,7 +38,7 @@ function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
 
   const handleDelete = () => {
     toast.success(t("analysis.details.deleted"));
-    setTimeout(() => navigate({ to: "/" }), 500);
+    setTimeout(() => navigate({ to: "/soils/$soilId", params: { soilId } }), 500);
   };
 
   const handleDownloadPDF = () => {
@@ -65,16 +66,18 @@ function AnalysisDetailsPage({ id }: AnalysisDetailsPageProps) {
       <div className="bg-gradient-to-r from-primary to-secondary text-white p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           <button
-            onClick={() => navigate({ to: "/" })}
+            onClick={() => navigate({ to: "/soils/$soilId", params: { soilId } })}
             className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>{t("analysis.details.backToDashboard")}</span>
+            <span>{t("analysis.details.backToSoil")}</span>
           </button>
 
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
             <div>
-              <h1 className="text-3xl mb-4">{t("analysis.details.reportTitle", { id })}</h1>
+              <h1 className="text-3xl mb-4">
+                {t("analysis.details.reportTitle", { id: analysisId })}
+              </h1>
               <div className="flex flex-wrap gap-4 text-white/90">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4" />

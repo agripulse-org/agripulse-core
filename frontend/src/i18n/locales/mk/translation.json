@@ -113,7 +113,7 @@
   "analysis.details.downloading": "Се презема PDF извештај...",
   "analysis.details.downloaded": "PDF извештајот е преземен",
   "analysis.details.downloadError": "Неуспешно преземање на PDF извештајот",
-  "analysis.details.backToDashboard": "Назад кон контролна табла",
+  "analysis.details.backToSoil": "Назад кон почва",
   "analysis.details.downloadPDFShort": "Преземи PDF",
   "analysis.details.importantNote": "Важна забелешка",
   "analysis.details.confirmDeletionTitle": "Потврди бришење",

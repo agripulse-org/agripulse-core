@@ -172,6 +172,7 @@ export function SoilDetailsPage() {
           {activeTab === "analyses" && (
             <AnalysesTab
               key="analyses"
+              soilId={id}
               analyses={analyses}
               onCreateNew={() => setShowNewAnalysisModal(true)}
             />
@@ -261,7 +262,11 @@ function OverviewTab({
           )}
           onClick={
             analyses.length > 0
-              ? () => navigate({ to: "/analysis/$id", params: { id: latestAnalysis.id } })
+              ? () =>
+                  navigate({
+                    to: "/soils/$soilId/analyses/$analysisId",
+                    params: { soilId: soil.id, analysisId: latestAnalysis.id },
+                  })
               : undefined
           }
         >
@@ -306,7 +311,12 @@ function OverviewTab({
               return (
                 <div
                   key={analysis.id}
-                  onClick={() => navigate({ to: "/analysis/$id", params: { id: analysis.id } })}
+                  onClick={() =>
+                    navigate({
+                      to: "/soils/$soilId/analyses/$analysisId",
+                      params: { soilId: soil.id, analysisId: analysis.id },
+                    })
+                  }
                   className="flex items-center gap-3 p-4 rounded-xl hover:bg-muted/50 transition-all cursor-pointer mb-2 last:mb-0"
                 >
                   <div
@@ -363,9 +373,11 @@ function OverviewTab({
 
 // Analyses Tab Component
 function AnalysesTab({
+  soilId,
   analyses,
   onCreateNew,
 }: {
+  soilId: string;
   analyses: SoilAnalysis[];
   onCreateNew: () => void;
 }) {
@@ -408,7 +420,12 @@ function AnalysesTab({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                onClick={() => navigate({ to: "/analysis/$id", params: { id: analysis.id } })}
+                onClick={() =>
+                  navigate({
+                    to: "/soils/$soilId/analyses/$analysisId",
+                    params: { soilId, analysisId: analysis.id },
+                  })
+                }
                 className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-4">
