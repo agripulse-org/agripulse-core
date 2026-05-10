@@ -118,6 +118,8 @@
   "analysis.details.importantNote": "Important Note",
   "analysis.details.confirmDeletionTitle": "Confirm Deletion",
   "analysis.details.confirmDeletionDescription": "Are you sure you want to delete this analysis? This action cannot be undone.",
+  "analysis.status.PENDING": "Pending",
+  "analysis.status.FAILED": "Failed",
 
   "soils.title": "Soil Management",
   "soils.add": "Add Soil",
@@ -186,6 +188,7 @@
   "soils.details.analysis.autoLoad": "Discover Parameters",
   "soils.details.analysis.autoLoadLabel": "Discover Parameters",
   "soils.details.analysis.autoLoadDescription": "Select a depth layer and we'll automatically use the latest soil parameters for this location.",
+  "soils.details.analysis.failedDescription": "This analysis could not be completed.",
   "soils.details.chat.title": "AI Chat Sessions",
   "soils.details.chat.subtitle": "View and manage your conversations about this soil",
   "soils.details.chat.newSession": "New Chat Session",

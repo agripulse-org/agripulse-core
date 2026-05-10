@@ -13,24 +13,32 @@ import {
   FlaskConical,
   ChevronRight,
   StickyNote,
+  Clock,
+  AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { getSoilProfileByIdQueryOptions } from "@/data/soilProfile";
-import { ANALYSIS_DEPTH_OPTIONS, SOIL_DETAILS_MOCK_ANALYSES } from "@/lib/constants";
+import { getSoilAnalysesQueryOptions } from "@/data/soilAnalysis";
+import { cn } from "@/lib/utils";
+import { ANALYSIS_DEPTH_OPTIONS, CROP_TYPE_MAP, getSoilDepthLabel } from "@/lib/constants";
 import { APIError } from "@/services/apiClient";
 import { SoilNotesTab } from "@/components/soils/details/SoilNotesTab";
 import { SoilConversationsTab } from "@/components/soils/details/SoilConversationsTab";
 
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import type { SoilAnalysis } from "@/services/soil-analysis/models";
 
 export const Route = createFileRoute("/(app)/soils/$soilId/")({
   loader: async ({ params, context: { queryClient } }) => {
     try {
-      await queryClient.ensureQueryData(getSoilProfileByIdQueryOptions(params.soilId));
+      await Promise.all([
+        queryClient.ensureQueryData(getSoilProfileByIdQueryOptions(params.soilId)),
+        queryClient.ensureQueryData(getSoilAnalysesQueryOptions(params.soilId)),
+      ]);
     } catch (error) {
       if (error instanceof APIError && error.statusCode === 404) {
         throw notFound();
@@ -51,6 +59,7 @@ export function SoilDetailsPage() {
   const { soilId: id } = Route.useParams();
 
   const { data: soil } = useSuspenseQuery(getSoilProfileByIdQueryOptions(id));
+  const { data: analyses } = useSuspenseQuery(getSoilAnalysesQueryOptions(id));
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [showNewAnalysisModal, setShowNewAnalysisModal] = useState(false);
 
@@ -134,14 +143,12 @@ export function SoilDetailsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center gap-2 px-6 py-4 border-b-2 transition-all whitespace-nowrap
-                    ${
-                      activeTab === tab.id
-                        ? "border-primary text-primary"
-                        : "border-transparent text-muted-foreground hover:text-foreground"
-                    }
-                  `}
+                  className={cn(
+                    "flex items-center gap-2 px-6 py-4 border-b-2 transition-all whitespace-nowrap",
+                    activeTab === tab.id
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground",
+                  )}
                 >
                   <Icon className="w-4 h-4" />
                   <span>{tab.label}</span>
@@ -158,14 +165,14 @@ export function SoilDetailsPage() {
             <OverviewTab
               key="overview"
               soil={soil}
-              analyses={SOIL_DETAILS_MOCK_ANALYSES}
+              analyses={analyses}
               onViewAllAnalyses={() => setActiveTab("analyses")}
             />
           )}
           {activeTab === "analyses" && (
             <AnalysesTab
               key="analyses"
-              analyses={SOIL_DETAILS_MOCK_ANALYSES}
+              analyses={analyses}
               onCreateNew={() => setShowNewAnalysisModal(true)}
             />
           )}
@@ -217,7 +224,7 @@ function OverviewTab({
     latitude: number;
     longitude: number;
   };
-  analyses: any[];
+  analyses: SoilAnalysis[];
   onViewAllAnalyses: () => void;
 }) {
   const navigate = useNavigate();
@@ -227,9 +234,12 @@ function OverviewTab({
   );
   const locationLabel =
     locationParts.length > 0 ? locationParts.join(", ") : t("soils.unknownLocation");
-  const latestAnalysis = analyses
+
+  const sortedAnalyses = analyses
     .slice()
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const latestAnalysis = sortedAnalyses[0];
+  const recentAnalyses = sortedAnalyses.slice(0, 3);
 
   return (
     <motion.div
@@ -244,13 +254,23 @@ function OverviewTab({
           <p className="text-sm text-muted-foreground mb-2">{t("soils.details.totalAnalyses")}</p>
           <p className="text-3xl text-primary">{analyses.length}</p>
         </div>
-        <div className="bg-card border border-border rounded-xl p-6">
+        <div
+          className={cn(
+            "bg-card border border-border rounded-xl p-6",
+            analyses.length > 0 && "cursor-pointer hover:shadow-md transition-all",
+          )}
+          onClick={
+            analyses.length > 0
+              ? () => navigate({ to: "/analysis/$id", params: { id: latestAnalysis.id } })
+              : undefined
+          }
+        >
           <p className="text-sm text-muted-foreground mb-2">{t("soils.lastAnalysis")}</p>
-          {latestAnalysis ? (
+          {analyses.length > 0 ? (
             <div className="space-y-1">
-              <p className="text-lg">{latestAnalysis.depth}</p>
+              <p className="text-lg">{getSoilDepthLabel(latestAnalysis.soilDepth)}</p>
               <p className="text-sm text-muted-foreground">
-                {new Date(latestAnalysis.date).toLocaleDateString()}
+                {new Date(latestAnalysis.createdAt).toLocaleDateString()}
               </p>
             </div>
           ) : (
@@ -263,39 +283,92 @@ function OverviewTab({
         </div>
       </div>
 
-      {/* Recent Analyses */}
-      <div className="bg-card border border-border rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl">{t("soils.details.recentAnalyses")}</h2>
-          <button onClick={onViewAllAnalyses} className="text-primary hover:underline text-sm">
-            {t("soils.details.viewAll")}
-          </button>
-        </div>
-
-        {analyses.slice(0, 3).map((analysis) => (
-          <div
-            key={analysis.id}
-            onClick={() => navigate({ to: `/analysis/${analysis.id}` })}
-            className="p-4 rounded-xl hover:bg-muted/50 transition-all cursor-pointer mb-2 last:mb-0"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium mb-1">{analysis.depth}</p>
-                <p className="text-sm text-muted-foreground">
-                  {new Date(analysis.date).toLocaleDateString()}
-                </p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Recent Analyses */}
+        <div className="bg-card border border-border rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl">{t("soils.details.recentAnalyses")}</h2>
+            <button onClick={onViewAllAnalyses} className="text-primary hover:underline text-sm">
+              {t("soils.details.viewAll")}
+            </button>
           </div>
-        ))}
+
+          {recentAnalyses.length === 0 ? (
+            <p className="text-muted-foreground text-sm">{t("dashboard.noAnalyses")}</p>
+          ) : (
+            recentAnalyses.map((analysis) => {
+              const isPending = analysis.status === "PENDING";
+              const isFailed = analysis.status === "FAILED";
+              const topRec =
+                !isPending && !isFailed ? (analysis.cropRecommendations ?? [])[0] : undefined;
+              const cropMeta = topRec ? CROP_TYPE_MAP[topRec.crop] : undefined;
+
+              return (
+                <div
+                  key={analysis.id}
+                  onClick={() => navigate({ to: "/analysis/$id", params: { id: analysis.id } })}
+                  className="flex items-center gap-3 p-4 rounded-xl hover:bg-muted/50 transition-all cursor-pointer mb-2 last:mb-0"
+                >
+                  <div
+                    className={cn(
+                      "w-9 h-9 rounded-lg flex items-center justify-center shrink-0",
+                      isPending
+                        ? "bg-amber-500/10"
+                        : isFailed
+                          ? "bg-destructive/10"
+                          : "bg-primary/10",
+                    )}
+                  >
+                    {isPending ? (
+                      <Clock className="w-4 h-4 text-amber-500" />
+                    ) : isFailed ? (
+                      <AlertCircle className="w-4 h-4 text-destructive" />
+                    ) : (
+                      <FlaskConical className="w-4 h-4 text-primary" />
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium">{getSoilDepthLabel(analysis.soilDepth)}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(analysis.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  {isFailed ? (
+                    <p className="text-xs text-destructive font-medium shrink-0">
+                      {t("analysis.status.FAILED")}
+                    </p>
+                  ) : topRec ? (
+                    <div className="text-right shrink-0">
+                      <p className="text-sm font-medium text-primary">
+                        {Math.round(topRec.recommendationScore)}%
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {cropMeta ? t(cropMeta.name) : topRec.crop}
+                      </p>
+                    </div>
+                  ) : null}
+
+                  <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0" />
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
     </motion.div>
   );
 }
 
 // Analyses Tab Component
-function AnalysesTab({ analyses, onCreateNew }: { analyses: any[]; onCreateNew: () => void }) {
+function AnalysesTab({
+  analyses,
+  onCreateNew,
+}: {
+  analyses: SoilAnalysis[];
+  onCreateNew: () => void;
+}) {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -321,44 +394,92 @@ function AnalysesTab({ analyses, onCreateNew }: { analyses: any[]; onCreateNew: 
           icon={FlaskConical}
           title={t("dashboard.noAnalyses")}
           description={t("soils.details.noAnalysesDescription")}
-          action={{ label: t("soils.details.createAnalysis"), onClick: onCreateNew }}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {analyses.map((analysis, index) => (
-            <motion.div
-              key={analysis.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              onClick={() => navigate({ to: `/analysis/${analysis.id}` })}
-              className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-medium mb-1">{analysis.depth}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(analysis.date).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <FlaskConical className="w-5 h-5 text-primary" />
-                </div>
-              </div>
+          {analyses.map((analysis, index) => {
+            const isPending = analysis.status === "PENDING";
+            const isFailed = analysis.status === "FAILED";
+            const topRecommendations = (analysis.cropRecommendations ?? []).slice(0, 3);
 
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground mb-2">
-                  {t("dashboard.recommendations")}
-                </p>
-                {analysis.topRecommendations.map((rec: any) => (
-                  <div key={rec.plant} className="flex items-center justify-between">
-                    <span className="text-sm">{rec.plant}</span>
-                    <span className="text-sm font-medium text-primary">{rec.compatibility}%</span>
+            return (
+              <motion.div
+                key={analysis.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => navigate({ to: "/analysis/$id", params: { id: analysis.id } })}
+                className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="font-medium mb-1">{getSoilDepthLabel(analysis.soilDepth)}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(analysis.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+                  <div className="flex items-center gap-2">
+                    {isFailed && (
+                      <span className="hidden sm:block text-xs text-destructive font-medium">
+                        {t("analysis.status.FAILED")}
+                      </span>
+                    )}
+                    <div
+                      className={cn(
+                        "w-10 h-10 rounded-lg flex items-center justify-center",
+                        isPending
+                          ? "bg-amber-500/10"
+                          : isFailed
+                            ? "bg-destructive/10"
+                            : "bg-primary/10",
+                      )}
+                    >
+                      {isPending ? (
+                        <Clock className="w-5 h-5 text-amber-500" />
+                      ) : isFailed ? (
+                        <AlertCircle className="w-5 h-5 text-destructive" />
+                      ) : (
+                        <FlaskConical className="w-5 h-5 text-primary" />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-border">
+                  {isPending ? (
+                    <p className="text-sm text-muted-foreground italic text-center">
+                      {t("dashboard.recommendationsPending")}
+                    </p>
+                  ) : isFailed ? (
+                    <p className="text-sm text-destructive text-center">
+                      {t("soils.details.analysis.failedDescription")}
+                    </p>
+                  ) : topRecommendations.length === 0 ? (
+                    <p className="text-sm text-muted-foreground italic text-center">
+                      {t("dashboard.noRecommendations")}
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground mb-2">
+                        {t("dashboard.recommendations")}
+                      </p>
+                      {topRecommendations.map((rec) => {
+                        const cropName = CROP_TYPE_MAP[rec.crop]?.name;
+                        return (
+                          <div key={rec.crop} className="flex items-center justify-between">
+                            <span className="text-sm">{cropName ? t(cropName) : rec.crop}</span>
+                            <span className="text-sm font-medium text-primary">
+                              {Math.round(rec.recommendationScore)}%
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       )}
     </motion.div>
@@ -446,21 +567,23 @@ function NewAnalysisModal({
         <div className="flex gap-2 mb-6 p-1 bg-muted rounded-xl">
           <button
             onClick={() => setMode("auto")}
-            className={`flex-1 px-4 py-2 rounded-lg transition-all ${
+            className={cn(
+              "flex-1 px-4 py-2 rounded-lg transition-all",
               mode === "auto"
                 ? "bg-card shadow-sm text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
             {t("soils.details.analysis.autoLoad")}
           </button>
           <button
             onClick={() => setMode("import")}
-            className={`flex-1 px-4 py-2 rounded-lg transition-all ${
+            className={cn(
+              "flex-1 px-4 py-2 rounded-lg transition-all",
               mode === "import"
                 ? "bg-card shadow-sm text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
             {t("soils.details.import.fromCsv")}
           </button>
@@ -485,14 +608,12 @@ function NewAnalysisModal({
               <button
                 key={option.value}
                 onClick={() => setSelectedDepth(option.value)}
-                className={`
-                  w-full p-4 rounded-xl border-2 transition-all text-left
-                  ${
-                    selectedDepth === option.value
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50"
-                  }
-                `}
+                className={cn(
+                  "w-full p-4 rounded-xl border-2 transition-all text-left",
+                  selectedDepth === option.value
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/50",
+                )}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -544,11 +665,13 @@ function NewAnalysisModal({
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              className={`
-                relative border-2 border-dashed rounded-xl p-8 text-center transition-all
-                ${isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"}
-                ${isImporting ? "pointer-events-none opacity-50" : ""}
-              `}
+              className={cn(
+                "relative border-2 border-dashed rounded-xl p-8 text-center transition-all",
+                isDragging
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:border-primary/50",
+                isImporting && "pointer-events-none opacity-50",
+              )}
             >
               <input
                 type="file"

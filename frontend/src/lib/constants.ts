@@ -8,6 +8,11 @@ export const ANALYSIS_DEPTH_OPTIONS = [
   { value: "30-60", label: "30–60 cm", description: "Deep layer" },
 ];
 
+export const getSoilDepthLabel = (soilDepth: string): string => {
+  const value = soilDepth.replace("DEPTH_", "").replaceAll("_", "-").toLowerCase();
+  return ANALYSIS_DEPTH_OPTIONS.find((o) => o.value === value)?.label ?? soilDepth;
+};
+
 // ==== Crop types ====
 
 export type CropI18nKey =
