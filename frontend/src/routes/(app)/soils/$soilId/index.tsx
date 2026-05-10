@@ -355,7 +355,7 @@ function OverviewTab({
                         {Math.round(topRec.recommendationScore)}%
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {cropMeta ? t(cropMeta.name) : topRec.crop}
+                        {cropMeta ? t(cropMeta.nameKey) : topRec.crop}
                       </p>
                     </div>
                   ) : null}
@@ -481,7 +481,7 @@ function AnalysesTab({
                         {t("dashboard.recommendations")}
                       </p>
                       {topRecommendations.map((rec) => {
-                        const cropName = CROP_TYPE_MAP[rec.crop]?.name;
+                        const cropName = CROP_TYPE_MAP[rec.crop]?.nameKey;
                         return (
                           <div key={rec.crop} className="flex items-center justify-between">
                             <span className="text-sm">{cropName ? t(cropName) : rec.crop}</span>

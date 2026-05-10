@@ -135,7 +135,7 @@ function AnalysisCard({ analysis, delay, onClick }: AnalysisCardProps) {
                 {analysis.recommendations.slice(0, 3).map((rec) => (
                   <div key={rec.crop} className="flex items-center justify-between">
                     <span className="text-sm">
-                      {CROP_TYPE_MAP[rec.crop] ? t(CROP_TYPE_MAP[rec.crop]!.name) : rec.crop}
+                      {CROP_TYPE_MAP[rec.crop] ? t(CROP_TYPE_MAP[rec.crop]!.nameKey) : rec.crop}
                     </span>
                     <div className="flex items-center gap-2">
                       <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
