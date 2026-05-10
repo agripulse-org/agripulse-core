@@ -18,4 +18,11 @@ public interface SoilAnalysisRepository extends JpaRepository<SoilAnalysis, UUID
             UUID soilProfileId,
             UserId userId
     );
+    long countBySoilProfile_UserId(
+            UserId userId
+    );
+
+    List<SoilAnalysis> findTop3BySoilProfile_UserIdOrderByCreatedAtDesc(
+            UserId userId
+    );
 }
