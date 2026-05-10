@@ -10,4 +10,7 @@ import java.util.UUID;
 
 public interface SoilProfileRepository extends JpaRepository<SoilProfile, UUID> {
     List<SoilProfile> findByUserId(UserId userId);
+    long countByUserId(
+            UserId userId
+    );
 }

@@ -8,46 +8,40 @@ export const ANALYSIS_DEPTH_OPTIONS = [
   { value: "30-60", label: "30–60 cm", description: "Deep layer" },
 ];
 
-// ==== Mock data ====
+// ==== Crop types ====
 
-export const DASHBOARD_MOCK_ANALYSES = [
-  {
-    id: "1",
-    location: "Skopje, North Macedonia",
-    date: "2026-04-10",
-    depth: "0-5 cm",
-    coordinates: { lat: 41.9973, lng: 21.428 },
-    recommendations: [
-      { plant: "Wheat", compatibility: 92 },
-      { plant: "Barley", compatibility: 88 },
-      { plant: "Sunflower", compatibility: 85 },
-    ],
-  },
-  {
-    id: "2",
-    location: "Bitola, North Macedonia",
-    date: "2026-04-05",
-    depth: "5-15 cm",
-    coordinates: { lat: 41.0297, lng: 21.3347 },
-    recommendations: [
-      { plant: "Corn", compatibility: 90 },
-      { plant: "Potato", compatibility: 87 },
-      { plant: "Tomato", compatibility: 82 },
-    ],
-  },
-  {
-    id: "3",
-    location: "Ohrid, North Macedonia",
-    date: "2026-03-28",
-    depth: "15-30 cm",
-    coordinates: { lat: 41.1172, lng: 20.8019 },
-    recommendations: [
-      { plant: "Grapes", compatibility: 95 },
-      { plant: "Olive", compatibility: 91 },
-      { plant: "Almond", compatibility: 86 },
-    ],
-  },
-];
+export type CropI18nKey =
+  | "crops.maize"
+  | "crops.sugarcane"
+  | "crops.cotton"
+  | "crops.tobacco"
+  | "crops.paddy"
+  | "crops.barley"
+  | "crops.wheat"
+  | "crops.millets"
+  | "crops.oilSeeds"
+  | "crops.pulses"
+  | "crops.groundNuts";
+
+export type CropTypeMeta = {
+  name: CropI18nKey;
+  imagePath?: string;
+  description?: string;
+};
+
+export const CROP_TYPE_MAP: Partial<Record<string, CropTypeMeta>> = {
+  maize: { name: "crops.maize" },
+  sugarcane: { name: "crops.sugarcane" },
+  cotton: { name: "crops.cotton" },
+  tobacco: { name: "crops.tobacco" },
+  paddy: { name: "crops.paddy" },
+  barley: { name: "crops.barley" },
+  wheat: { name: "crops.wheat" },
+  millets: { name: "crops.millets" },
+  oil_seeds: { name: "crops.oilSeeds" },
+  pulses: { name: "crops.pulses" },
+  ground_nuts: { name: "crops.groundNuts" },
+};
 
 export const ANALYSIS_DETAILS_MOCK = {
   id: "1",

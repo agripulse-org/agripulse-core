@@ -47,7 +47,6 @@ public class SoilAnalysis {
     @JoinColumn(name = "soil_profile_id", nullable = false)
     private SoilProfile soilProfile;
 
-    // Soil chemistry
 
     private Double ph;
 
@@ -59,8 +58,6 @@ public class SoilAnalysis {
 
     // g/kg
     private Double organicCarbon;
-
-    // Soil structure
 
     // g/kg
     private Double sandContent;
