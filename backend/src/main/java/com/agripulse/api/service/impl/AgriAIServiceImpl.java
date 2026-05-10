@@ -93,11 +93,24 @@ public class AgriAIServiceImpl implements AgriAIService {
         return sb.toString();
     }
 
+    private static final String TITLE_SYSTEM_PROMPT = """
+            You generate short titles for agricultural chat conversations.
+
+            Rules:
+            1. Output ONLY the title — no quotes, no punctuation, no explanation.
+            2. Maximum 6 words.
+            3. The title must reflect the agricultural topic of the message.
+            4. Detect the language of the user message and title in that same language.
+               - If the message is in Macedonian (македонски), write the title using ONLY the 31-letter Macedonian Cyrillic alphabet: А Б В Г Д Ѓ Е Ж З Ѕ И Ј К Л Љ М Н Њ О П Р С Т Ќ У Ф Х Ц Ч Џ Ш. Never use Bulgarian letters (Ъ Ь Щ Ю Я) or Serbian Cyrillic letters (Ђ Ћ). Never use Bulgarian or Serbian vocabulary.
+               - If the message is in English, write the title in English.
+               - For any other language, write the title in English.
+            """;
+
     @Override
     public String generateTitle(String firstUserMessage) {
         return chatClient.prompt()
-                .user("Generate a short title (max 6 words) for a chat conversation that starts with: \""
-                        + firstUserMessage + "\". Return only the title, no quotes or punctuation.")
+                .system(TITLE_SYSTEM_PROMPT)
+                .user("Generate a title for a chat conversation that starts with: \"" + firstUserMessage + "\"")
                 .call()
                 .content();
     }
