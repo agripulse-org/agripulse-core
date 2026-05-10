@@ -72,6 +72,10 @@ export function useFormatters() {
         if (diffDays >= 7) return dateFormatter.format(d);
         return formatDistanceToNow(d, { addSuffix: true, locale });
       },
+
+      percent(value: number, decimals = 0) {
+        return `${Math.round(value * 10 ** decimals) / 10 ** decimals}%`;
+      },
     };
   }, [currentLanguage]);
 }
