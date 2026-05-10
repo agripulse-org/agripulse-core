@@ -24,7 +24,6 @@ import { Route as appConversationsIndexRouteImport } from "./routes/(app)/conver
 import { Route as appSoilsCreateRouteImport } from "./routes/(app)/soils/create"
 import { Route as appConversationsNewRouteImport } from "./routes/(app)/conversations/new"
 import { Route as appConversationsSessionIdRouteImport } from "./routes/(app)/conversations/$sessionId"
-import { Route as appAnalysisCreateRouteImport } from "./routes/(app)/analysis/create"
 import { Route as appAnalysisIdRouteImport } from "./routes/(app)/analysis/$id"
 import { Route as appSoilsSoilIdIndexRouteImport } from "./routes/(app)/soils/$soilId/index"
 import { Route as appSoilsSoilIdEditRouteImport } from "./routes/(app)/soils/$soilId/edit"
@@ -104,11 +103,6 @@ const appConversationsSessionIdRoute =
     path: "/$sessionId",
     getParentRoute: () => appConversationsRouteRoute,
   } as any)
-const appAnalysisCreateRoute = appAnalysisCreateRouteImport.update({
-  id: "/analysis/create",
-  path: "/analysis/create",
-  getParentRoute: () => appRouteRoute,
-} as any)
 const appAnalysisIdRoute = appAnalysisIdRouteImport.update({
   id: "/analysis/$id",
   path: "/analysis/$id",
@@ -136,7 +130,6 @@ export interface FileRoutesByFullPath {
   "/": typeof appIndexRoute
   "/auth/": typeof AuthIndexRoute
   "/analysis/$id": typeof appAnalysisIdRoute
-  "/analysis/create": typeof appAnalysisCreateRoute
   "/conversations/$sessionId": typeof appConversationsSessionIdRoute
   "/conversations/new": typeof appConversationsNewRoute
   "/soils/create": typeof appSoilsCreateRoute
@@ -154,7 +147,6 @@ export interface FileRoutesByTo {
   "/": typeof appIndexRoute
   "/auth": typeof AuthIndexRoute
   "/analysis/$id": typeof appAnalysisIdRoute
-  "/analysis/create": typeof appAnalysisCreateRoute
   "/conversations/$sessionId": typeof appConversationsSessionIdRoute
   "/conversations/new": typeof appConversationsNewRoute
   "/soils/create": typeof appSoilsCreateRoute
@@ -176,7 +168,6 @@ export interface FileRoutesById {
   "/(app)/": typeof appIndexRoute
   "/auth/": typeof AuthIndexRoute
   "/(app)/analysis/$id": typeof appAnalysisIdRoute
-  "/(app)/analysis/create": typeof appAnalysisCreateRoute
   "/(app)/conversations/$sessionId": typeof appConversationsSessionIdRoute
   "/(app)/conversations/new": typeof appConversationsNewRoute
   "/(app)/soils/create": typeof appSoilsCreateRoute
@@ -198,7 +189,6 @@ export interface FileRouteTypes {
     | "/"
     | "/auth/"
     | "/analysis/$id"
-    | "/analysis/create"
     | "/conversations/$sessionId"
     | "/conversations/new"
     | "/soils/create"
@@ -216,7 +206,6 @@ export interface FileRouteTypes {
     | "/"
     | "/auth"
     | "/analysis/$id"
-    | "/analysis/create"
     | "/conversations/$sessionId"
     | "/conversations/new"
     | "/soils/create"
@@ -237,7 +226,6 @@ export interface FileRouteTypes {
     | "/(app)/"
     | "/auth/"
     | "/(app)/analysis/$id"
-    | "/(app)/analysis/create"
     | "/(app)/conversations/$sessionId"
     | "/(app)/conversations/new"
     | "/(app)/soils/create"
@@ -359,13 +347,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof appConversationsSessionIdRouteImport
       parentRoute: typeof appConversationsRouteRoute
     }
-    "/(app)/analysis/create": {
-      id: "/(app)/analysis/create"
-      path: "/analysis/create"
-      fullPath: "/analysis/create"
-      preLoaderRoute: typeof appAnalysisCreateRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     "/(app)/analysis/$id": {
       id: "/(app)/analysis/$id"
       path: "/analysis/$id"
@@ -413,7 +394,6 @@ interface appRouteRouteChildren {
   appProfileRoute: typeof appProfileRoute
   appIndexRoute: typeof appIndexRoute
   appAnalysisIdRoute: typeof appAnalysisIdRoute
-  appAnalysisCreateRoute: typeof appAnalysisCreateRoute
   appSoilsCreateRoute: typeof appSoilsCreateRoute
   appSoilsIndexRoute: typeof appSoilsIndexRoute
   appSoilsSoilIdEditRoute: typeof appSoilsSoilIdEditRoute
@@ -426,7 +406,6 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appProfileRoute: appProfileRoute,
   appIndexRoute: appIndexRoute,
   appAnalysisIdRoute: appAnalysisIdRoute,
-  appAnalysisCreateRoute: appAnalysisCreateRoute,
   appSoilsCreateRoute: appSoilsCreateRoute,
   appSoilsIndexRoute: appSoilsIndexRoute,
   appSoilsSoilIdEditRoute: appSoilsSoilIdEditRoute,

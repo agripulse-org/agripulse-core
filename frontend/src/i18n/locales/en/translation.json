@@ -124,6 +124,7 @@
   "soils.edit": "Edit",
   "soils.delete": "Delete",
   "soils.analyze": "Analyze",
+  "soils.viewDetails": "View Details",
   "soils.noSoils": "No saved soils",
   "soils.addFirst": "Add your first soil to get started",
   "soils.never": "Never",

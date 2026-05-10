@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { Plus, MapPin, Edit, Trash2, Layers, FlaskConical } from "lucide-react";
+import { Plus, MapPin, Edit, Trash2, Layers } from "lucide-react";
 import { motion } from "motion/react";
 import { EmptyState } from "@/components/EmptyState";
 import ConfirmDialog from "@/components/ConfirmDialog";
@@ -74,7 +74,7 @@ function SoilsRoute() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
                 onClick={() => handleOpenDetails(soil.id)}
-                className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group cursor-pointer"
+                className="flex flex-col bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group cursor-pointer"
               >
                 <div className="mb-4">
                   <h3 className="text-xl mb-2">{soil.name}</h3>
@@ -87,7 +87,7 @@ function SoilsRoute() {
                   )}
                 </div>
 
-                <div className="mb-4 pb-4 border-b border-border">
+                <div className="mt-auto mb-4 pb-4 border-b border-border">
                   <p className="text-xs text-muted-foreground">{t("soils.lastAnalysis")}</p>
                   <p className="text-sm">{t("soils.never")}</p>
                 </div>
@@ -96,12 +96,11 @@ function SoilsRoute() {
                   <button
                     onClick={(event) => {
                       event.stopPropagation();
-                      navigate({ to: "/analysis/create" });
+                      handleOpenDetails(soil.id);
                     }}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all"
                   >
-                    <FlaskConical className="w-4 h-4" />
-                    <span>{t("soils.analyze")}</span>
+                    {t("soils.viewDetails")}
                   </button>
                   <button
                     onClick={(event) => {
