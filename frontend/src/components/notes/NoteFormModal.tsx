@@ -21,8 +21,17 @@ const buildNoteFormSchema = (t: TFunction) =>
       .trim()
       .min(1, t("notes.validation.titleRequired"))
       .max(255, t("notes.validation.titleMax")),
-    description: z.string(),
-    tags: z.array(z.object({ value: z.string() })),
+    description: z.string().max(10000, t("notes.validation.descriptionMax", { max: 10000 })),
+    tags: z
+      .array(
+        z.object({
+          value: z
+            .string()
+            .min(1, t("notes.validation.tagEmpty"))
+            .max(64, t("notes.validation.tagMax", { max: 64 })),
+        }),
+      )
+      .max(25, t("notes.validation.tagsMax", { max: 25 })),
   });
 
 type NoteFormValues = z.infer<ReturnType<typeof buildNoteFormSchema>>;
@@ -236,6 +245,9 @@ export function NoteFormModal({
                   </Badge>
                 ))}
               </div>
+            )}
+            {errors.tags?.root?.message && (
+              <p className="mt-2 text-sm text-destructive">{errors.tags.root.message}</p>
             )}
           </div>
 

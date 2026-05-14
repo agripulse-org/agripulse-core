@@ -9,7 +9,7 @@ public record UpdateSoilProfileDTO(
         @Size(min = 1, max = 255, message = "Name must be between 1 and 255 characters")
         String name,
 
-        @Size(max = 1000, message = "Description must not exceed 1000 characters")
+        @Size(max = 255, message = "Description must not exceed 255 characters")
         String description,
 
         @DecimalMin(value = "-90.0", message = "Latitude must be >= -90")

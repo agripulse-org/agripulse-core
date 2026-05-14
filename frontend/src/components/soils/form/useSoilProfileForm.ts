@@ -35,9 +35,7 @@ export const buildSoilProfileFormSchema = (t: TFunction) =>
     description: z
       .string()
       .trim()
-      .max(1000, t("soils.validation.descriptionMax"))
-      .optional()
-      .or(z.literal("")),
+      .max(255, t("soils.validation.descriptionMax", { max: 255 })),
     latitude: coordinateSchema(t, "soils.latitude", -90, 90),
     longitude: coordinateSchema(t, "soils.longitude", -180, 180),
   });
@@ -66,7 +64,7 @@ export function useSoilProfileForm(initialValues?: SoilProfileFormValues) {
     }
 
     setValue("name", initialValues.name);
-    setValue("description", initialValues.description ?? "");
+    setValue("description", initialValues.description);
     setValue("latitude", initialValues.latitude);
     setValue("longitude", initialValues.longitude);
   }, [initialValues, setValue]);

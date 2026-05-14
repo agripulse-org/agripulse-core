@@ -13,7 +13,7 @@ public record CreateSoilProfileDTO(
         @Size(max = 255, message = "Name must not exceed 255 characters")
         String name,
 
-        @Size(max = 1000, message = "Description must not exceed 1000 characters")
+        @Size(max = 255, message = "Description must not exceed 255 characters")
         String description,
 
         @NotNull(message = "Latitude is required")

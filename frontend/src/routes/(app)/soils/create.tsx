@@ -24,7 +24,7 @@ function CreateSoilProfileRoute() {
 
     await createSoilProfileMutation.mutateAsync({
       name: values.name.trim(),
-      description: values.description?.trim() || undefined,
+      description: values.description.trim() || undefined,
       latitude: Number(values.latitude),
       longitude: Number(values.longitude),
       city: resolvedLocation?.city.trim() || "",
