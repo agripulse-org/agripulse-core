@@ -24,9 +24,9 @@ import { Route as appConversationsIndexRouteImport } from "./routes/(app)/conver
 import { Route as appSoilsCreateRouteImport } from "./routes/(app)/soils/create"
 import { Route as appConversationsNewRouteImport } from "./routes/(app)/conversations/new"
 import { Route as appConversationsSessionIdRouteImport } from "./routes/(app)/conversations/$sessionId"
-import { Route as appAnalysisIdRouteImport } from "./routes/(app)/analysis/$id"
 import { Route as appSoilsSoilIdIndexRouteImport } from "./routes/(app)/soils/$soilId/index"
 import { Route as appSoilsSoilIdEditRouteImport } from "./routes/(app)/soils/$soilId/edit"
+import { Route as appSoilsSoilIdAnalysesAnalysisIdRouteImport } from "./routes/(app)/soils/$soilId/analyses/$analysisId"
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: "/auth",
@@ -103,11 +103,6 @@ const appConversationsSessionIdRoute =
     path: "/$sessionId",
     getParentRoute: () => appConversationsRouteRoute,
   } as any)
-const appAnalysisIdRoute = appAnalysisIdRouteImport.update({
-  id: "/analysis/$id",
-  path: "/analysis/$id",
-  getParentRoute: () => appRouteRoute,
-} as any)
 const appSoilsSoilIdIndexRoute = appSoilsSoilIdIndexRouteImport.update({
   id: "/soils/$soilId/",
   path: "/soils/$soilId/",
@@ -118,6 +113,12 @@ const appSoilsSoilIdEditRoute = appSoilsSoilIdEditRouteImport.update({
   path: "/soils/$soilId/edit",
   getParentRoute: () => appRouteRoute,
 } as any)
+const appSoilsSoilIdAnalysesAnalysisIdRoute =
+  appSoilsSoilIdAnalysesAnalysisIdRouteImport.update({
+    id: "/soils/$soilId/analyses/$analysisId",
+    path: "/soils/$soilId/analyses/$analysisId",
+    getParentRoute: () => appRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   "/auth": typeof AuthRouteRouteWithChildren
@@ -129,7 +130,6 @@ export interface FileRoutesByFullPath {
   "/auth/sso-callback": typeof AuthSsoCallbackRoute
   "/": typeof appIndexRoute
   "/auth/": typeof AuthIndexRoute
-  "/analysis/$id": typeof appAnalysisIdRoute
   "/conversations/$sessionId": typeof appConversationsSessionIdRoute
   "/conversations/new": typeof appConversationsNewRoute
   "/soils/create": typeof appSoilsCreateRoute
@@ -137,6 +137,7 @@ export interface FileRoutesByFullPath {
   "/soils/": typeof appSoilsIndexRoute
   "/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
   "/soils/$soilId/": typeof appSoilsSoilIdIndexRoute
+  "/soils/$soilId/analyses/$analysisId": typeof appSoilsSoilIdAnalysesAnalysisIdRoute
 }
 export interface FileRoutesByTo {
   "/notes": typeof appNotesRoute
@@ -146,7 +147,6 @@ export interface FileRoutesByTo {
   "/auth/sso-callback": typeof AuthSsoCallbackRoute
   "/": typeof appIndexRoute
   "/auth": typeof AuthIndexRoute
-  "/analysis/$id": typeof appAnalysisIdRoute
   "/conversations/$sessionId": typeof appConversationsSessionIdRoute
   "/conversations/new": typeof appConversationsNewRoute
   "/soils/create": typeof appSoilsCreateRoute
@@ -154,6 +154,7 @@ export interface FileRoutesByTo {
   "/soils": typeof appSoilsIndexRoute
   "/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
   "/soils/$soilId": typeof appSoilsSoilIdIndexRoute
+  "/soils/$soilId/analyses/$analysisId": typeof appSoilsSoilIdAnalysesAnalysisIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -167,7 +168,6 @@ export interface FileRoutesById {
   "/auth/sso-callback": typeof AuthSsoCallbackRoute
   "/(app)/": typeof appIndexRoute
   "/auth/": typeof AuthIndexRoute
-  "/(app)/analysis/$id": typeof appAnalysisIdRoute
   "/(app)/conversations/$sessionId": typeof appConversationsSessionIdRoute
   "/(app)/conversations/new": typeof appConversationsNewRoute
   "/(app)/soils/create": typeof appSoilsCreateRoute
@@ -175,6 +175,7 @@ export interface FileRoutesById {
   "/(app)/soils/": typeof appSoilsIndexRoute
   "/(app)/soils/$soilId/edit": typeof appSoilsSoilIdEditRoute
   "/(app)/soils/$soilId/": typeof appSoilsSoilIdIndexRoute
+  "/(app)/soils/$soilId/analyses/$analysisId": typeof appSoilsSoilIdAnalysesAnalysisIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -188,7 +189,6 @@ export interface FileRouteTypes {
     | "/auth/sso-callback"
     | "/"
     | "/auth/"
-    | "/analysis/$id"
     | "/conversations/$sessionId"
     | "/conversations/new"
     | "/soils/create"
@@ -196,6 +196,7 @@ export interface FileRouteTypes {
     | "/soils/"
     | "/soils/$soilId/edit"
     | "/soils/$soilId/"
+    | "/soils/$soilId/analyses/$analysisId"
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/notes"
@@ -205,7 +206,6 @@ export interface FileRouteTypes {
     | "/auth/sso-callback"
     | "/"
     | "/auth"
-    | "/analysis/$id"
     | "/conversations/$sessionId"
     | "/conversations/new"
     | "/soils/create"
@@ -213,6 +213,7 @@ export interface FileRouteTypes {
     | "/soils"
     | "/soils/$soilId/edit"
     | "/soils/$soilId"
+    | "/soils/$soilId/analyses/$analysisId"
   id:
     | "__root__"
     | "/(app)"
@@ -225,7 +226,6 @@ export interface FileRouteTypes {
     | "/auth/sso-callback"
     | "/(app)/"
     | "/auth/"
-    | "/(app)/analysis/$id"
     | "/(app)/conversations/$sessionId"
     | "/(app)/conversations/new"
     | "/(app)/soils/create"
@@ -233,6 +233,7 @@ export interface FileRouteTypes {
     | "/(app)/soils/"
     | "/(app)/soils/$soilId/edit"
     | "/(app)/soils/$soilId/"
+    | "/(app)/soils/$soilId/analyses/$analysisId"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -347,13 +348,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof appConversationsSessionIdRouteImport
       parentRoute: typeof appConversationsRouteRoute
     }
-    "/(app)/analysis/$id": {
-      id: "/(app)/analysis/$id"
-      path: "/analysis/$id"
-      fullPath: "/analysis/$id"
-      preLoaderRoute: typeof appAnalysisIdRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     "/(app)/soils/$soilId/": {
       id: "/(app)/soils/$soilId/"
       path: "/soils/$soilId"
@@ -366,6 +360,13 @@ declare module "@tanstack/react-router" {
       path: "/soils/$soilId/edit"
       fullPath: "/soils/$soilId/edit"
       preLoaderRoute: typeof appSoilsSoilIdEditRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    "/(app)/soils/$soilId/analyses/$analysisId": {
+      id: "/(app)/soils/$soilId/analyses/$analysisId"
+      path: "/soils/$soilId/analyses/$analysisId"
+      fullPath: "/soils/$soilId/analyses/$analysisId"
+      preLoaderRoute: typeof appSoilsSoilIdAnalysesAnalysisIdRouteImport
       parentRoute: typeof appRouteRoute
     }
   }
@@ -393,11 +394,11 @@ interface appRouteRouteChildren {
   appNotesRoute: typeof appNotesRoute
   appProfileRoute: typeof appProfileRoute
   appIndexRoute: typeof appIndexRoute
-  appAnalysisIdRoute: typeof appAnalysisIdRoute
   appSoilsCreateRoute: typeof appSoilsCreateRoute
   appSoilsIndexRoute: typeof appSoilsIndexRoute
   appSoilsSoilIdEditRoute: typeof appSoilsSoilIdEditRoute
   appSoilsSoilIdIndexRoute: typeof appSoilsSoilIdIndexRoute
+  appSoilsSoilIdAnalysesAnalysisIdRoute: typeof appSoilsSoilIdAnalysesAnalysisIdRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
@@ -405,11 +406,11 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appNotesRoute: appNotesRoute,
   appProfileRoute: appProfileRoute,
   appIndexRoute: appIndexRoute,
-  appAnalysisIdRoute: appAnalysisIdRoute,
   appSoilsCreateRoute: appSoilsCreateRoute,
   appSoilsIndexRoute: appSoilsIndexRoute,
   appSoilsSoilIdEditRoute: appSoilsSoilIdEditRoute,
   appSoilsSoilIdIndexRoute: appSoilsSoilIdIndexRoute,
+  appSoilsSoilIdAnalysesAnalysisIdRoute: appSoilsSoilIdAnalysesAnalysisIdRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(

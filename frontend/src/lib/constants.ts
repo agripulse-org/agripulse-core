@@ -1,95 +1,53 @@
+import type { ParseKeys } from "i18next";
+
 export const MAP_INITIAL_CENTER: [number, number] = [41.6086, 21.7453];
 export const MAP_INITIAL_ZOOM = 8;
 
-export const ANALYSIS_DEPTH_OPTIONS = [
-  { value: "0-5", label: "0–5 cm", description: "Surface layer" },
-  { value: "5-15", label: "5–15 cm", description: "Topsoil" },
-  { value: "15-30", label: "15–30 cm", description: "Subsoil" },
-  { value: "30-60", label: "30–60 cm", description: "Deep layer" },
+// ==== Soil analysis ====
+export const ANALYSIS_DEPTH_OPTIONS: {
+  value: "DEPTH_0_5" | "DEPTH_5_15" | "DEPTH_15_30" | "DEPTH_30_60";
+  label: string;
+  descriptionKey: ParseKeys;
+}[] = [
+  { value: "DEPTH_0_5", label: "0–5 cm", descriptionKey: "soils.depth.DEPTH_0_5.description" },
+  { value: "DEPTH_5_15", label: "5–15 cm", descriptionKey: "soils.depth.DEPTH_5_15.description" },
+  {
+    value: "DEPTH_15_30",
+    label: "15–30 cm",
+    descriptionKey: "soils.depth.DEPTH_15_30.description",
+  },
+  {
+    value: "DEPTH_30_60",
+    label: "30–60 cm",
+    descriptionKey: "soils.depth.DEPTH_30_60.description",
+  },
 ];
 
+export const getSoilDepthLabel = (soilDepth: string): string => {
+  return ANALYSIS_DEPTH_OPTIONS.find((o) => o.value === soilDepth)?.label ?? soilDepth;
+};
+
+export const SOIL_ANALYSIS_CSV_TEMPLATE =
+  "soilDepth,ph,nitrogen,cec,organicCarbon,sandContent,siltContent,clayContent,bulkDensity,coarseFragments,plantAvailableWater\n" +
+  "0-5,6.5,0.14,18.0,2.8,45.0,35.0,20.0,1.35,5.0,22.0\n";
+
 // ==== Crop types ====
-
-export type CropI18nKey =
-  | "crops.maize"
-  | "crops.sugarcane"
-  | "crops.cotton"
-  | "crops.tobacco"
-  | "crops.paddy"
-  | "crops.barley"
-  | "crops.wheat"
-  | "crops.millets"
-  | "crops.oilSeeds"
-  | "crops.pulses"
-  | "crops.groundNuts";
-
 export type CropTypeMeta = {
-  name: CropI18nKey;
-  imagePath?: string;
-  description?: string;
+  nameKey: ParseKeys;
+  descriptionKey: ParseKeys;
+  imageUrl?: string;
 };
 
 export const CROP_TYPE_MAP: Partial<Record<string, CropTypeMeta>> = {
-  maize: { name: "crops.maize" },
-  sugarcane: { name: "crops.sugarcane" },
-  cotton: { name: "crops.cotton" },
-  tobacco: { name: "crops.tobacco" },
-  paddy: { name: "crops.paddy" },
-  barley: { name: "crops.barley" },
-  wheat: { name: "crops.wheat" },
-  millets: { name: "crops.millets" },
-  oil_seeds: { name: "crops.oilSeeds" },
-  pulses: { name: "crops.pulses" },
-  ground_nuts: { name: "crops.groundNuts" },
+  maize: { nameKey: "crops.maize", descriptionKey: "crops.maize.description" },
+  sugarcane: { nameKey: "crops.sugarcane", descriptionKey: "crops.sugarcane.description" },
+  cotton: { nameKey: "crops.cotton", descriptionKey: "crops.cotton.description" },
+  tobacco: { nameKey: "crops.tobacco", descriptionKey: "crops.tobacco.description" },
+  paddy: { nameKey: "crops.paddy", descriptionKey: "crops.paddy.description" },
+  barley: { nameKey: "crops.barley", descriptionKey: "crops.barley.description" },
+  wheat: { nameKey: "crops.wheat", descriptionKey: "crops.wheat.description" },
+  millets: { nameKey: "crops.millets", descriptionKey: "crops.millets.description" },
+  oil_seeds: { nameKey: "crops.oilSeeds", descriptionKey: "crops.oilSeeds.description" },
+  pulses: { nameKey: "crops.pulses", descriptionKey: "crops.pulses.description" },
+  ground_nuts: { nameKey: "crops.groundNuts", descriptionKey: "crops.groundNuts.description" },
 };
-
-export const ANALYSIS_DETAILS_MOCK = {
-  id: "1",
-  location: "Skopje, North Macedonia",
-  date: "2026-04-10",
-  depth: "0-5 cm",
-  coordinates: { lat: 41.9973, lng: 21.428 },
-  soilParameters: {
-    ph: { value: 6.5, unit: "pH", status: "optimal" },
-    texture: { value: "Loamy", status: "good" },
-    carbon: { value: 2.8, unit: "%", status: "good" },
-    nitrogen: { value: 0.14, unit: "%", status: "optimal" },
-    bulkDensity: { value: 1.35, unit: "g/cm³", status: "good" },
-    cec: { value: 18, unit: "meq/100g", status: "optimal" },
-    moisture: { value: 22, unit: "%", status: "good" },
-  },
-  weather: {
-    temperature: { value: 18, unit: "°C" },
-    rainfall: { value: 45, unit: "mm/month" },
-  },
-  recommendations: [
-    { plant: "Wheat", compatibility: 92, reason: "Optimal pH and nitrogen levels" },
-    { plant: "Barley", compatibility: 88, reason: "Good soil texture and moisture" },
-    { plant: "Sunflower", compatibility: 85, reason: "Suitable organic carbon content" },
-    { plant: "Corn", compatibility: 78, reason: "Adequate CEC and bulk density" },
-    { plant: "Potato", compatibility: 75, reason: "Good moisture retention" },
-  ],
-};
-
-export const SOIL_DETAILS_MOCK_ANALYSES = [
-  {
-    id: "1",
-    soilId: "1",
-    depth: "0-5 cm",
-    date: "2026-04-10",
-    topRecommendations: [
-      { plant: "Wheat", compatibility: 92 },
-      { plant: "Barley", compatibility: 88 },
-    ],
-  },
-  {
-    id: "2",
-    soilId: "1",
-    depth: "5-15 cm",
-    date: "2026-04-05",
-    topRecommendations: [
-      { plant: "Corn", compatibility: 90 },
-      { plant: "Potato", compatibility: 87 },
-    ],
-  },
-];

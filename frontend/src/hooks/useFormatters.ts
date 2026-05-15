@@ -81,8 +81,10 @@ export function useFormatters() {
 }
 
 // Custom formatters
+// @ts-expect-error - Not using the language code since the mk locale is incorrect
 function getDateFormatter(languageCode: AppLanguage) {
-  const locale = languageCode === "mk" ? "mk" : "en-GB";
+  // const locale = languageCode === "mk" ? "mk-MK" : "en-GB";
+  const locale = "en-GB";
 
   return new Intl.DateTimeFormat(locale, {
     day: "2-digit",
@@ -91,8 +93,10 @@ function getDateFormatter(languageCode: AppLanguage) {
   });
 }
 
+// @ts-expect-error - Not using the language code since the mk locale is incorrect
 function getTimeFormatter(languageCode: AppLanguage) {
-  const locale = languageCode === "mk" ? "mk" : "en-GB";
+  // const locale = languageCode === "mk" ? "mk-MK" : "en-GB";
+  const locale = "en-GB";
 
   return new Intl.DateTimeFormat(locale, {
     hour: "2-digit",

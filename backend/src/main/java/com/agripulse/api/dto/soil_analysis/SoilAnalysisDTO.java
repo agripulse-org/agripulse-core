@@ -3,8 +3,10 @@ package com.agripulse.api.dto.soil_analysis;
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.model.enums.AnalysisStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public record SoilAnalysisDTO(
@@ -33,7 +35,10 @@ public record SoilAnalysisDTO(
         Double temperatureMinC,
         Double temperatureMaxC,
         Double avgHumidityPercent,
-        Double totalPrecipitationMm
+        Double totalPrecipitationMm,
+
+        @Schema(nullable = true)
+        List<CropRecommendationResult> cropRecommendations
 ) {
 
     public static SoilAnalysisDTO from(
@@ -66,7 +71,9 @@ public record SoilAnalysisDTO(
                 analysis.getTemperatureMinC(),
                 analysis.getTemperatureMaxC(),
                 analysis.getAvgHumidityPercent(),
-                analysis.getTotalPrecipitationMm()
+                analysis.getTotalPrecipitationMm(),
+
+                analysis.getCropRecommendations()
         );
     }
 }

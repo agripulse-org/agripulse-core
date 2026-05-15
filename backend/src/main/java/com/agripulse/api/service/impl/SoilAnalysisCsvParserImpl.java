@@ -16,15 +16,22 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SoilAnalysisCsvParserImpl implements SoilAnalysisCsvParser {
 
+    private static final Map<String, SoilDepth> DEPTH_MAP = Map.of(
+            "0-5", SoilDepth.DEPTH_0_5,
+            "5-15", SoilDepth.DEPTH_5_15,
+            "15-30", SoilDepth.DEPTH_15_30,
+            "30-60", SoilDepth.DEPTH_30_60
+    );
+
     @Override
     public List<SoilAnalysis> parse(
             MultipartFile file,
-            SoilProfile soilProfile,
-            SoilDepth soilDepth
+            SoilProfile soilProfile
     ) {
         try (
                 Reader reader = new InputStreamReader(file.getInputStream());
@@ -38,6 +45,11 @@ public class SoilAnalysisCsvParserImpl implements SoilAnalysisCsvParser {
             List<SoilAnalysis> analyses = new ArrayList<>();
 
             for (CSVRecord record : csvParser) {
+                SoilDepth soilDepth = DEPTH_MAP.get(record.get("soilDepth"));
+                if (soilDepth == null) {
+                    continue;
+                }
+
                 SoilAnalysis analysis = new SoilAnalysis(soilProfile, soilDepth);
 
                 analysis.setPh(Double.valueOf(record.get("ph")));
@@ -55,7 +67,7 @@ public class SoilAnalysisCsvParserImpl implements SoilAnalysisCsvParser {
             }
 
             if (analyses.isEmpty()) {
-                throw new RuntimeException("CSV file contains no data rows");
+                throw new RuntimeException("CSV file contains no valid data rows");
             }
 
             return analyses;
