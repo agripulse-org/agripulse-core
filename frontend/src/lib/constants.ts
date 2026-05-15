@@ -39,15 +39,59 @@ export type CropTypeMeta = {
 };
 
 export const CROP_TYPE_MAP: Partial<Record<string, CropTypeMeta>> = {
-  maize: { nameKey: "crops.maize", descriptionKey: "crops.maize.description" },
-  sugarcane: { nameKey: "crops.sugarcane", descriptionKey: "crops.sugarcane.description" },
-  cotton: { nameKey: "crops.cotton", descriptionKey: "crops.cotton.description" },
-  tobacco: { nameKey: "crops.tobacco", descriptionKey: "crops.tobacco.description" },
-  paddy: { nameKey: "crops.paddy", descriptionKey: "crops.paddy.description" },
-  barley: { nameKey: "crops.barley", descriptionKey: "crops.barley.description" },
-  wheat: { nameKey: "crops.wheat", descriptionKey: "crops.wheat.description" },
-  millets: { nameKey: "crops.millets", descriptionKey: "crops.millets.description" },
-  oil_seeds: { nameKey: "crops.oilSeeds", descriptionKey: "crops.oilSeeds.description" },
-  pulses: { nameKey: "crops.pulses", descriptionKey: "crops.pulses.description" },
-  ground_nuts: { nameKey: "crops.groundNuts", descriptionKey: "crops.groundNuts.description" },
+  maize: {
+    nameKey: "crops.maize",
+    descriptionKey: "crops.maize.description",
+    imageUrl: "/crops/maize.webp",
+  },
+  sugarcane: {
+    nameKey: "crops.sugarcane",
+    descriptionKey: "crops.sugarcane.description",
+    imageUrl: "/crops/sugarcane.webp",
+  },
+  cotton: {
+    nameKey: "crops.cotton",
+    descriptionKey: "crops.cotton.description",
+    imageUrl: "/crops/cotton.webp",
+  },
+  tobacco: {
+    nameKey: "crops.tobacco",
+    descriptionKey: "crops.tobacco.description",
+    imageUrl: "/crops/tobacco.webp",
+  },
+  paddy: {
+    nameKey: "crops.paddy",
+    descriptionKey: "crops.paddy.description",
+    imageUrl: "/crops/paddy.webp",
+  },
+  barley: {
+    nameKey: "crops.barley",
+    descriptionKey: "crops.barley.description",
+    imageUrl: "/crops/barley.webp",
+  },
+  wheat: {
+    nameKey: "crops.wheat",
+    descriptionKey: "crops.wheat.description",
+    imageUrl: "/crops/wheat.webp",
+  },
+  millets: {
+    nameKey: "crops.millets",
+    descriptionKey: "crops.millets.description",
+    imageUrl: "/crops/millets.webp",
+  },
+  oil_seeds: {
+    nameKey: "crops.oilSeeds",
+    descriptionKey: "crops.oilSeeds.description",
+    imageUrl: "/crops/oil-seeds.webp",
+  },
+  pulses: {
+    nameKey: "crops.pulses",
+    descriptionKey: "crops.pulses.description",
+    imageUrl: "/crops/pulses.webp",
+  },
+  ground_nuts: {
+    nameKey: "crops.groundNuts",
+    descriptionKey: "crops.groundNuts.description",
+    imageUrl: "/crops/ground-nuts.webp",
+  },
 };
