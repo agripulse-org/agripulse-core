@@ -3,7 +3,6 @@ package com.agripulse.api.service;
 import com.agripulse.api.dto.soil_analysis.CreateSoilAnalysisDTO;
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.UserId;
-import com.agripulse.api.model.enums.SoilDepth;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -38,8 +37,7 @@ public interface SoilAnalysisService {
     List<SoilAnalysis> uploadCsv(
             UserId userId,
             UUID soilProfileId,
-            MultipartFile file,
-            SoilDepth soilDepth
+            MultipartFile file
     );
 
     byte[] exportReport(

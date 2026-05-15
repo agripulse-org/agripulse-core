@@ -4,7 +4,6 @@ import com.agripulse.api.model.view.SoilAnalysisReportModel;
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.SoilProfile;
 import com.agripulse.api.model.domain.UserId;
-import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.model.exceptions.SoilAnalysisNotFoundException;
 import com.agripulse.api.repository.SoilAnalysisRepository;
 import com.agripulse.api.service.PdfGeneratorService;
@@ -69,12 +68,11 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
     public List<SoilAnalysis> uploadCsv(
             UserId userId,
             UUID soilProfileId,
-            MultipartFile file,
-            SoilDepth soilDepth
+            MultipartFile file
     ) {
         SoilProfile soilProfile = soilProfileService.getProfileById(userId, soilProfileId);
 
-        List<SoilAnalysis> analyses = csvParser.parse(file, soilProfile, soilDepth);
+        List<SoilAnalysis> analyses = csvParser.parse(file, soilProfile);
 
         return soilAnalysisRepository.saveAll(analyses);
     }

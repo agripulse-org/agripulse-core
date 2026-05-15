@@ -29,3 +29,7 @@ export type AnalysisCropRecommendation = {
   crop: string;
   recommendationScore: number;
 };
+
+export type CreateAnalysisRequest = {
+  soilDepth: AnalysisSoilDepth;
+};

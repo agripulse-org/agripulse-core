@@ -198,6 +198,11 @@
   "soils.validation.nameMax": "Soil name must not exceed 255 characters",
   "soils.validation.descriptionMax": "Description must not exceed 1000 characters",
 
+  "soils.depth.DEPTH_0_5.description": "Surface layer",
+  "soils.depth.DEPTH_5_15.description": "Topsoil",
+  "soils.depth.DEPTH_15_30.description": "Subsoil",
+  "soils.depth.DEPTH_30_60.description": "Deep layer",
+
   "soils.details.backToSoils": "Back to Soils",
   "soils.details.editSoil": "Edit Soil",
   "soils.details.created": "Created",
@@ -211,6 +216,7 @@
   "soils.details.recentAnalyses": "Recent Analyses",
   "soils.details.viewAll": "View All",
   "soils.details.allAnalyses": "All Analyses",
+
   "soils.details.noAnalysesDescription": "Create your first analysis to get soil insights and plant recommendations",
   "soils.details.createAnalysis": "Create Analysis",
   "soils.details.analysis.creating": "Creating analysis for depth {{depth}}...",
@@ -241,9 +247,9 @@
   "soils.details.import.invalidCsv": "Please upload a valid CSV file",
   "soils.details.import.templateDownloaded": "Template downloaded",
   "soils.details.import.requirementsTitle": "CSV Format Requirements",
-  "soils.details.import.requirement.depth": "Include depth column (e.g., \"0-5 cm\", \"5-15 cm\")",
-  "soils.details.import.requirement.required": "Required: pH, Texture, Nitrogen, Organic Carbon",
-  "soils.details.import.requirement.optional": "Optional: Bulk Density, CEC, Moisture",
+  "soils.details.import.requirement.depth": "soilDepth column accepts: 0-5, 5-15, 15-30, or 30-60",
+  "soils.details.import.requirement.required": "Required: ph, nitrogen, cec, organicCarbon, sandContent, siltContent, clayContent, bulkDensity, coarseFragments, plantAvailableWater",
+  "soils.details.import.requirement.optional": "Rows with unrecognised depth values are skipped",
   "soils.details.import.requirement.headers": "First row must contain column headers",
   "soils.details.import.downloadTemplate": "Download CSV Template",
   "soils.details.notes.title": "Field notes",

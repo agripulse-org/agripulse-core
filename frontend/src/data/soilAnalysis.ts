@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient, queryOptions } from "@tanstack/react-query";
 import { soilAnalysisService } from "@/services/soil-analysis";
+import type { CreateAnalysisRequest } from "@/services/soil-analysis/models";
 
 export const getSoilAnalysesQueryOptions = (soilProfileId: string) =>
   queryOptions({
@@ -16,6 +17,35 @@ export const getSoilAnalysisQueryOptions = (soilProfileId: string, analysisId: s
 
 export const useSoilAnalyses = (soilProfileId: string) =>
   useQuery(getSoilAnalysesQueryOptions(soilProfileId));
+
+export const useCreateSoilAnalysis = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      soilProfileId,
+      request,
+    }: {
+      soilProfileId: string;
+      request: CreateAnalysisRequest;
+    }) => soilAnalysisService.createAnalysis(soilProfileId, request),
+    onSuccess: (_data, { soilProfileId }) => {
+      queryClient.invalidateQueries({ queryKey: ["soil-analyses", soilProfileId] });
+    },
+  });
+};
+
+export const useUploadSoilAnalysisCSV = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ soilProfileId, file }: { soilProfileId: string; file: File }) =>
+      soilAnalysisService.uploadCSV(soilProfileId, file),
+    onSuccess: (_data, { soilProfileId }) => {
+      queryClient.invalidateQueries({ queryKey: ["soil-analyses", soilProfileId] });
+    },
+  });
+};
 
 export const useDeleteSoilAnalysis = () => {
   const queryClient = useQueryClient();

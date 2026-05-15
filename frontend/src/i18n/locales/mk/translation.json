@@ -198,6 +198,11 @@
   "soils.validation.nameMax": "Името на почвата не смее да надмине 255 карактери",
   "soils.validation.descriptionMax": "Описот не смее да надмине 1000 карактери",
 
+  "soils.depth.DEPTH_0_5.description": "Површински слој",
+  "soils.depth.DEPTH_5_15.description": "Горен слој на почва",
+  "soils.depth.DEPTH_15_30.description": "Подпочвен слој",
+  "soils.depth.DEPTH_30_60.description": "Длабок слој",
+
   "soils.details.backToSoils": "Назад кон почви",
   "soils.details.editSoil": "Уреди почва",
   "soils.details.created": "Креирано",
@@ -211,6 +216,7 @@
   "soils.details.recentAnalyses": "Последни анализи",
   "soils.details.viewAll": "Види ги сите",
   "soils.details.allAnalyses": "Сите анализи",
+
   "soils.details.noAnalysesDescription": "Креирајте ја вашата прва анализа за да добиете увид во почвата и препораки за растенија",
   "soils.details.createAnalysis": "Креирај анализа",
   "soils.details.analysis.creating": "Се креира анализа за длабочина {{depth}}...",
@@ -241,9 +247,9 @@
   "soils.details.import.invalidCsv": "Прикачете валидна CSV датотека",
   "soils.details.import.templateDownloaded": "Шаблонот е преземен",
   "soils.details.import.requirementsTitle": "Барања за CSV формат",
-  "soils.details.import.requirement.depth": "Вклучете колона за длабочина (пр. „0-5 cm“, „5-15 cm“)",
-  "soils.details.import.requirement.required": "Задолжително: pH, Текстура, Азот, Органски јаглерод",
-  "soils.details.import.requirement.optional": "Опционално: Густина, CEC, Влажност",
+  "soils.details.import.requirement.depth": "Колоната soilDepth прифаќа: 0-5, 5-15, 15-30 или 30-60",
+  "soils.details.import.requirement.required": "Задолжително: ph, nitrogen, cec, organicCarbon, sandContent, siltContent, clayContent, bulkDensity, coarseFragments, plantAvailableWater",
+  "soils.details.import.requirement.optional": "Редовите со непознати вредности за длабочина се прескокнуваат",
   "soils.details.import.requirement.headers": "Првиот ред мора да содржи заглавија на колони",
   "soils.details.import.downloadTemplate": "Преземи CSV шаблон",
   "soils.details.notes.title": "Белешки од полето",
