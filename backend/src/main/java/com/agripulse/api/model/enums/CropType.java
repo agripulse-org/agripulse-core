@@ -4,17 +4,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum CropType {
-    MAIZE("maize"),
-    SUGARCANE("sugarcane"),
-    COTTON("cotton"),
-    TOBACCO("tobacco"),
-    PADDY("paddy"),
-    BARLEY("barley"),
     WHEAT("wheat"),
-    MILLETS("millets"),
-    OIL_SEEDS("oil_seeds"),
-    PULSES("pulses"),
-    GROUND_NUTS("ground_nuts");
+    BARLEY("barley"),
+    RYE("rye"),
+    OATS("oats"),
+    CORN("corn"),
+    RAPESEED("rapeseed"),
+    SUNFLOWER("sunflower"),
+    SOYBEAN("soybean"),
+    POTATO("potato"),
+    SUGAR_BEET("sugar_beet"),
+    TOMATO("tomato"),
+    CHERRY("cherry"),
+    PEACH("peach");
 
     private final String value;
 
