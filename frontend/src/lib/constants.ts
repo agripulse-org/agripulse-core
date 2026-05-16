@@ -39,59 +39,68 @@ export type CropTypeMeta = {
 };
 
 export const CROP_TYPE_MAP: Partial<Record<string, CropTypeMeta>> = {
-  maize: {
-    nameKey: "crops.maize",
-    descriptionKey: "crops.maize.description",
-    imageUrl: "/crops/maize.webp",
-  },
-  sugarcane: {
-    nameKey: "crops.sugarcane",
-    descriptionKey: "crops.sugarcane.description",
-    imageUrl: "/crops/sugarcane.webp",
-  },
-  cotton: {
-    nameKey: "crops.cotton",
-    descriptionKey: "crops.cotton.description",
-    imageUrl: "/crops/cotton.webp",
-  },
-  tobacco: {
-    nameKey: "crops.tobacco",
-    descriptionKey: "crops.tobacco.description",
-    imageUrl: "/crops/tobacco.webp",
-  },
-  paddy: {
-    nameKey: "crops.paddy",
-    descriptionKey: "crops.paddy.description",
-    imageUrl: "/crops/paddy.webp",
+  wheat: {
+    nameKey: "crops.wheat",
+    descriptionKey: "crops.wheat.description",
+    imageUrl: "/crops/wheat.webp",
   },
   barley: {
     nameKey: "crops.barley",
     descriptionKey: "crops.barley.description",
     imageUrl: "/crops/barley.webp",
   },
-  wheat: {
-    nameKey: "crops.wheat",
-    descriptionKey: "crops.wheat.description",
-    imageUrl: "/crops/wheat.webp",
+  rye: {
+    nameKey: "crops.rye",
+    descriptionKey: "crops.rye.description",
+    imageUrl: "/crops/rye.webp",
   },
-  millets: {
-    nameKey: "crops.millets",
-    descriptionKey: "crops.millets.description",
-    imageUrl: "/crops/millets.webp",
+  oats: {
+    nameKey: "crops.oats",
+    descriptionKey: "crops.oats.description",
+    imageUrl: "/crops/oats.webp",
   },
-  oil_seeds: {
-    nameKey: "crops.oilSeeds",
-    descriptionKey: "crops.oilSeeds.description",
-    imageUrl: "/crops/oil-seeds.webp",
+  corn: {
+    nameKey: "crops.corn",
+    descriptionKey: "crops.corn.description",
+    imageUrl: "/crops/corn.webp",
   },
-  pulses: {
-    nameKey: "crops.pulses",
-    descriptionKey: "crops.pulses.description",
-    imageUrl: "/crops/pulses.webp",
+  rapeseed: {
+    nameKey: "crops.rapeseed",
+    descriptionKey: "crops.rapeseed.description",
+    imageUrl: "/crops/Rapeseed.webp",
   },
-  ground_nuts: {
-    nameKey: "crops.groundNuts",
-    descriptionKey: "crops.groundNuts.description",
-    imageUrl: "/crops/ground-nuts.webp",
+  sunflower: {
+    nameKey: "crops.sunflower",
+    descriptionKey: "crops.sunflower.description",
+    imageUrl: "/crops/sunflower.webp",
+  },
+  soybean: {
+    nameKey: "crops.soybean",
+    descriptionKey: "crops.soybean.description",
+    imageUrl: "/crops/soybean.webp",
+  },
+  potato: {
+    nameKey: "crops.potato",
+    descriptionKey: "crops.potato.description",
+    imageUrl: "/crops/potato.webp",
+  },
+  sugar_beet: {
+    nameKey: "crops.sugarBeet",
+    descriptionKey: "crops.sugarBeet.description",
+  },
+  tomato: {
+    nameKey: "crops.tomato",
+    descriptionKey: "crops.tomato.description",
+    imageUrl: "/crops/tomato.webp",
+  },
+  cherry: {
+    nameKey: "crops.cherry",
+    descriptionKey: "crops.cherry.description",
+    imageUrl: "/crops/cherry.webp",
+  },
+  peach: {
+    nameKey: "crops.peach",
+    descriptionKey: "crops.peach.description",
+    imageUrl: "/crops/peach.webp",
   },
 };
