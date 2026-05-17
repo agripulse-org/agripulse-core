@@ -2,7 +2,7 @@ package com.agripulse.api;
 
 import com.agripulse.api.model.domain.SoilProperties;
 import com.agripulse.api.model.domain.WeatherData;
-import com.agripulse.api.model.enums.SoilType;
+import com.agripulse.api.model.enums.SoilTexture;
 import com.agripulse.api.service.CropRecommendationService;
 import com.agripulse.api.service.PdfGeneratorService;
 import com.agripulse.api.service.SoilPropertiesService;
@@ -92,7 +92,7 @@ class ExternalServicesIntegrationTest {
                 65.0,   // humidity %
                 6.5,    // ph
                 40.0,   // moisture %
-                SoilType.LOAMY
+                SoilTexture.LOAM
         );
 
         System.out.println("Crop recommendations: " + recommendations);

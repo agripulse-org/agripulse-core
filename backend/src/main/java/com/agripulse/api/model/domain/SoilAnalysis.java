@@ -4,7 +4,7 @@ import com.agripulse.api.dto.soil_analysis.CropRecommendationResult;
 import com.agripulse.api.model.enums.AnalysisStatus;
 import com.agripulse.api.model.enums.CropType;
 import com.agripulse.api.model.enums.SoilDepth;
-import com.agripulse.api.model.enums.SoilType;
+import com.agripulse.api.model.enums.SoilTexture;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -78,7 +78,7 @@ public class SoilAnalysis {
     private Double plantAvailableWater;
 
     @Enumerated(EnumType.STRING)
-    private SoilType soilType;
+    private SoilTexture soilTexture;
 
     // Weather
     private Double temperatureAvgC;

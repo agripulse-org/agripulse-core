@@ -1,9 +1,24 @@
+export type SoilTexture =
+  | "sand"
+  | "loamy_sand"
+  | "sandy_loam"
+  | "loam"
+  | "silt_loam"
+  | "silt"
+  | "sandy_clay_loam"
+  | "clay_loam"
+  | "silty_clay_loam"
+  | "sandy_clay"
+  | "silty_clay"
+  | "clay";
+
 export type SoilAnalysis = {
   id: string;
   soilProfileId: string;
   createdAt: string;
   updatedAt: string;
   soilDepth: AnalysisSoilDepth;
+  soilTexture: SoilTexture | null;
   status: string;
   ph: number | null;
   nitrogen: number | null;

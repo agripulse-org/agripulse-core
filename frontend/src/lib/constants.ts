@@ -31,6 +31,26 @@ export const SOIL_ANALYSIS_CSV_TEMPLATE =
   "soilDepth,ph,nitrogen,cec,organicCarbon,sandContent,siltContent,clayContent,bulkDensity,coarseFragments,plantAvailableWater\n" +
   "0-5,6.5,0.14,18.0,2.8,45.0,35.0,20.0,1.35,5.0,22.0\n";
 
+// ==== Soil textures ====
+export type SoilTextureMeta = {
+  labelKey: ParseKeys;
+};
+
+export const SOIL_TEXTURE_MAP: Partial<Record<string, SoilTextureMeta>> = {
+  sand: { labelKey: "soils.texture.sand" },
+  loamy_sand: { labelKey: "soils.texture.loamy_sand" },
+  sandy_loam: { labelKey: "soils.texture.sandy_loam" },
+  loam: { labelKey: "soils.texture.loam" },
+  silt_loam: { labelKey: "soils.texture.silt_loam" },
+  silt: { labelKey: "soils.texture.silt" },
+  sandy_clay_loam: { labelKey: "soils.texture.sandy_clay_loam" },
+  clay_loam: { labelKey: "soils.texture.clay_loam" },
+  silty_clay_loam: { labelKey: "soils.texture.silty_clay_loam" },
+  sandy_clay: { labelKey: "soils.texture.sandy_clay" },
+  silty_clay: { labelKey: "soils.texture.silty_clay" },
+  clay: { labelKey: "soils.texture.clay" },
+};
+
 // ==== Crop types ====
 export type CropTypeMeta = {
   nameKey: ParseKeys;

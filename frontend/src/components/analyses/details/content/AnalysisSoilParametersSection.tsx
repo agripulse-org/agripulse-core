@@ -4,12 +4,13 @@ import { motion } from "motion/react";
 import { AnalysisMetricCard } from "@/components/analyses/AnalysisMetricCard";
 import type { SoilAnalysis } from "@/services/soil-analysis/models";
 import { StackedBar } from "@/components/charts/StackedBar";
+import { SOIL_TEXTURE_MAP } from "@/lib/constants";
 
 type SoilParameter = {
   key: string;
   label: string;
-  value: string | undefined;
-  unit: string;
+  value?: string;
+  unit?: string;
 };
 
 interface AnalysisSoilParametersSectionProps {
@@ -22,8 +23,11 @@ export function AnalysisSoilParametersSection({ analysis }: AnalysisSoilParamete
   const hasTexture =
     analysis.sandContent !== null || analysis.siltContent !== null || analysis.clayContent !== null;
 
-  const soilParams = useMemo<SoilParameter[]>(
-    () => [
+  const soilParams = useMemo<SoilParameter[]>(() => {
+    const textureMeta = analysis.soilTexture ? SOIL_TEXTURE_MAP[analysis.soilTexture] : undefined;
+    const textureLabel = textureMeta ? t(textureMeta.labelKey) : undefined;
+    return [
+      { key: "soilTexture", label: t("analysis.details.texture"), value: textureLabel },
       { key: "ph", label: t("analysis.details.ph"), value: analysis.ph?.toFixed(1), unit: "pH" },
       {
         key: "nitrogen",
@@ -61,9 +65,8 @@ export function AnalysisSoilParametersSection({ analysis }: AnalysisSoilParamete
         value: analysis.plantAvailableWater?.toFixed(0),
         unit: "mm/m",
       },
-    ],
-    [analysis, t],
-  );
+    ];
+  }, [analysis, t]);
 
   return (
     <motion.section
@@ -105,6 +108,7 @@ export function AnalysisSoilParametersSection({ analysis }: AnalysisSoilParamete
         {soilParams.map((param) => (
           <AnalysisMetricCard
             key={param.key}
+            className={param.key === "soilTexture" ? "text-2xl" : ""}
             label={param.label}
             value={param.value}
             unit={param.unit}

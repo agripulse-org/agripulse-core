@@ -1,7 +1,6 @@
 package com.agripulse.api.client.agripulseai;
 
 import com.agripulse.api.model.enums.CropType;
-import com.agripulse.api.model.enums.SoilType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.HttpExchange;

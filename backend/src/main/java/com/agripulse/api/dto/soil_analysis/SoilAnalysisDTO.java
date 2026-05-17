@@ -1,9 +1,10 @@
 package com.agripulse.api.dto.soil_analysis;
 
 import com.agripulse.api.model.domain.SoilAnalysis;
-import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.model.enums.AnalysisStatus;
 import com.agripulse.api.model.enums.CropType;
+import com.agripulse.api.model.enums.SoilDepth;
+import com.agripulse.api.model.enums.SoilTexture;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ public record SoilAnalysisDTO(
         LocalDateTime updatedAt,
 
         SoilDepth soilDepth,
+        SoilTexture soilTexture,
         AnalysisStatus status,
 
         Double ph,
@@ -53,6 +55,7 @@ public record SoilAnalysisDTO(
                 analysis.getUpdatedAt(),
 
                 analysis.getSoilDepth(),
+                analysis.getSoilTexture(),
                 analysis.getStatus(),
 
                 analysis.getPh(),

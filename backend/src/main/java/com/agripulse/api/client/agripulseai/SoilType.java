@@ -1,4 +1,4 @@
-package com.agripulse.api.model.enums;
+package com.agripulse.api.client.agripulseai;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

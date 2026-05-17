@@ -1,11 +1,13 @@
+import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
 interface AnalysisMetricCardProps {
   label: string;
   value?: string | undefined;
-  unit: string;
+  unit?: string;
   icon?: ReactNode;
   children?: ReactNode;
+  className?: string;
 }
 
 export function AnalysisMetricCard({
@@ -14,6 +16,7 @@ export function AnalysisMetricCard({
   unit,
   icon,
   children,
+  className,
 }: AnalysisMetricCardProps) {
   return (
     <div className="bg-card border border-border rounded-xl p-6 hover:shadow-md transition-all">
@@ -26,8 +29,8 @@ export function AnalysisMetricCard({
         <p className="text-sm text-muted-foreground mb-2">{label}</p>
       )}
 
-      <div className={`flex items-baseline gap-2${children ? " mb-4" : ""}`}>
-        <span className="text-3xl">{value ?? "—"}</span>
+      <div className={cn("flex items-baseline gap-2", children && "mb-4")}>
+        <span className={cn("text-3xl", className)}>{value ?? "—"}</span>
         {value !== undefined && <span className="text-sm text-muted-foreground">{unit}</span>}
       </div>
 
