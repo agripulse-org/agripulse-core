@@ -3,15 +3,15 @@ package com.agripulse.api.service.impl;
 import com.agripulse.api.client.soilgrids.SoilGridsClient;
 import com.agripulse.api.model.domain.SoilProperties;
 import com.agripulse.api.model.exceptions.SoilGridsFetchException;
+import com.agripulse.api.model.value.Concentration;
+import com.agripulse.api.model.value.VolumetricWater;
 import com.agripulse.api.service.SoilPropertiesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientResponseException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SoilPropertiesServiceImpl implements SoilPropertiesService {
@@ -19,23 +19,7 @@ public class SoilPropertiesServiceImpl implements SoilPropertiesService {
     private static final Logger log = LoggerFactory.getLogger(SoilPropertiesServiceImpl.class);
 
     private static final List<String> SOIL_PROPERTIES = List.of(
-            "phh2o", "soc", "nitrogen", "clay", "sand", "silt", "bdod");
-
-    // SoilGrids stores values multiplied by a d_factor; divide to get standard units.
-    // phh2o: pH×10 → ÷10 = pH (-)
-    // soc:   dg/kg  → ÷10 = g/kg
-    // nitrogen: cg/kg → ÷100 = g/kg
-    // clay/sand/silt: g/kg×10 → ÷10 = g/kg
-    // bdod:  cg/cm³ → ÷100 = g/cm³
-    private static final Map<String, Double> DIVISORS = Map.of(
-            "phh2o",    10.0,
-            "soc",      10.0,
-            "nitrogen", 100.0,
-            "clay",     10.0,
-            "sand",     10.0,
-            "silt",     10.0,
-            "bdod",     100.0
-    );
+            "phh2o", "soc", "nitrogen", "clay", "sand", "silt", "bdod", "wv0033", "wv1500");
 
     private final SoilGridsClient soilGridsClient;
 
@@ -67,27 +51,27 @@ public class SoilPropertiesServiceImpl implements SoilPropertiesService {
             throw new SoilGridsFetchException("SoilGrids API returned an empty or invalid response");
         }
 
-        Map<String, Double> converted = extractAndConvert(response.properties().layers(), depth);
+        List<SoilGridsClient.SoilGridsResponse.Layer> layers = response.properties().layers();
 
         return new SoilProperties(
-                converted.get("phh2o"),
-                converted.get("soc"),
-                converted.get("nitrogen"),
-                converted.get("clay"),
-                converted.get("sand"),
-                converted.get("silt"),
-                converted.get("bdod")
+                divide(mean(layers, "phh2o",    depth), 10.0),            // pH×10 → pH
+                Concentration.ofDgPerKg(    mean(layers, "soc",      depth)), // dg/kg → g/kg
+                Concentration.ofCgPerKg(    mean(layers, "nitrogen", depth)), // cg/kg → g/kg
+                Concentration.ofTenthGPerKg(mean(layers, "clay",     depth)), // g/kg×10 → g/kg
+                Concentration.ofTenthGPerKg(mean(layers, "sand",     depth)),
+                Concentration.ofTenthGPerKg(mean(layers, "silt",     depth)),
+                divide(mean(layers, "bdod",  depth), 100.0),              // cg/cm³ → g/cm³
+                VolumetricWater.ofMilliCm3PerCm3(mean(layers, "wv0033", depth)),
+                VolumetricWater.ofMilliCm3PerCm3(mean(layers, "wv1500", depth))
         );
     }
 
-    private Map<String, Double> extractAndConvert(List<SoilGridsClient.SoilGridsResponse.Layer> layers, String depth) {
-        Map<String, Double> result = new HashMap<>();
-        for (SoilGridsClient.SoilGridsResponse.Layer layer : layers) {
-            if (layer.name() != null && DIVISORS.containsKey(layer.name())) {
-                result.put(layer.name(), convertRaw(layer.name(), meanForDepth(layer, depth)));
-            }
-        }
-        return result;
+    private Double mean(List<SoilGridsClient.SoilGridsResponse.Layer> layers, String property, String depth) {
+        return layers.stream()
+                .filter(l -> property.equals(l.name()))
+                .findFirst()
+                .map(l -> meanForDepth(l, depth))
+                .orElse(null);
     }
 
     private Double meanForDepth(SoilGridsClient.SoilGridsResponse.Layer layer, String depth) {
@@ -99,8 +83,7 @@ public class SoilPropertiesServiceImpl implements SoilPropertiesService {
                 .orElse(null);
     }
 
-    private Double convertRaw(String property, Double raw) {
-        if (raw == null) return null;
-        return raw / DIVISORS.get(property);
+    private static Double divide(Double raw, double divisor) {
+        return raw != null ? raw / divisor : null;
     }
 }
