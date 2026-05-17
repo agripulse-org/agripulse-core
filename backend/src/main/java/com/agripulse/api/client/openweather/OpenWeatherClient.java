@@ -18,6 +18,29 @@ public interface OpenWeatherClient {
             @RequestParam("units") String units
     );
 
+    @GetExchange("/forecast")
+    ForecastResponse getForecast(
+            @RequestParam("lat") double lat,
+            @RequestParam("lon") double lon,
+            @RequestParam("units") String units
+    );
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    record ForecastResponse(
+            @JsonProperty("list") List<ForecastSlot> list
+    ) {
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public record ForecastSlot(
+                @JsonProperty("main") OpenWeatherResponse.Main main,
+                @JsonProperty("rain") Rain3h rain
+        ) {
+            @JsonIgnoreProperties(ignoreUnknown = true)
+            public record Rain3h(
+                    @JsonProperty("3h") Double threeHour
+            ) {}
+        }
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     record OpenWeatherResponse(
             @JsonProperty("main") Main main,
@@ -28,6 +51,8 @@ public interface OpenWeatherClient {
         @JsonIgnoreProperties(ignoreUnknown = true)
         public record Main(
                 @JsonProperty("temp") double temp,
+                @JsonProperty("temp_min") Double tempMin,
+                @JsonProperty("temp_max") Double tempMax,
                 @JsonProperty("humidity") int humidity
         ) {}
 

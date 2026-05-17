@@ -3,6 +3,7 @@ package com.agripulse.api;
 import com.agripulse.api.model.domain.SoilProperties;
 import com.agripulse.api.model.domain.WeatherData;
 import com.agripulse.api.model.enums.SoilTexture;
+import com.agripulse.api.model.value.Concentration;
 import com.agripulse.api.service.CropRecommendationService;
 import com.agripulse.api.service.PdfGeneratorService;
 import com.agripulse.api.service.SoilPropertiesService;
@@ -54,10 +55,14 @@ class ExternalServicesIntegrationTest {
 
         assertThat(props).isNotNull();
         assertThat(props.phH2o()).isNotNull().isBetween(0.0, 14.0);
-        assertThat(props.organicCarbon()).isNotNull().isGreaterThanOrEqualTo(0.0);
-        assertThat(props.clay()).isNotNull().isBetween(0.0, 1000.0);
-        assertThat(props.sand()).isNotNull().isBetween(0.0, 1000.0);
-        assertThat(props.silt()).isNotNull().isBetween(0.0, 1000.0);
+        assertThat(props.organicCarbon()).isNotNull();
+        assertThat(props.organicCarbon().value()).isGreaterThanOrEqualTo(0.0);
+        assertThat(props.clay()).isNotNull();
+        assertThat(props.clay().value()).isBetween(0.0, 1000.0);
+        assertThat(props.sand()).isNotNull();
+        assertThat(props.sand().value()).isBetween(0.0, 1000.0);
+        assertThat(props.silt()).isNotNull();
+        assertThat(props.silt().value()).isBetween(0.0, 1000.0);
     }
 
     @Test
@@ -87,11 +92,11 @@ class ExternalServicesIntegrationTest {
     @Test
     void agriPulseAiService_returnsCropRecommendations() {
         var recommendations = cropRecommendationService.getRecommendations(
-                50.0,   // nitrogen mg/kg
-                15.0,   // temperature °C
-                65.0,   // humidity %
-                6.5,    // ph
-                40.0,   // moisture %
+                new Concentration(0.5), // nitrogen g/kg
+                15.0,                    // temperature °C
+                65.0,                    // humidity %
+                6.5,                     // ph
+                40.0,                    // moisture vol%
                 SoilTexture.LOAM
         );
 

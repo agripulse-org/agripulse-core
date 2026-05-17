@@ -5,6 +5,8 @@ import com.agripulse.api.model.enums.AnalysisStatus;
 import com.agripulse.api.model.enums.CropType;
 import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.model.enums.SoilTexture;
+import com.agripulse.api.model.value.Concentration;
+import com.agripulse.api.model.value.VolumetricWater;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -50,35 +52,45 @@ public class SoilAnalysis {
 
     private Double ph;
 
-    // g/kg
-    private Double nitrogen;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "nitrogen"))
+    private Concentration nitrogen;
 
     // mmol_c/kg
     private Double cec;
 
-    // g/kg
-    private Double organicCarbon;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "organic_carbon"))
+    private Concentration organicCarbon;
 
-    // g/kg
-    private Double sandContent;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "sand_content"))
+    private Concentration sandContent;
 
-    // g/kg
-    private Double siltContent;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "silt_content"))
+    private Concentration siltContent;
 
-    // g/kg
-    private Double clayContent;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "clay_content"))
+    private Concentration clayContent;
 
-    // kg/dm³
+    // g/cm³
     private Double bulkDensity;
 
-    // vol%
-    private Double coarseFragments;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "coarse_fragments"))
+    private VolumetricWater coarseFragments;
 
-    // cm³/cm³
-    private Double plantAvailableWater;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "plant_available_water"))
+    private VolumetricWater plantAvailableWater;
 
     @Enumerated(EnumType.STRING)
     private SoilTexture soilTexture;
+
+    @Column(length = 1024)
+    private String failureReason;
 
     // Weather
     private Double temperatureAvgC;

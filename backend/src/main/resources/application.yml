@@ -1,6 +1,9 @@
 spring:
   application:
     name: agripulse-api
+  threads:
+    virtual:
+      enabled: true
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/agripulse}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
@@ -13,6 +16,19 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+      schema: classpath:quartz-schema-postgres.sql
+    properties:
+      org.quartz:
+        scheduler.instanceName: AgriPulseScheduler
+        scheduler.idleWaitTime: 1000
+        threadPool.threadCount: 10
+        jobStore.misfireThreshold: 60000
+        jobStore.isClustered: false
+        jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 
   security:
     oauth2:

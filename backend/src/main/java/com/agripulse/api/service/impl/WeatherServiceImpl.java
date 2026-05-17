@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientResponseException;
 
+import java.util.List;
+import java.util.OptionalDouble;
+
 @Service
 public class WeatherServiceImpl implements WeatherService {
 
@@ -46,10 +49,62 @@ public class WeatherServiceImpl implements WeatherService {
 
         return new WeatherData(
                 response.main().temp(),
+                response.main().tempMin(),
+                response.main().tempMax(),
                 response.main().humidity(),
                 response.wind() != null ? response.wind().speed() : 0.0,
                 description,
                 rain
         );
+    }
+
+    @Override
+    public WeatherData getWeatherForecastForLocation(double latitude, double longitude) {
+        OpenWeatherClient.ForecastResponse response;
+
+        try {
+            response = openWeatherClient.getForecast(latitude, longitude, "metric");
+        } catch (WeatherFetchException e) {
+            throw e;
+        } catch (RestClientResponseException e) {
+            throw new WeatherFetchException("OpenWeather API error: HTTP " + e.getStatusCode().value());
+        } catch (RuntimeException e) {
+            log.error("Failed to reach weather service", e);
+            throw new WeatherFetchException("Failed to reach weather service");
+        }
+
+        if (response == null || response.list() == null || response.list().isEmpty()) {
+            throw new WeatherFetchException("OpenWeather API returned an empty forecast response");
+        }
+
+        var slots = response.list();
+
+        double tempAvg = slots.stream()
+                .mapToDouble(s -> s.main().temp())
+                .average()
+                .orElse(0.0);
+
+        OptionalDouble tempMinOpt = slots.stream()
+                .filter(s -> s.main().tempMin() != null)
+                .mapToDouble(s -> s.main().tempMin())
+                .min();
+        Double tempMin = tempMinOpt.isPresent() ? tempMinOpt.getAsDouble() : null;
+
+        OptionalDouble tempMaxOpt = slots.stream()
+                .filter(s -> s.main().tempMax() != null)
+                .mapToDouble(s -> s.main().tempMax())
+                .max();
+        Double tempMax = tempMaxOpt.isPresent() ? tempMaxOpt.getAsDouble() : null;
+
+        int avgHumidity = (int) Math.round(slots.stream()
+                .mapToInt(s -> s.main().humidity())
+                .average()
+                .orElse(0.0));
+
+        double totalPrecipitation = slots.stream()
+                .mapToDouble(s -> s.rain() != null && s.rain().threeHour() != null ? s.rain().threeHour() : 0.0)
+                .sum();
+
+        return new WeatherData(tempAvg, tempMin, tempMax, avgHumidity, 0.0, "", totalPrecipitation);
     }
 }

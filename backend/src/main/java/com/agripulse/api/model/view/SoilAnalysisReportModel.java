@@ -2,6 +2,8 @@ package com.agripulse.api.model.view;
 
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.SoilProfile;
+import com.agripulse.api.model.value.Concentration;
+import com.agripulse.api.model.value.VolumetricWater;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,16 +50,16 @@ public record SoilAnalysisReportModel(
                 analysis.getSoilDepth().getLabel(),
 
                 analysis.getPh(),
-                analysis.getNitrogen(),
-                analysis.getOrganicCarbon(),
+                Concentration.valueOf(analysis.getNitrogen()),
+                Concentration.valueOf(analysis.getOrganicCarbon()),
                 analysis.getBulkDensity(),
                 analysis.getCec(),
 
-                analysis.getSandContent(),
-                analysis.getSiltContent(),
-                analysis.getClayContent(),
-                analysis.getCoarseFragments(),
-                analysis.getPlantAvailableWater(),
+                Concentration.valueOf(analysis.getSandContent()),
+                Concentration.valueOf(analysis.getSiltContent()),
+                Concentration.valueOf(analysis.getClayContent()),
+                VolumetricWater.valueOf(analysis.getCoarseFragments()),
+                VolumetricWater.valueOf(analysis.getPlantAvailableWater()),
 
                 analysis.getTemperatureAvgC(),
                 analysis.getTemperatureMinC(),

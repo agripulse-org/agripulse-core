@@ -4,6 +4,7 @@ import com.agripulse.api.client.agripulseai.AgriPulseAiClient;
 import com.agripulse.api.client.agripulseai.SoilType;
 import com.agripulse.api.dto.soil_analysis.CropRecommendationResult;
 import com.agripulse.api.model.enums.SoilTexture;
+import com.agripulse.api.model.value.Concentration;
 import com.agripulse.api.service.CropRecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class CropRecommendationServiceImpl implements CropRecommendationService 
 
     @Override
     public List<CropRecommendationResult> getRecommendations(
-            double nitrogen,
+            Concentration nitrogen,
             double temperature,
             double humidity,
             double ph,
@@ -31,7 +32,7 @@ public class CropRecommendationServiceImpl implements CropRecommendationService 
             SoilTexture soilTexture
     ) {
         try {
-            var requestBody = new AgriPulseAiClient.CropsRequest(nitrogen, temperature, humidity, ph, moisture, mapToSoilType(soilTexture));
+            var requestBody = new AgriPulseAiClient.CropsRequest(nitrogen.toCgPerKg(), temperature, humidity, ph, moisture, mapToSoilType(soilTexture));
             var response = agriPulseAiClient.recommendCrops(requestBody);
 
             return response.recommendations().stream()

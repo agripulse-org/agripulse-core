@@ -1,5 +1,7 @@
 package com.agripulse.api.service.impl;
+
 import com.agripulse.api.dto.soil_analysis.CreateSoilAnalysisDTO;
+import com.agripulse.api.job.SoilAnalysisJob;
 import com.agripulse.api.model.view.SoilAnalysisReportModel;
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.SoilProfile;
@@ -12,7 +14,16 @@ import com.agripulse.api.service.SoilAnalysisCsvParser;
 import com.agripulse.api.service.SoilAnalysisService;
 import com.agripulse.api.service.SoilProfileService;
 import lombok.RequiredArgsConstructor;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -27,11 +38,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SoilAnalysisServiceImpl implements SoilAnalysisService {
 
+    private static final Logger log = LoggerFactory.getLogger(SoilAnalysisServiceImpl.class);
+
     private final SoilAnalysisRepository soilAnalysisRepository;
     private final SoilProfileService soilProfileService;
     private final SoilAnalysisCsvParser csvParser;
     private final PdfGeneratorService pdfGeneratorService;
     private final TemplateEngine templateEngine;
+    private final Scheduler scheduler;
 
     @Override
     public List<SoilAnalysis> findAll(UserId userId, UUID soilProfileId) {
@@ -47,6 +61,7 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
     }
 
     @Override
+    @Transactional
     public SoilAnalysis create(
             UserId userId,
             UUID soilProfileId,
@@ -56,8 +71,11 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
         var profile = soilProfileService.getProfileById(userId, soilProfileId);
 
         SoilAnalysis analysis = new SoilAnalysis(profile, request.soilDepth());
+        SoilAnalysis saved = soilAnalysisRepository.save(analysis);
 
-        return soilAnalysisRepository.save(analysis);
+        scheduleAnalysisProcessingJob(saved.getId());
+
+        return saved;
     }
 
     @Override
@@ -69,6 +87,7 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
     }
 
     @Override
+    @Transactional
     public List<SoilAnalysis> uploadCsv(
             UserId userId,
             UUID soilProfileId,
@@ -78,7 +97,11 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
 
         List<SoilAnalysis> analyses = csvParser.parse(file, soilProfile);
 
-        return soilAnalysisRepository.saveAll(analyses);
+        List<SoilAnalysis> saved = soilAnalysisRepository.saveAll(analyses);
+
+        saved.forEach(a -> scheduleAnalysisProcessingJob(a.getId()));
+
+        return saved;
     }
 
     @Override
@@ -100,5 +123,24 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
                         ProfileLastAnalysisProjection::getSoilProfileId,
                         ProfileLastAnalysisProjection::getLastAnalysisAt
                 ));
+    }
+
+    private void scheduleAnalysisProcessingJob(UUID analysisId) {
+        JobDetail jobDetail = JobBuilder.newJob(SoilAnalysisJob.class)
+                .withIdentity("analysis-" + analysisId, "soil-analyses")
+                .usingJobData(SoilAnalysisJob.ANALYSIS_ID_KEY, analysisId.toString())
+                .build();
+
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity("analysis-trigger-" + analysisId, "soil-analyses")
+                .startNow()
+                .build();
+
+        try {
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (SchedulerException e) {
+            log.error("Failed to schedule analysis processing job for {}", analysisId, e);
+            throw new RuntimeException("Failed to schedule analysis processing", e);
+        }
     }
 }

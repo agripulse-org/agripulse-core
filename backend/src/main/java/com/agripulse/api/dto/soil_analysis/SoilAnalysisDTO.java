@@ -5,6 +5,8 @@ import com.agripulse.api.model.enums.AnalysisStatus;
 import com.agripulse.api.model.enums.CropType;
 import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.model.enums.SoilTexture;
+import com.agripulse.api.model.value.Concentration;
+import com.agripulse.api.model.value.VolumetricWater;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -44,10 +46,7 @@ public record SoilAnalysisDTO(
         List<CropRecommendationDTO> cropRecommendations
 ) {
 
-    public static SoilAnalysisDTO from(
-            SoilAnalysis analysis
-    ) {
-
+    public static SoilAnalysisDTO from(SoilAnalysis analysis) {
         return new SoilAnalysisDTO(
                 analysis.getId(),
                 analysis.getSoilProfile().getId(),
@@ -59,17 +58,17 @@ public record SoilAnalysisDTO(
                 analysis.getStatus(),
 
                 analysis.getPh(),
-                analysis.getNitrogen(),
+                Concentration.valueOf(analysis.getNitrogen()),
                 analysis.getCec(),
-                analysis.getOrganicCarbon(),
+                Concentration.valueOf(analysis.getOrganicCarbon()),
 
-                analysis.getSandContent(),
-                analysis.getSiltContent(),
-                analysis.getClayContent(),
+                Concentration.valueOf(analysis.getSandContent()),
+                Concentration.valueOf(analysis.getSiltContent()),
+                Concentration.valueOf(analysis.getClayContent()),
                 analysis.getBulkDensity(),
-                analysis.getCoarseFragments(),
+                VolumetricWater.valueOf(analysis.getCoarseFragments()),
 
-                analysis.getPlantAvailableWater(),
+                VolumetricWater.valueOf(analysis.getPlantAvailableWater()),
 
                 analysis.getTemperatureAvgC(),
                 analysis.getTemperatureMinC(),

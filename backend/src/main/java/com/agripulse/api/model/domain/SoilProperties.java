@@ -1,16 +1,18 @@
 package com.agripulse.api.model.domain;
 
-/**
- * Soil property values returned from SoilGrids v2.0.
- * Units after conversion: phH2o (-), organicCarbon/nitrogen/clay/sand/silt (g/kg),
- * bulkDensity (g/cm³). Null means the API did not return a value for that property.
- */
+import com.agripulse.api.model.value.Concentration;
+import com.agripulse.api.model.value.VolumetricWater;
+
 public record SoilProperties(
         Double phH2o,
-        Double organicCarbon,
-        Double nitrogen,
-        Double clay,
-        Double sand,
-        Double silt,
-        Double bulkDensity
+        Concentration organicCarbon,
+        Concentration nitrogen,
+        Concentration clay,
+        Concentration sand,
+        Concentration silt,
+        Double bulkDensity,
+        Double cec,
+        VolumetricWater coarseFragments,
+        VolumetricWater fieldCapacity,
+        VolumetricWater wiltingPoint
 ) {}

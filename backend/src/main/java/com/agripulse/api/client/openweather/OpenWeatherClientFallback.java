@@ -13,4 +13,10 @@ public class OpenWeatherClientFallback implements OpenWeatherClient {
         log.warn("Weather service circuit open, failing fast");
         throw new WeatherFetchException("Weather service is temporarily unavailable");
     }
+
+    @Override
+    public ForecastResponse getForecast(double lat, double lon, String units) {
+        log.warn("Weather service circuit open, failing fast");
+        throw new WeatherFetchException("Weather service is temporarily unavailable");
+    }
 }

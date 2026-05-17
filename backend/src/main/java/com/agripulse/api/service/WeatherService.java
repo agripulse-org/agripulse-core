@@ -4,4 +4,5 @@ import com.agripulse.api.model.domain.WeatherData;
 
 public interface WeatherService {
     WeatherData getWeatherForLocation(double latitude, double longitude);
+    WeatherData getWeatherForecastForLocation(double latitude, double longitude);
 }
