@@ -2,6 +2,7 @@ package com.agripulse.api.repository;
 
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.UserId;
+import com.agripulse.api.model.enums.AnalysisStatus;
 import com.agripulse.api.model.projections.ProfileLastAnalysisProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +28,11 @@ public interface SoilAnalysisRepository extends JpaRepository<SoilAnalysis, UUID
 
     List<SoilAnalysis> findTop3BySoilProfile_UserIdOrderByCreatedAtDesc(
             UserId userId
+    );
+
+    List<SoilAnalysis> findBySoilProfile_UserIdAndStatus(
+            UserId userId,
+            AnalysisStatus status
     );
 
     @Query("""
