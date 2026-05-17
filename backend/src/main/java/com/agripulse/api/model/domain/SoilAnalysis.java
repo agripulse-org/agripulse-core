@@ -88,6 +88,9 @@ public class SoilAnalysis {
     @Enumerated(EnumType.STRING)
     private SoilTexture soilTexture;
 
+    @Column(length = 1024)
+    private String failureReason;
+
     // Weather
     private Double temperatureAvgC;
     private Double temperatureMinC;

@@ -62,8 +62,8 @@ export function AnalysisSoilParametersSection({ analysis }: AnalysisSoilParamete
       {
         key: "plantAvailableWater",
         label: t("analysis.details.plantAvailableWater"),
-        value: analysis.plantAvailableWater?.toFixed(0),
-        unit: "mm/m",
+        value: analysis.plantAvailableWater?.toFixed(1),
+        unit: "%",
       },
     ];
   }, [analysis, t]);

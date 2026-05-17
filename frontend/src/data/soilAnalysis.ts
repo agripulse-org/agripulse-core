@@ -12,7 +12,7 @@ export const getSoilAnalysisQueryOptions = (soilProfileId: string, analysisId: s
   queryOptions({
     queryKey: ["soil-analyses", soilProfileId, analysisId],
     queryFn: () => soilAnalysisService.getById(soilProfileId, analysisId),
-    refetchInterval: (query) => (query.state.data?.status === "PENDING" ? 30_000 : false),
+    refetchInterval: (query) => (query.state.data?.status === "PENDING" ? 10_000 : false),
   });
 
 export const useSoilAnalyses = (soilProfileId: string) =>

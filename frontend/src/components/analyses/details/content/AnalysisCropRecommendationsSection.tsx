@@ -30,14 +30,16 @@ export function AnalysisCropRecommendationsSection({
             {t("analysis.details.noRecommendations")}
           </p>
         ) : (
-          analysis.cropRecommendations.map((rec, index) => (
-            <AnalysisCropRecommendationCard
-              key={rec.crop}
-              recommendation={rec}
-              imageFallback={index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "🌱"}
-              delay={0.3 + index * 0.05}
-            />
-          ))
+          analysis.cropRecommendations
+            .filter((rec) => rec.confidencePercentage >= 1)
+            .map((rec, index) => (
+              <AnalysisCropRecommendationCard
+                key={rec.crop}
+                recommendation={rec}
+                imageFallback={index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "🌱"}
+                delay={0.3 + index * 0.05}
+              />
+            ))
         )}
       </div>
     </motion.section>
