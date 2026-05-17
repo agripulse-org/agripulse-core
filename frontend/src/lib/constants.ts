@@ -87,6 +87,7 @@ export const CROP_TYPE_MAP: Partial<Record<string, CropTypeMeta>> = {
   sugar_beet: {
     nameKey: "crops.sugarBeet",
     descriptionKey: "crops.sugarBeet.description",
+    imageUrl: "/crops/sugar-beet.webp",
   },
   tomato: {
     nameKey: "crops.tomato",
