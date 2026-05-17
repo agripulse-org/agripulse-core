@@ -19,5 +19,5 @@ export type DashboardAnalysis = {
 
 export type DashboardCropRecommendation = {
   crop: string;
-  recommendationScore: number;
+  confidencePercentage: number;
 };

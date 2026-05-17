@@ -77,7 +77,7 @@ interface AnalysisCardProps {
 function AnalysisCard({ soilId, analysis, delay }: AnalysisCardProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { date } = useFormatters();
+  const { date, percent } = useFormatters();
 
   const isPending = analysis.status === "PENDING";
   const isFailed = analysis.status === "FAILED";
@@ -149,7 +149,7 @@ function AnalysisCard({ soilId, analysis, delay }: AnalysisCardProps) {
                 <div key={rec.crop} className="flex items-center justify-between">
                   <span className="text-sm">{cropNameKey ? t(cropNameKey) : rec.crop}</span>
                   <span className="text-sm font-medium text-primary">
-                    {Math.round(rec.recommendationScore)}%
+                    {percent(rec.confidencePercentage)}
                   </span>
                 </div>
               );

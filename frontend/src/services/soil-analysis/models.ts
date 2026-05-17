@@ -27,7 +27,7 @@ export type AnalysisSoilDepth = "DEPTH_0_5" | "DEPTH_5_15" | "DEPTH_15_30" | "DE
 
 export type AnalysisCropRecommendation = {
   crop: string;
-  recommendationScore: number;
+  confidencePercentage: number;
 };
 
 export type CreateAnalysisRequest = {

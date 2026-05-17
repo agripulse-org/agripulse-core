@@ -204,7 +204,7 @@ function OverviewTab({
 }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { date } = useFormatters();
+  const { date, percent } = useFormatters();
 
   const locationParts = [soil.city, soil.country].filter((value): value is string =>
     Boolean(value),
@@ -324,7 +324,7 @@ function OverviewTab({
                   ) : topRec ? (
                     <div className="text-right shrink-0">
                       <p className="text-sm font-medium text-primary">
-                        {Math.round(topRec.recommendationScore)}%
+                        {percent(topRec.confidencePercentage)}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         {cropMeta ? t(cropMeta.nameKey) : topRec.crop}

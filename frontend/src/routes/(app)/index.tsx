@@ -141,11 +141,11 @@ function AnalysisCard({ analysis, delay, onClick }: AnalysisCardProps) {
                       <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
                         <div
                           className="h-full bg-primary rounded-full transition-all"
-                          style={{ width: `${rec.recommendationScore}%` }}
+                          style={{ width: `${rec.confidencePercentage}%` }}
                         />
                       </div>
-                      <span className="text-sm font-medium text-primary">
-                        {formatters.percent(rec.recommendationScore)}
+                      <span className="text-sm font-medium text-primary min-w-8 text-right">
+                        {formatters.percent(rec.confidencePercentage)}
                       </span>
                     </div>
                   </div>

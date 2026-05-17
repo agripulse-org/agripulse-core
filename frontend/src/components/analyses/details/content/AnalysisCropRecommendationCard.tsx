@@ -31,7 +31,7 @@ export function AnalysisCropRecommendationCard({
   const { percent } = useFormatters();
 
   const cropMeta = CROP_TYPE_MAP[recommendation.crop];
-  const score = recommendation.recommendationScore;
+  const score = recommendation.confidencePercentage;
 
   return (
     <motion.div

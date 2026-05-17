@@ -3,6 +3,7 @@ package com.agripulse.api.dto.soil_analysis;
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.enums.SoilDepth;
 import com.agripulse.api.model.enums.AnalysisStatus;
+import com.agripulse.api.model.enums.CropType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -38,7 +39,7 @@ public record SoilAnalysisDTO(
         Double totalPrecipitationMm,
 
         @Schema(nullable = true)
-        List<CropRecommendationResult> cropRecommendations
+        List<CropRecommendationDTO> cropRecommendations
 ) {
 
     public static SoilAnalysisDTO from(
@@ -73,7 +74,24 @@ public record SoilAnalysisDTO(
                 analysis.getAvgHumidityPercent(),
                 analysis.getTotalPrecipitationMm(),
 
-                analysis.getCropRecommendations()
+                analysis.getCropRecommendations() != null
+                        ? CropRecommendationDTO.from(analysis.getCropRecommendations())
+                        : null
         );
+    }
+
+    record CropRecommendationDTO(
+            CropType crop,
+            double confidencePercentage
+    ) {
+        public static CropRecommendationDTO from(CropRecommendationResult result) {
+            return new CropRecommendationDTO(result.crop(), result.recommendationScore() * 100.0);
+        }
+
+        public static List<CropRecommendationDTO> from(List<CropRecommendationResult> results) {
+            return results.stream()
+                    .map(CropRecommendationDTO::from)
+                    .toList();
+        }
     }
 }

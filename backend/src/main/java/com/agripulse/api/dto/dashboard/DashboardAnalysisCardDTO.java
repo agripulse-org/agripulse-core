@@ -3,6 +3,7 @@ package com.agripulse.api.dto.dashboard;
 import com.agripulse.api.dto.soil_analysis.CropRecommendationResult;
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.SoilProfile;
+import com.agripulse.api.model.enums.CropType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public record DashboardAnalysisCardDTO(
         String soilDepth,
 
         @Schema(nullable = true)
-        List<CropRecommendationResult> recommendations
+        List<DashboardCropRecommendationDTO> recommendations
 
 ) {
 
@@ -38,7 +39,9 @@ public record DashboardAnalysisCardDTO(
 
                 analysis.getSoilDepth().getLabel(),
 
-                analysis.getCropRecommendations()
+                analysis.getCropRecommendations() != null
+                        ? DashboardCropRecommendationDTO.from(analysis.getCropRecommendations())
+                        : null
         );
     }
 
@@ -64,4 +67,20 @@ public record DashboardAnalysisCardDTO(
             );
         }
     }
+
+    record DashboardCropRecommendationDTO(
+            CropType crop,
+            double confidencePercentage
+    ) {
+        static DashboardCropRecommendationDTO from(CropRecommendationResult result) {
+            return new DashboardCropRecommendationDTO(result.crop(), result.recommendationScore() * 100.0);
+        }
+
+        static List<DashboardCropRecommendationDTO> from(List<CropRecommendationResult> results) {
+            return results.stream()
+                    .map(DashboardCropRecommendationDTO::from)
+                    .toList();
+        }
+    }
+
 }
