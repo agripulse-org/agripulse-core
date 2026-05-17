@@ -46,6 +46,8 @@ public class WeatherServiceImpl implements WeatherService {
 
         return new WeatherData(
                 response.main().temp(),
+                response.main().tempMin(),
+                response.main().tempMax(),
                 response.main().humidity(),
                 response.wind() != null ? response.wind().speed() : 0.0,
                 description,

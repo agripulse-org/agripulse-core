@@ -28,6 +28,8 @@ public interface OpenWeatherClient {
         @JsonIgnoreProperties(ignoreUnknown = true)
         public record Main(
                 @JsonProperty("temp") double temp,
+                @JsonProperty("temp_min") Double tempMin,
+                @JsonProperty("temp_max") Double tempMax,
                 @JsonProperty("humidity") int humidity
         ) {}
 
