@@ -2,7 +2,10 @@ package com.agripulse.api.repository;
 
 import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.UserId;
+import com.agripulse.api.model.projections.ProfileLastAnalysisProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +28,12 @@ public interface SoilAnalysisRepository extends JpaRepository<SoilAnalysis, UUID
     List<SoilAnalysis> findTop3BySoilProfile_UserIdOrderByCreatedAtDesc(
             UserId userId
     );
+
+    @Query("""
+            SELECT a.soilProfile.id as soilProfileId, MAX(a.createdAt) as lastAnalysisAt
+            FROM SoilAnalysis a
+            WHERE a.soilProfile.userId = :userId AND a.status = 'FINISHED'
+            GROUP BY a.soilProfile.id
+            """)
+    List<ProfileLastAnalysisProjection> findLastFinishedAtPerProfile(@Param("userId") UserId userId);
 }

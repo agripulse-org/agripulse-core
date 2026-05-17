@@ -5,6 +5,7 @@ import com.agripulse.api.model.domain.SoilAnalysis;
 import com.agripulse.api.model.domain.SoilProfile;
 import com.agripulse.api.model.domain.UserId;
 import com.agripulse.api.model.exceptions.SoilAnalysisNotFoundException;
+import com.agripulse.api.model.projections.ProfileLastAnalysisProjection;
 import com.agripulse.api.repository.SoilAnalysisRepository;
 import com.agripulse.api.service.PdfGeneratorService;
 import com.agripulse.api.service.SoilAnalysisCsvParser;
@@ -16,8 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,5 +90,15 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
 
         String html = templateEngine.process("soil-analysis-report", context);
         return pdfGeneratorService.generateFromHtml(html);
+    }
+
+    @Override
+    public Map<UUID, LocalDateTime> getLastFinishedAnalysisTimestampPerSoilByUser(UserId userId) {
+        return soilAnalysisRepository.findLastFinishedAtPerProfile(userId)
+                .stream()
+                .collect(Collectors.toMap(
+                        ProfileLastAnalysisProjection::getSoilProfileId,
+                        ProfileLastAnalysisProjection::getLastAnalysisAt
+                ));
     }
 }

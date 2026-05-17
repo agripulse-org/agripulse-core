@@ -2,9 +2,11 @@ package com.agripulse.api.web;
 
 import com.agripulse.api.dto.soil_profile.CreateSoilProfileDTO;
 import com.agripulse.api.dto.soil_profile.SoilProfileDTO;
+import com.agripulse.api.dto.soil_profile.SoilProfileSummaryDTO;
 import com.agripulse.api.dto.soil_profile.UpdateSoilProfileDTO;
 import com.agripulse.api.model.domain.SoilProfile;
 import com.agripulse.api.model.domain.UserId;
+import com.agripulse.api.service.SoilAnalysisService;
 import com.agripulse.api.service.SoilProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +25,17 @@ import java.util.UUID;
 public class SoilProfileController {
 
     private final SoilProfileService soilProfileService;
+    private final SoilAnalysisService soilAnalysisService;
 
     @GetMapping
-    public List<SoilProfileDTO> getProfiles(@AuthenticationPrincipal Jwt jwt) {
+    public List<SoilProfileSummaryDTO> getProfiles(@AuthenticationPrincipal Jwt jwt) {
         var userId = UserId.of(jwt.getSubject());
+        
+        var lastAnalysisByProfile = soilAnalysisService.getLastFinishedAnalysisTimestampPerSoilByUser(userId);
+        
         return soilProfileService.getProfilesByUser(userId)
                 .stream()
-                .map(SoilProfileDTO::from)
+                .map(p -> SoilProfileSummaryDTO.from(p, lastAnalysisByProfile.get(p.getId())))
                 .toList();
     }
 

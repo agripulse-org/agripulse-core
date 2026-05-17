@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Plus, MapPin, Edit, Trash2, Layers } from "lucide-react";
+import { useFormatters } from "@/hooks/useFormatters";
 import { motion } from "motion/react";
 import { EmptyState } from "@/components/EmptyState";
 import ConfirmDialog from "@/components/ConfirmDialog";
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/(app)/soils/")({
 
 function SoilsRoute() {
   const { t } = useTranslation();
+  const { date } = useFormatters();
   const navigate = useNavigate();
 
   const { data: soils } = useSuspenseQuery(getSoilProfilesQueryOptions());
@@ -89,7 +91,9 @@ function SoilsRoute() {
 
                 <div className="mt-auto mb-4 pb-4 border-b border-border">
                   <p className="text-xs text-muted-foreground">{t("soils.lastAnalysis")}</p>
-                  <p className="text-sm">{t("soils.never")}</p>
+                  <p className="text-sm">
+                    {soil.lastAnalysisAt ? date(soil.lastAnalysisAt) : t("soils.never")}
+                  </p>
                 </div>
 
                 <div className="flex gap-2">
