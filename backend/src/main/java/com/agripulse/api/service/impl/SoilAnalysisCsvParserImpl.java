@@ -90,7 +90,7 @@ public class SoilAnalysisCsvParserImpl implements SoilAnalysisCsvParser {
         analysis.setSiltContent(new Concentration(Double.parseDouble(record.get("siltContent"))));
         analysis.setClayContent(new Concentration(Double.parseDouble(record.get("clayContent"))));
         analysis.setBulkDensity(Double.valueOf(record.get("bulkDensity")));
-        analysis.setCoarseFragments(Double.valueOf(record.get("coarseFragments")));
+        analysis.setCoarseFragments(new VolumetricWater(Double.parseDouble(record.get("coarseFragments"))));
         analysis.setPlantAvailableWater(new VolumetricWater(Double.parseDouble(record.get("plantAvailableWater"))));
 
         return analysis;

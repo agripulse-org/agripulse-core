@@ -58,7 +58,7 @@ public record SoilAnalysisReportModel(
                 Concentration.valueOf(analysis.getSandContent()),
                 Concentration.valueOf(analysis.getSiltContent()),
                 Concentration.valueOf(analysis.getClayContent()),
-                analysis.getCoarseFragments(),
+                VolumetricWater.valueOf(analysis.getCoarseFragments()),
                 VolumetricWater.valueOf(analysis.getPlantAvailableWater()),
 
                 analysis.getTemperatureAvgC(),

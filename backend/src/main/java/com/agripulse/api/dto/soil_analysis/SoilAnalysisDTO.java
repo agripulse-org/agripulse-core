@@ -66,7 +66,7 @@ public record SoilAnalysisDTO(
                 Concentration.valueOf(analysis.getSiltContent()),
                 Concentration.valueOf(analysis.getClayContent()),
                 analysis.getBulkDensity(),
-                analysis.getCoarseFragments(),
+                VolumetricWater.valueOf(analysis.getCoarseFragments()),
 
                 VolumetricWater.valueOf(analysis.getPlantAvailableWater()),
 

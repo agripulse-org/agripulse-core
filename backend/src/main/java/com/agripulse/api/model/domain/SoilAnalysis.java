@@ -78,8 +78,9 @@ public class SoilAnalysis {
     // g/cm³
     private Double bulkDensity;
 
-    // vol%
-    private Double coarseFragments;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "coarse_fragments"))
+    private VolumetricWater coarseFragments;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "plant_available_water"))

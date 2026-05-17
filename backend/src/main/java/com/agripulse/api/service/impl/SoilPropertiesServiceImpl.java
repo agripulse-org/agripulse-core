@@ -19,7 +19,7 @@ public class SoilPropertiesServiceImpl implements SoilPropertiesService {
     private static final Logger log = LoggerFactory.getLogger(SoilPropertiesServiceImpl.class);
 
     private static final List<String> SOIL_PROPERTIES = List.of(
-            "phh2o", "soc", "nitrogen", "clay", "sand", "silt", "bdod", "wv0033", "wv1500");
+            "phh2o", "soc", "nitrogen", "clay", "sand", "silt", "bdod", "cec", "cfvo", "wv0033", "wv1500");
 
     private final SoilGridsClient soilGridsClient;
 
@@ -61,6 +61,8 @@ public class SoilPropertiesServiceImpl implements SoilPropertiesService {
                 Concentration.ofTenthGPerKg(mean(layers, "sand",     depth)),
                 Concentration.ofTenthGPerKg(mean(layers, "silt",     depth)),
                 divide(mean(layers, "bdod",  depth), 100.0),              // cg/cm³ → g/cm³
+                divide(mean(layers, "cec",   depth),  10.0),              // mmol_c/kg×10 → mmol_c/kg
+                VolumetricWater.ofMilliCm3PerCm3(mean(layers, "cfvo",  depth)),
                 VolumetricWater.ofMilliCm3PerCm3(mean(layers, "wv0033", depth)),
                 VolumetricWater.ofMilliCm3PerCm3(mean(layers, "wv1500", depth))
         );

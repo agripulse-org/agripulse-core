@@ -11,6 +11,8 @@ public record SoilProperties(
         Concentration sand,
         Concentration silt,
         Double bulkDensity,
+        Double cec,
+        VolumetricWater coarseFragments,
         VolumetricWater fieldCapacity,
         VolumetricWater wiltingPoint
 ) {}

@@ -135,6 +135,8 @@ public class SoilAnalysisProcessorImpl implements SoilAnalysisProcessor {
         analysis.setSiltContent(soil.silt());
         analysis.setClayContent(soil.clay());
         analysis.setBulkDensity(soil.bulkDensity());
+        analysis.setCec(soil.cec());
+        analysis.setCoarseFragments(soil.coarseFragments());
 
         if (soil.fieldCapacity() == null || soil.wiltingPoint() == null) {
             throw new IllegalStateException("Cannot calculate plant available water: missing field capacity or wilting point from SoilGrids");
