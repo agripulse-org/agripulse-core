@@ -20,6 +20,7 @@ spring:
     job-store-type: jdbc
     jdbc:
       initialize-schema: always
+      schema: classpath:quartz-schema-postgres.sql
     properties:
       org.quartz:
         scheduler.instanceName: AgriPulseScheduler

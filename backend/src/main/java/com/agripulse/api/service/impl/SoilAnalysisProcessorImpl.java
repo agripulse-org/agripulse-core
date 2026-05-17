@@ -22,12 +22,15 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
 public class SoilAnalysisProcessorImpl implements SoilAnalysisProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(SoilAnalysisProcessorImpl.class);
+    private static final Executor VIRTUAL = Executors.newVirtualThreadPerTaskExecutor();
 
     private final SoilAnalysisRepository soilAnalysisRepository;
     private final SoilProfileRepository soilProfileRepository;
@@ -58,12 +61,12 @@ public class SoilAnalysisProcessorImpl implements SoilAnalysisProcessor {
 
             CompletableFuture<SoilProperties> soilFuture = needsSoil
                     ? CompletableFuture.supplyAsync(() ->
-                        soilPropertiesService.getPropertiesForLocation(latitude, longitude, analysis.getSoilDepth().getLabel()))
+                        soilPropertiesService.getPropertiesForLocation(latitude, longitude, analysis.getSoilDepth().getLabel()), VIRTUAL)
                     : null;
 
             CompletableFuture<WeatherData> weatherFuture = needsWeather
                     ? CompletableFuture.supplyAsync(() ->
-                        weatherService.getWeatherForecastForLocation(latitude, longitude))
+                        weatherService.getWeatherForecastForLocation(latitude, longitude), VIRTUAL)
                     : null;
 
             Throwable soilError = null;

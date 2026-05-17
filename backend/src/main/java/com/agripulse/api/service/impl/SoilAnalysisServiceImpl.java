@@ -23,6 +23,7 @@ import org.quartz.TriggerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -60,6 +61,7 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
     }
 
     @Override
+    @Transactional
     public SoilAnalysis create(
             UserId userId,
             UUID soilProfileId,
@@ -85,6 +87,7 @@ public class SoilAnalysisServiceImpl implements SoilAnalysisService {
     }
 
     @Override
+    @Transactional
     public List<SoilAnalysis> uploadCsv(
             UserId userId,
             UUID soilProfileId,

@@ -1,7 +1,6 @@
 package com.agripulse.api.job;
 
 import com.agripulse.api.service.SoilAnalysisProcessor;
-import lombok.RequiredArgsConstructor;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.UUID;
 
 @DisallowConcurrentExecution
-@RequiredArgsConstructor
 public class SoilAnalysisJob implements Job {
 
     public static final String ANALYSIS_ID_KEY = "analysisId";
@@ -21,7 +19,9 @@ public class SoilAnalysisJob implements Job {
 
     private static final Logger log = LoggerFactory.getLogger(SoilAnalysisJob.class);
 
-    private final SoilAnalysisProcessor analysisProcessor;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    private SoilAnalysisProcessor analysisProcessor;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
