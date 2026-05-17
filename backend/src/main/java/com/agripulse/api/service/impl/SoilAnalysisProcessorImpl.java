@@ -63,7 +63,7 @@ public class SoilAnalysisProcessorImpl implements SoilAnalysisProcessor {
 
             CompletableFuture<WeatherData> weatherFuture = needsWeather
                     ? CompletableFuture.supplyAsync(() ->
-                        weatherService.getWeatherForLocation(latitude, longitude))
+                        weatherService.getWeatherForecastForLocation(latitude, longitude))
                     : null;
 
             Throwable soilError = null;
